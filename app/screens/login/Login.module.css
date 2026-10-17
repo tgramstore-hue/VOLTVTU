@@ -1,0 +1,216 @@
+.container {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  color: #fff;
+}
+
+.wave {
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: drop-in 400ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes drop-in {
+  from { transform: translateY(-100%); }
+  to { transform: none; }
+}
+
+.logoMark {
+  position: absolute;
+  left: 24px;
+  top: 56px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  animation: fade-up 400ms 200ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.logoInner {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: #F0B90B;
+}
+
+.signUpLink {
+  position: absolute;
+  right: 24px;
+  top: 60px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #000;
+  font-size: 16px;
+  font-weight: 500;
+  z-index: 2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  animation: fade-up 400ms 250ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 150px;
+  margin: 0;
+  text-align: center;
+  font-size: 44px;
+  font-weight: 600;
+  color: #000;
+  letter-spacing: -1px;
+  z-index: 2;
+  animation: fade-up 400ms 300ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.form {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  top: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.label {
+  text-align: center;
+  font-size: 15px;
+  color: #9a9a9a;
+  animation: fade-up 300ms var(--i, 350ms) cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.input {
+  height: 56px;
+  border-radius: 28px;
+  border: none;
+  background: #1c1c1c;
+  color: #fff;
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  outline: none;
+  width: 100%;
+  animation: fade-up 300ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.input::placeholder {
+  color: #8a8a8a;
+}
+
+.form > *:nth-child(1) { animation-delay: 350ms; }
+.form > *:nth-child(2) { animation-delay: 410ms; }
+.form > *:nth-child(3) { animation-delay: 470ms; }
+.form > *:nth-child(4) { animation-delay: 530ms; }
+.form > *:nth-child(5) { animation-delay: 590ms; }
+.form > *:nth-child(6) { animation-delay: 650ms; }
+
+.forgot {
+  text-align: center;
+  color: #9a9a9a;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.signInBtn {
+  height: 58px;
+  border-radius: 29px;
+  border: none;
+  background: #F0B90B;
+  color: #000;
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: transform 100ms;
+}
+
+.signInBtn:active {
+  transform: scale(0.97);
+}
+
+.signInBtn:disabled {
+  opacity: 0.7;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(0,0,0,0.2);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.orText {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 696px;
+  text-align: center;
+  font-size: 15px;
+  color: #9a9a9a;
+}
+
+.fingerWrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 730px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+.fingerBtn {
+  width: 68px;
+  height: 68px;
+  border-radius: 34px;
+  border: none;
+  background: #F0B90B;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 150ms;
+}
+
+.fingerBtn:active {
+  transform: scale(0.93);
+}
+
+.homeBar {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: 130px;
+  height: 5px;
+  margin-left: -65px;
+  border-radius: 3px;
+  background: #fff;
+}
+
+@keyframes fade-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

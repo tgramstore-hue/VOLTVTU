@@ -1,0 +1,81 @@
+.container {
+  position: absolute;
+  inset: 0;
+  background: #0B0B0B;
+  color: #fff;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.center {
+  text-align: center;
+}
+
+.logo {
+  width: 96px;
+  height: 96px;
+  border-radius: 28px;
+  background: #F0B90B;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pop 0.8s cubic-bezier(0.2, 0, 0, 1) both;
+  color: #000;
+}
+
+.logo svg {
+  fill: none;
+  stroke: #000;
+}
+
+.brand {
+  font-size: 30px;
+  font-weight: 600;
+  margin-top: 22px;
+  letter-spacing: -0.5px;
+  animation: fade-up 0.6s 0.3s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.tagline {
+  font-size: 15px;
+  color: #9a9a9a;
+  margin-top: 8px;
+  animation: fade-up 0.6s 0.5s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.loaderWrap {
+  position: absolute;
+  left: 125px;
+  right: 125px;
+  bottom: 90px;
+  height: 4px;
+  border-radius: 2px;
+  background: #222;
+}
+
+.loaderBar {
+  height: 4px;
+  border-radius: 2px;
+  background: #F0B90B;
+  animation: load 2s ease-in-out infinite;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes load {
+  0% { width: 0; }
+  100% { width: 100%; }
+}

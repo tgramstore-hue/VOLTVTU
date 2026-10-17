@@ -1,0 +1,149 @@
+.container {
+  min-height: 844px;
+  background: var(--bg);
+  padding: 16px 20px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mut);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  height: 56px;
+  background: #fff;
+  border: 1.5px solid transparent;
+  border-radius: 28px;
+  padding: 0 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--y);
+}
+
+.amountGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.amountChip {
+  height: 48px;
+  background: #fff;
+  border: 1.5px solid transparent;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+  transition: all 0.18s;
+}
+
+.amountChip:active {
+  transform: scale(0.96);
+}
+
+.amountChipActive {
+  background: var(--y);
+  color: #000;
+  box-shadow: 0 4px 14px rgba(240, 185, 11, 0.35);
+}
+
+.cashbackCard {
+  background: #0B0B0B;
+  color: #fff;
+  border-radius: 20px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.cashbackLabel {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.cashbackValue {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--y);
+  margin-top: 2px;
+}
+
+.cashbackBadge {
+  background: rgba(240, 185, 11, 0.18);
+  color: var(--y);
+  padding: 6px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.btnWrap {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.btn {
+  width: 100%;
+  height: 56px;
+  background: var(--y);
+  color: #000;
+  border: none;
+  border-radius: 28px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(240, 185, 11, 0.35);
+  transition: transform 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,0 +1,559 @@
+/* ============================================
+   VTUflash – Global Design System & Animations
+   ============================================ */
+
+/* === Google Fonts === */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+
+/* === Design Tokens === */
+:root {
+  /* Brand Colors */
+  --brand-yellow: #F0B90B;
+  --near-black: #0B0B0B;
+  --page-bg: #F5F5F5;
+  --card-white: #ffffff;
+
+  /* Text Colors */
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --text-tertiary: #777777;
+  --text-muted: #9a9a9a;
+  --text-placeholder: #8a8a8a;
+
+  /* Status Colors */
+  --success: #16A34A;
+  --success-bg: #DCFCE7;
+  --success-text: #15803D;
+  --pending-bg: #FEF3C7;
+  --pending-text: #92400E;
+  --failed: #DC2626;
+  --failed-bg: #FEE2E2;
+  --failed-text: #B91C1C;
+
+  /* Surfaces */
+  --card-shadow: 0 6px 22px rgba(0, 0, 0, 0.07);
+  --card-shadow-strong: 0 10px 26px rgba(0, 0, 0, 0.22);
+  --btn-shadow: 0 6px 22px rgba(0, 0, 0, 0.09);
+  --input-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --chip-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  --back-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --nav-shadow: 0 -6px 20px rgba(0, 0, 0, 0.06);
+  --yellow-glow: 0 0 0 2px #F0B90B, 0 6px 18px rgba(240, 185, 11, 0.35);
+
+  /* Radii */
+  --radius-pill: 28px;
+  --radius-card: 22px;
+  --radius-logo: 22px;
+  --radius-full: 50%;
+
+  /* Sizes */
+  --btn-height: 56px;
+  --input-height: 54px;
+  --chip-height: 44px;
+  --nav-height: 86px;
+  --screen-width: 390px;
+  --screen-height: 844px;
+
+  /* Typography */
+  --font-family: 'Outfit', sans-serif;
+
+  /* Motion Tokens */
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 500ms;
+}
+
+/* === Reset & Base === */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: var(--font-family);
+  background: #000;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+}
+
+/* === Mobile Frame === */
+.app-frame {
+  position: relative;
+  width: var(--screen-width);
+  height: var(--screen-height);
+  overflow: hidden;
+  background: var(--page-bg);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+  border-radius: 40px;
+}
+
+/* === Scrollable Screen Content === */
+.screen {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.screen::-webkit-scrollbar {
+  display: none;
+}
+
+/* === SVG Icons === */
+svg.ic {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* === Button Base === */
+button, input, select, textarea {
+  font-family: var(--font-family);
+  border: none;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input::placeholder {
+  color: var(--text-placeholder);
+}
+
+/* === Component Classes === */
+
+/* Card */
+.card {
+  background: var(--card-white);
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-shadow);
+}
+
+/* Primary Button */
+.btn {
+  height: var(--btn-height);
+  border-radius: var(--radius-pill);
+  border: none;
+  background: var(--brand-yellow);
+  color: #000;
+  font-size: 17px;
+  font-weight: 600;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform var(--duration-fast);
+  cursor: pointer;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn.w {
+  background: var(--card-white);
+  color: #000;
+  box-shadow: var(--btn-shadow);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Label */
+.lab {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 18px 0 8px 6px;
+}
+
+/* Input */
+.in {
+  height: var(--input-height);
+  border-radius: 27px;
+  border: none;
+  background: var(--card-white);
+  box-shadow: var(--input-shadow);
+  padding: 0 22px;
+  font-size: 16px;
+  color: #000;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Dark Input (Login/Register) */
+.in-dark {
+  height: 56px;
+  border-radius: 28px;
+  border: none;
+  background: #1c1c1c;
+  color: #fff;
+  text-align: center;
+  font-family: var(--font-family);
+  font-size: 17px;
+  outline: none;
+  width: 100%;
+}
+
+.in-dark::placeholder {
+  color: var(--text-placeholder);
+}
+
+/* Network/Provider Tile */
+.net {
+  width: 76px;
+  height: 76px;
+  border-radius: var(--radius-logo);
+  background: var(--card-white);
+  box-shadow: var(--input-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  color: #000;
+  transition: box-shadow var(--duration-fast), transform var(--duration-fast);
+  cursor: pointer;
+}
+
+.net.on {
+  background: var(--card-white);
+  box-shadow: var(--yellow-glow);
+  transform: scale(1.04);
+}
+
+/* Chip */
+.chip {
+  height: var(--chip-height);
+  border-radius: 22px;
+  background: var(--card-white);
+  box-shadow: var(--chip-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  padding: 0 18px;
+  color: #000;
+  transition: background var(--duration-fast), color var(--duration-fast);
+  cursor: pointer;
+}
+
+.chip.on {
+  background: var(--brand-yellow);
+  color: #000;
+}
+
+/* Grid & Flex Utilities */
+.g { display: grid; gap: 10px; }
+.fx { display: flex; align-items: center; }
+.sp { justify-content: space-between; }
+
+/* Detail Row */
+.rw {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  padding: 9px 0;
+}
+
+.rw span:first-child { color: var(--text-tertiary); }
+.rw span:last-child { font-weight: 500; }
+
+/* Back Button */
+.bk {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: var(--card-white);
+  box-shadow: var(--back-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  cursor: pointer;
+  transition: transform var(--duration-fast);
+}
+
+.bk:active {
+  transform: scale(0.95);
+}
+
+/* Icon Circle */
+.ico {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #FFF4CC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+/* Nav Item */
+.nv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color var(--duration-fast);
+}
+
+/* Keypad Key */
+.key {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--card-white);
+  box-shadow: var(--chip-shadow);
+  border: none;
+  font-size: 26px;
+  font-weight: 500;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--duration-fast), background var(--duration-fast);
+}
+
+.key:active {
+  transform: scale(0.93);
+  background: #f0f0f0;
+}
+
+/* Status Pills */
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.pill.success { background: var(--success-bg); color: var(--success-text); }
+.pill.pending { background: var(--pending-bg); color: var(--pending-text); }
+.pill.failed  { background: var(--failed-bg); color: var(--failed-text); }
+.pill.locked  { background: #F1F1F1; color: #555; }
+.pill.next    { background: var(--pending-bg); color: var(--pending-text); }
+
+/* Service Grid */
+.row4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: 16px;
+  padding: 16px 8px;
+}
+
+.it {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #111;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tl {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #F4F4F4;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--duration-fast), background var(--duration-fast);
+}
+
+.it:active .tl {
+  transform: scale(0.92);
+}
+
+/* Skeleton Shimmer */
+.skeleton {
+  background: linear-gradient(90deg, #eee 25%, #f7f7f7 50%, #eee 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 12px;
+}
+
+/* ============================================
+   Keyframe Animations
+   ============================================ */
+
+/* Page Transitions */
+@keyframes page-in-forward {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes page-out-forward {
+  from { transform: none; opacity: 1; }
+  to { transform: translateX(-25%); opacity: 0.6; }
+}
+
+@keyframes page-in-back {
+  from { transform: translateX(-25%); opacity: 0.6; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes page-out-back {
+  from { transform: none; }
+  to { transform: translateX(100%); }
+}
+
+/* UI Animations */
+@keyframes fade-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes pop-small {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.7); opacity: 0.7; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200px 0; }
+  to { background-position: 200px 0; }
+}
+
+@keyframes load {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+@keyframes scale-fade-in {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes scrim-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dot-fill {
+  from { transform: scale(0.6); }
+  to { transform: scale(1); }
+}
+
+@keyframes check-draw {
+  from { stroke-dashoffset: 30; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rotate-slow {
+  to { transform: rotate(360deg); }
+}
+
+/* Banner Carousel */
+@keyframes slide {
+  0%, 16% { transform: translateX(0); }
+  20%, 36% { transform: translateX(-358px); }
+  40%, 56% { transform: translateX(-716px); }
+  60%, 76% { transform: translateX(-1074px); }
+  80%, 96% { transform: translateX(-1432px); }
+  100% { transform: translateX(-1432px); }
+}
+
+@keyframes d1 { 0%,16%,80%,100% { width: 18px; background: #000; } 20%,76% { width: 6px; background: rgba(0,0,0,.25); } }
+@keyframes d2 { 0%,16%,40%,100% { width: 6px; background: rgba(0,0,0,.25); } 20%,36% { width: 18px; background: #000; } }
+@keyframes d3 { 0%,36%,60%,100% { width: 6px; background: rgba(0,0,0,.25); } 40%,56% { width: 18px; background: #000; } }
+@keyframes d4 { 0%,56%,80%,100% { width: 6px; background: rgba(0,0,0,.25); } 60%,76% { width: 18px; background: #000; } }
+
+/* === Stagger Utility === */
+.stagger { animation: fade-up var(--duration-base) var(--ease-out) both; animation-delay: calc(var(--i, 0) * 50ms); }
+
+/* === Animation Classes === */
+.anim-pop { animation: pop 450ms var(--ease-out) both; }
+.anim-pop-small { animation: pop-small 600ms var(--ease-out) both; }
+.anim-fade-up { animation: fade-up var(--duration-base) var(--ease-out) both; }
+.anim-fade-in { animation: fade-in var(--duration-base) var(--ease-out) both; }
+.anim-shake { animation: shake 400ms; }
+.anim-spin { animation: spin 1s linear infinite; }
+.anim-scale-fade { animation: scale-fade-in 250ms var(--ease-out) both; }
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
