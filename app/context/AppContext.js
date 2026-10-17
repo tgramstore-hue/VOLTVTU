@@ -9,10 +9,12 @@ const INITIAL_STATE = {
     initial: 'E',
     phone: '080 0000 0000',
     email: 'etim@example.com',
-    balance: 0,
-    cashback: 0,
+    balance: 15400,
+    cashback: 320,
+    voltPoints: 2450,
     tier: 1,
     kycStatus: 'none', // none | pending | verified | failed
+    profileImage: null,
   },
   transactions: [
     { id: 1, type: 'airtime', title: 'MTN Airtime', amount: -1000, status: 'successful', date: 'today', time: '2:34 PM', icon: 'phone' },
@@ -41,6 +43,11 @@ export function AppProvider({ children }) {
     if (dir === 'forward') {
       historyStack.current.push(to);
     }
+    // Update active tab if screen matches a tab
+    if (to === 'dashboard') setActiveTab('home');
+    else if (to === 'services') setActiveTab('services');
+    else if (to === 'rewards') setActiveTab('rewards');
+    else if (to === 'profile') setActiveTab('me');
   }, [screen]);
 
   const goBack = useCallback(() => {
@@ -50,22 +57,26 @@ export function AppProvider({ children }) {
       setDirection('back');
       setPrevScreen(screen);
       setScreen(prev);
+      if (prev === 'dashboard') setActiveTab('home');
+      else if (prev === 'services') setActiveTab('services');
+      else if (prev === 'rewards') setActiveTab('rewards');
+      else if (prev === 'profile') setActiveTab('me');
     }
   }, [screen]);
 
   const switchTab = useCallback((tab) => {
     const tabScreenMap = {
       home: 'dashboard',
-      rewards: 'dashboard',
-      history: 'transactions',
-      support: 'dashboard',
+      services: 'services',
+      rewards: 'rewards',
       me: 'profile',
     };
     setActiveTab(tab);
     setDirection('tab');
     setPrevScreen(screen);
-    setScreen(tabScreenMap[tab] || 'dashboard');
-    historyStack.current = [tabScreenMap[tab] || 'dashboard'];
+    const targetScreen = tabScreenMap[tab] || 'dashboard';
+    setScreen(targetScreen);
+    historyStack.current = [targetScreen];
   }, [screen]);
 
   const setPurchase = useCallback((purchase) => {

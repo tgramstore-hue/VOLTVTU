@@ -1,0 +1,98 @@
+.container {
+  min-height: 844px;
+  background: var(--bg);
+  padding: 0 16px 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: 'Outfit', sans-serif;
+  color: #000;
+  scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg);
+  padding: 24px 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.categorySection {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.categoryTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--mut);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-left: 4px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.serviceCard {
+  background: #fff;
+  border-radius: 22px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  border: 1.5px solid transparent;
+}
+
+.serviceCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.serviceCard:active {
+  transform: scale(0.97);
+}
+
+.iconWrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background: #FFF4CC;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardName {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+}
+
+.cardDesc {
+  font-size: 12px;
+  color: #777;
+  line-height: 1.3;
+}

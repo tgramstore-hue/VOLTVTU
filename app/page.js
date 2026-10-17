@@ -1,11 +1,14 @@
 'use client';
 import { useApp } from './context/AppContext';
+import BottomNav from './components/BottomNav';
 import SplashScreen from './screens/splash/Splash';
 import LoginScreen from './screens/login/Login';
 import RegisterScreen from './screens/register/Register';
 import FingerprintScreen from './screens/fingerprint/Fingerprint';
 import UnlockPINScreen from './screens/unlock-pin/UnlockPIN';
 import DashboardScreen from './screens/dashboard/Dashboard';
+import ServicesScreen from './screens/services/Services';
+import RewardsScreen from './screens/rewards/Rewards';
 import AirtimeScreen from './screens/airtime/Airtime';
 import DataScreen from './screens/data/Data';
 import CableScreen from './screens/cable/Cable';
@@ -47,6 +50,10 @@ export default function App() {
         return <UnlockPINScreen />;
       case 'dashboard':
         return <DashboardScreen />;
+      case 'services':
+        return <ServicesScreen />;
+      case 'rewards':
+        return <RewardsScreen />;
       case 'airtime':
         return <AirtimeScreen />;
       case 'data':
@@ -100,9 +107,14 @@ export default function App() {
     ? 'anim-fade-in'
     : 'anim-fade-in';
 
+  const isTabScreen = ['dashboard', 'services', 'rewards', 'profile'].includes(screen);
+
   return (
-    <div key={screen} className={`screen ${animClass}`}>
-      {renderScreen()}
-    </div>
+    <>
+      <div key={screen} className={`screen ${animClass}`} style={{ paddingBottom: isTabScreen ? '86px' : undefined }}>
+        {renderScreen()}
+      </div>
+      {isTabScreen && <BottomNav />}
+    </>
   );
 }

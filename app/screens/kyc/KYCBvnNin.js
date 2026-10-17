@@ -1,66 +1,88 @@
 'use client';
 import { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import PageHeader from '../../components/PageHeader';
-import styles from './KYC.module.css';
+import { IconChevronLeft, IconLock, IconCheck } from '../../components/Icons';
 
 export default function KYCBvnNinScreen() {
   const { navigate, goBack } = useApp();
   const [docType, setDocType] = useState('bvn');
-  const [number, setNumber] = useState('22345678901');
+  const [value, setValue] = useState('');
+  const [agreed, setAgreed] = useState(true);
 
-  const isValid = number.length === 11;
+  const isValid = value.length === 11 && agreed;
 
   return (
-    <div className={styles.container}>
-      <PageHeader title="Identity Number" onBack={goBack} />
+    <div style={{ position: 'relative', width: '390px', minHeight: '844px', background: '#f5f5f5', color: '#000', overflowY: 'auto', overflowX: 'hidden', fontFamily: "'Outfit', sans-serif", paddingBottom: '90px' }}>
+      {/* Top Header */}
+      <div className="fx" style={{ position: 'sticky', top: 0, zIndex: 50, background: '#f5f5f5', padding: '24px 16px 12px', gap: '14px', display: 'flex', alignItems: 'center' }}>
+        <button type="button" className="bk" aria-label="Back" onClick={goBack}>
+          <IconChevronLeft size={22} />
+        </button>
+        <span style={{ fontSize: '21px', fontWeight: 600 }}>BVN or NIN</span>
+      </div>
 
-      <div className={styles.content}>
-        <div className={styles.toggleWrap}>
+      <div style={{ padding: '0 16px', marginTop: '10px' }}>
+        {/* Toggle Chips */}
+        <div className="g" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           <button
             type="button"
-            className={`${styles.toggleBtn} ${docType === 'bvn' ? styles.toggleActive : ''}`}
-            onClick={() => setDocType('bvn')}
+            className={`chip ${docType === 'bvn' ? 'on' : ''}`}
+            onClick={() => { setDocType('bvn'); setValue(''); }}
           >
-            Bank Verification Number (BVN)
+            BVN
           </button>
           <button
             type="button"
-            className={`${styles.toggleBtn} ${docType === 'nin' ? styles.toggleActive : ''}`}
-            onClick={() => setDocType('nin')}
+            className={`chip ${docType === 'nin' ? 'on' : ''}`}
+            onClick={() => { setDocType('nin'); setValue(''); }}
           >
-            National Identity (NIN)
+            NIN
           </button>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#666', textTransform: 'uppercase' }}>
-            Enter 11-Digit {docType.toUpperCase()}
-          </span>
-          <input
-            type="text"
-            className={styles.input}
-            placeholder="e.g. 22233344455"
-            value={number}
-            onChange={(e) => setNumber(e.target.value.replace(/\D/g, ''))}
-            maxLength={11}
-          />
+        <div className="lab" style={{ fontSize: '14px', color: '#666', margin: '18px 0 8px 6px' }}>
+          Enter your 11-digit {docType.toUpperCase()}
         </div>
 
-        <div style={{ fontSize: 13, color: '#666', lineHeight: 1.5, background: '#fff', padding: '14px 16px', borderRadius: 18 }}>
-          🔒 Your {docType.toUpperCase()} is encrypted with 256-bit bank grade security and is only used to verify your full legal identity with official databases.
+        <input
+          className="in"
+          type="text"
+          placeholder="00000000000"
+          value={value}
+          maxLength={11}
+          onChange={(e) => setValue(e.target.value.replace(/\D/g, ''))}
+        />
+
+        {/* Security Note Card */}
+        <div className="card fx" style={{ gap: '12px', padding: '14px 16px', marginTop: '18px', fontSize: '14px', color: '#444', lineHeight: 1.5, display: 'flex', alignItems: 'center' }}>
+          <IconLock size={22} />
+          <span>Your details are used only to verify your identity and are kept secure.</span>
         </div>
 
-        <div className={styles.btnWrap}>
-          <button
-            type="button"
-            className={styles.btn}
-            disabled={!isValid}
-            onClick={() => navigate('kyc-selfie')}
-          >
-            Continue
-          </button>
+        {/* Consent Checkbox */}
+        <div
+          className="fx"
+          style={{ gap: '12px', marginTop: '22px', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+          onClick={() => setAgreed(!agreed)}
+        >
+          <div style={{ width: '24px', height: '24px', borderRadius: '8px', background: agreed ? '#F0B90B' : '#ddd', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', flex: 'none', transition: 'background 0.2s' }}>
+            {agreed && <IconCheck size={16} />}
+          </div>
+          <span style={{ fontSize: '14px', color: '#444' }}>I agree to the verification terms</span>
         </div>
+      </div>
+
+      {/* Stationary Bottom Button */}
+      <div style={{ position: 'fixed', maxWidth: '390px', width: '100%', left: '50%', transform: 'translateX(-50%)', bottom: '24px', padding: '0 16px', boxSizing: 'border-box', zIndex: 40 }}>
+        <button
+          type="button"
+          className="btn"
+          disabled={!isValid}
+          style={{ opacity: isValid ? 1 : 0.5, cursor: isValid ? 'pointer' : 'not-allowed' }}
+          onClick={() => navigate('kyc-selfie')}
+        >
+          Continue
+        </button>
       </div>
     </div>
   );

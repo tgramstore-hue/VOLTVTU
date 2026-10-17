@@ -104,8 +104,6 @@ export default function HistoryScreen() {
           No transactions found.
         </div>
       )}
-
-      <BottomNav />
     </div>
   );
 }

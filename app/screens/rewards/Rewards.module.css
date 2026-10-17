@@ -1,0 +1,195 @@
+.container {
+  min-height: 844px;
+  background: var(--bg);
+  padding: 0 16px 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: 'Outfit', sans-serif;
+  color: #000;
+  scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg);
+  padding: 24px 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.pointsCard {
+  background: #0B0B0B;
+  color: #fff;
+  border-radius: 24px;
+  padding: 22px 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.pointsTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.pointsLabel {
+  font-size: 13px;
+  color: #bdbdbd;
+}
+
+.pointsValue {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--y);
+  letter-spacing: -0.5px;
+  margin-top: 4px;
+}
+
+.pointsCashEq {
+  font-size: 13px;
+  color: #86EFAC;
+  font-weight: 600;
+}
+
+.redeemBtn {
+  background: var(--y);
+  color: #000;
+  border: none;
+  height: 44px;
+  border-radius: 22px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.redeemBtn:active {
+  transform: scale(0.97);
+}
+
+.referralCard {
+  background: #fff;
+  border-radius: 22px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.refTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111;
+}
+
+.refSub {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.codeBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F5F5F5;
+  border: 1.5px dashed #ccc;
+  border-radius: 18px;
+  padding: 10px 16px;
+}
+
+.codeText {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #000;
+}
+
+.copyCodeBtn {
+  background: #0B0B0B;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.streakCard {
+  background: #fff;
+  border-radius: 22px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.streakTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 14px;
+}
+
+.daysRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.dayItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.dayCoin {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #777;
+  border: 1.5px solid transparent;
+}
+
+.dayCoinActive {
+  background: #DCFCE7;
+  color: #15803D;
+  border-color: #86EFAC;
+}
+
+.dayCoinToday {
+  background: var(--y);
+  color: #000;
+  box-shadow: 0 4px 12px rgba(240, 185, 11, 0.4);
+}
+
+.dayLabel {
+  font-size: 11px;
+  color: #888;
+}
