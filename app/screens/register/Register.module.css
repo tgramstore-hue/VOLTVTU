@@ -19,52 +19,74 @@
   to { transform: none; }
 }
 
-.logoMark {
+.brandHeader {
   position: absolute;
   left: 24px;
-  top: 56px;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
+  top: 54px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 2;
+  animation: fade-up 400ms 200ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.logoMark {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.logoInner {
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
-  background: #F0B90B;
+.brandName {
+  font-size: 20px;
+  font-weight: 800;
+  color: #000;
+  letter-spacing: -0.4px;
+}
+
+.brandHighlight {
+  color: #D97706;
 }
 
 .signInLink {
   position: absolute;
   right: 24px;
-  top: 66px;
+  top: 60px;
   color: #000;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   z-index: 2;
   background: none;
   border: none;
-  cursor: pointer;
+  cursor: default;
 }
 
-.title {
+.headingArea {
   position: absolute;
   left: 0;
   right: 0;
-  top: 120px;
-  margin: 0;
+  top: 115px;
   text-align: center;
-  font-size: 42px;
-  font-weight: 600;
+  z-index: 2;
+}
+
+.title {
+  margin: 0;
+  font-size: 38px;
+  font-weight: 700;
   color: #000;
   letter-spacing: -1px;
-  z-index: 2;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+  margin-top: 2px;
 }
 
 .form {
@@ -118,7 +140,7 @@
   font-size: 18px;
   font-weight: 600;
   margin-top: 12px;
-  cursor: pointer;
+  cursor: default;
   font-family: 'Outfit', sans-serif;
   display: flex;
   align-items: center;

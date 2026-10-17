@@ -30,7 +30,7 @@
   font-size: 14px;
   font-weight: 700;
   color: #666;
-  cursor: pointer;
+  cursor: default;
   transition: all 0.2s;
 }
 
@@ -104,7 +104,7 @@
   border-radius: 16px;
   font-size: 12px;
   font-weight: 700;
-  cursor: pointer;
+  cursor: default;
 }
 
 .accountBottom {
@@ -170,7 +170,7 @@
   font-size: 14px;
   font-weight: 700;
   color: #111;
-  cursor: pointer;
+  cursor: default;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   transition: all 0.18s;
 }
@@ -194,8 +194,8 @@
   border-radius: 28px;
   font-size: 16px;
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(240, 185, 11, 0.35);
+  cursor: default;
+  box-shadow: none;
   transition: transform 0.18s;
   display: flex;
   align-items: center;

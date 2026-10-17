@@ -1,0 +1,172 @@
+.container {
+  min-height: 844px;
+  background: #F5F5F5;
+  padding: 16px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Outfit', sans-serif;
+}
+
+.headerRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.markReadBtn {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  background: none;
+  border: none;
+  color: #B08A00;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+}
+
+/* Tabs */
+.tabsRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.tabBtn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 19px;
+  background: #fff;
+  border: 1px solid #EAEAEA;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  transition: all 0.15s;
+}
+
+.tabBtnActive {
+  background: #F0B90B;
+  color: #000;
+  border-color: #F0B90B;
+}
+
+/* List */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+  transition: background 0.15s;
+}
+
+.cardUnread {
+  border-left: 3.5px solid #F0B90B;
+}
+
+.iconWrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconGreen {
+  background: #DCFCE7;
+  color: #15803D;
+}
+
+.iconYellow {
+  background: #FEF3C7;
+  color: #B08A00;
+}
+
+.iconBlue {
+  background: #DBEAFE;
+  color: #1D4ED8;
+}
+
+.iconRed {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.cardContent {
+  flex: 1;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.itemTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+}
+
+.unreadDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #F0B90B;
+  flex-shrink: 0;
+}
+
+.itemMessage {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.45;
+  margin-top: 4px;
+}
+
+.itemTime {
+  font-size: 11px;
+  color: #999;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* Empty state */
+.emptyState {
+  background: #fff;
+  border-radius: 22px;
+  padding: 40px 20px;
+  text-align: center;
+  margin-top: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+}
+
+.emptyIcon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.emptyTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+}
+
+.emptySub {
+  font-size: 13px;
+  color: #777;
+  margin-top: 6px;
+}

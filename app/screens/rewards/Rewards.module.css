@@ -75,7 +75,7 @@
   border-radius: 22px;
   font-size: 14px;
   font-weight: 700;
-  cursor: pointer;
+  cursor: default;
   transition: transform 0.15s;
 }
 
@@ -131,7 +131,7 @@
   border-radius: 14px;
   font-size: 12px;
   font-weight: 700;
-  cursor: pointer;
+  cursor: default;
 }
 
 .streakCard {

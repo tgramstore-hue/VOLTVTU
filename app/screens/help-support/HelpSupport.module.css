@@ -1,0 +1,205 @@
+.container {
+  min-height: 844px;
+  background: #F5F5F5;
+  padding: 16px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Outfit', sans-serif;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 14px;
+}
+
+.banner {
+  background: #0B0B0B;
+  color: #fff;
+  border-radius: 22px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+}
+
+.bannerBadge {
+  display: inline-block;
+  background: rgba(240, 185, 11, 0.2);
+  color: #F0B90B;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 10px;
+  align-self: flex-start;
+}
+
+.bannerTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 4px;
+}
+
+.bannerSub {
+  font-size: 13px;
+  color: #aaa;
+  line-height: 1.4;
+}
+
+/* Contact Grid */
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.contactCard {
+  background: #fff;
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+  cursor: default;
+  transition: transform 0.12s;
+}
+
+.contactCard:active {
+  transform: scale(0.97);
+}
+
+.contactIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconGreen {
+  background: #DCFCE7;
+  color: #15803D;
+}
+
+.iconYellow {
+  background: #FEF3C7;
+  color: #B08A00;
+}
+
+.iconBlue {
+  background: #DBEAFE;
+  color: #1D4ED8;
+}
+
+.iconPurple {
+  background: #F3E8FF;
+  color: #7E22CE;
+}
+
+.contactName {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.contactAction {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+/* FAQs */
+.faqSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.sectionTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faqCard {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px 18px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+  cursor: default;
+  transition: all 0.15s;
+}
+
+.faqHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.faqQuestion {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+  line-height: 1.35;
+}
+
+.faqChevron {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.faqChevronOpen {
+  transform: rotate(180deg);
+}
+
+.faqAnswer {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #F3F3F3;
+}
+
+/* Button */
+.btnWrap {
+  margin-top: 10px;
+}
+
+.btn {
+  width: 100%;
+  height: 56px;
+  background: #F0B90B;
+  color: #000;
+  border: none;
+  border-radius: 28px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  transition: transform 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 16px;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}

@@ -70,6 +70,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  cursor: default !important;
 }
 
 html, body {
@@ -90,15 +91,22 @@ body {
   min-height: 100dvh;
 }
 
-/* === Mobile Frame === */
+/* === Mobile Frame — fills screen on real phones, framed on desktop === */
 .app-frame {
   position: relative;
-  width: var(--screen-width);
-  height: var(--screen-height);
+  width: 100vw;
+  height: 100dvh;
   overflow: hidden;
   background: var(--page-bg);
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
-  border-radius: 40px;
+}
+
+@media (min-width: 480px) {
+  .app-frame {
+    width: var(--screen-width);
+    height: var(--screen-height);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+    border-radius: 40px;
+  }
 }
 
 /* === Scrollable Screen Content === */
@@ -129,15 +137,17 @@ button, input, select, textarea {
   font-family: var(--font-family);
   border: none;
   outline: none;
+  cursor: default;
 }
 
 button {
-  cursor: pointer;
+  cursor: default;
   -webkit-tap-highlight-color: transparent;
 }
 
 a {
   text-decoration: none;
+  cursor: default;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -169,7 +179,7 @@ input::placeholder {
   justify-content: center;
   gap: 10px;
   transition: transform var(--duration-fast);
-  cursor: pointer;
+  cursor: default;
 }
 
 .btn:active {
@@ -244,7 +254,7 @@ input::placeholder {
   border: none;
   color: #000;
   transition: box-shadow var(--duration-fast), transform var(--duration-fast);
-  cursor: pointer;
+  cursor: default;
 }
 
 .net.on {
@@ -268,7 +278,7 @@ input::placeholder {
   padding: 0 18px;
   color: #000;
   transition: background var(--duration-fast), color var(--duration-fast);
-  cursor: pointer;
+  cursor: default;
 }
 
 .chip.on {
@@ -304,7 +314,7 @@ input::placeholder {
   align-items: center;
   justify-content: center;
   color: #000;
-  cursor: pointer;
+  cursor: default;
   transition: transform var(--duration-fast);
 }
 
@@ -331,7 +341,7 @@ input::placeholder {
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  cursor: pointer;
+  cursor: default;
   transition: color var(--duration-fast);
 }
 
@@ -349,7 +359,7 @@ input::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  cursor: default;
   transition: transform var(--duration-fast), background var(--duration-fast);
 }
 
@@ -389,7 +399,7 @@ input::placeholder {
   font-size: 12.5px;
   color: #111;
   text-align: center;
-  cursor: pointer;
+  cursor: default;
 }
 
 .tl {

@@ -1,123 +1,184 @@
 .container {
-  min-height: 844px;
-  background: var(--bg);
-  padding: 24px 20px 84px;
+  background: #F5F5F5;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  padding: 0 20px 100px;
+  gap: 14px;
+  overflow-y: auto;
 }
 
+/* Sticky header */
+.header {
+  position: sticky;
+  top: 0;
+  background: #F5F5F5;
+  padding: 24px 0 10px;
+  z-index: 10;
+}
+
+.headerTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+/* Avatar card */
 .userCard {
-  background: #0B0B0B;
-  color: #fff;
-  border-radius: 24px;
-  padding: 24px 20px;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+  padding: 16px 18px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  gap: 14px;
 }
 
-.avatar {
+.avatarWrap {
+  position: relative;
+  flex-shrink: 0;
   width: 58px;
   height: 58px;
+  cursor: default;
+}
+
+.avatarCircle {
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  background: var(--y);
+  border: 2px solid #F0B90B;
+  overflow: hidden;
+  background: #F0B90B;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatarInitial {
+  width: 100%;
+  height: 100%;
+  background: #F0B90B;
   color: #000;
   font-size: 24px;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
 }
 
-.name {
-  font-size: 18px;
-  font-weight: 800;
-  color: #fff;
-}
-
-.phone {
-  font-size: 13px;
-  color: #aaa;
-  margin-top: 2px;
-}
-
-.tierPill {
-  display: inline-block;
-  background: rgba(240, 185, 11, 0.2);
-  color: var(--y);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 10px;
-  margin-top: 6px;
-}
-
-.kycBanner {
-  background: #FEF9C3;
-  border: 1px solid #FDE047;
-  border-radius: 20px;
-  padding: 16px 18px;
+/* Camera badge right on top of the profile icon */
+.cameraBadge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #F0B90B;
+  border: 2px solid #fff;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  transition: transform 0.15s;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  cursor: default;
+  transition: transform 0.12s;
 }
 
-.kycBanner:active {
-  transform: scale(0.98);
+.cameraBadge:active {
+  transform: scale(0.9);
 }
 
-.kycTitle {
-  font-size: 14px;
+.userInfo {
+  flex: 1;
+  cursor: default;
+}
+
+.userNameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userName {
+  font-size: 17px;
   font-weight: 700;
-  color: #854D0E;
+  color: #111;
 }
 
-.kycSub {
-  font-size: 12px;
-  color: #A16207;
+.tierTag {
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.userPhone {
+  font-size: 13px;
+  color: #888;
   margin-top: 2px;
 }
 
-.menuSection {
+/* Menu card */
+.menuCard {
   background: #fff;
   border-radius: 22px;
-  padding: 6px 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+  padding: 0 16px;
+  overflow: hidden;
 }
 
-.menuItem {
+.menuRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 16px 0;
   border-bottom: 1px solid #F3F3F3;
-  cursor: pointer;
+  cursor: default;
+  transition: background 0.15s;
 }
 
-.menuItem:last-child {
+.menuRow:active {
+  background: #FAFAFA;
+}
+
+.menuRow:last-child {
   border-bottom: none;
 }
 
 .menuLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+}
+
+.menuIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #FFF8D6;
+  color: #B08A00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.menuLabel {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   color: #111;
 }
 
-.menuChevron {
-  font-size: 16px;
-  color: #bbb;
-}
-
+/* Logout button */
 .logoutBtn {
-  margin-top: 10px;
   height: 52px;
   background: #fff;
   color: #DC2626;
@@ -125,11 +186,12 @@
   border-radius: 26px;
   font-size: 15px;
   font-weight: 700;
+  font-family: 'Outfit', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.15s;
+  transition: background 0.15s;
+  cursor: default;
 }
 
 .logoutBtn:active {

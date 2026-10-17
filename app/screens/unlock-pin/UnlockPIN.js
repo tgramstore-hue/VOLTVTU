@@ -83,7 +83,7 @@ export default function UnlockPINScreen() {
         <button
           type="button"
           className={styles.forgot}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', margin: '26px auto 0' }}
+          style={{ background: 'none', border: 'none', cursor: 'default', margin: '26px auto 0' }}
           onClick={() => navigate('create-pin')}
         >
           Forgot PIN? Reset or Create New

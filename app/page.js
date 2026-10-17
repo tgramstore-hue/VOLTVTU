@@ -24,6 +24,10 @@ import PaymentFailedScreen from './screens/payment-failed/PaymentFailed';
 import AddMoneyScreen from './screens/add-money/AddMoney';
 import HistoryScreen from './screens/history/History';
 import ProfileScreen from './screens/profile/Profile';
+import ProfileInfoScreen from './screens/profile-info/ProfileInfo';
+import NotificationsScreen from './screens/notifications/Notifications';
+import HelpSupportScreen from './screens/help-support/HelpSupport';
+import DownloadStatementScreen from './screens/download-statement/DownloadStatement';
 import KYCOverviewScreen from './screens/kyc/KYCOverview';
 import KYCBvnNinScreen from './screens/kyc/KYCBvnNin';
 import KYCSelfieScreen from './screens/kyc/KYCSelfie';
@@ -85,6 +89,14 @@ export default function App() {
         return <HistoryScreen />;
       case 'profile':
         return <ProfileScreen />;
+      case 'profile-info':
+        return <ProfileInfoScreen />;
+      case 'notifications':
+        return <NotificationsScreen />;
+      case 'help-support':
+        return <HelpSupportScreen />;
+      case 'download-statement':
+        return <DownloadStatementScreen />;
       case 'kyc-overview':
         return <KYCOverviewScreen />;
       case 'kyc-bvn-nin':
@@ -114,7 +126,7 @@ export default function App() {
 
   return (
     <>
-      <div key={screen} className={`screen ${animClass}`} style={{ paddingBottom: isTabScreen ? '86px' : undefined }}>
+      <div key={screen} className={`screen ${animClass}`} style={{ paddingBottom: isTabScreen ? '72px' : undefined }}>
         {renderScreen()}
       </div>
       {isTabScreen && <BottomNav />}

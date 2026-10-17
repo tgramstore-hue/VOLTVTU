@@ -67,7 +67,7 @@
   color: #555;
   border: 1.5px solid transparent;
   white-space: nowrap;
-  cursor: pointer;
+  cursor: default;
   box-shadow: 0 2px 8px rgba(0,0,0,0.03);
   transition: all 0.18s;
 }
@@ -92,7 +92,7 @@
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-  cursor: pointer;
+  cursor: default;
   transition: all 0.18s;
 }
 
@@ -103,7 +103,7 @@
 .planCardActive {
   border-color: var(--y);
   background: #fffdf5;
-  box-shadow: 0 6px 20px rgba(240, 185, 11, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .planName {
@@ -138,8 +138,8 @@
   border-radius: 28px;
   font-size: 16px;
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(240, 185, 11, 0.35);
+  cursor: default;
+  box-shadow: none;
   transition: transform 0.18s;
   display: flex;
   align-items: center;

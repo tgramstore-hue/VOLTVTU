@@ -44,7 +44,7 @@ export default function KYCUploadIdScreen() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  cursor: 'pointer',
+                  cursor: 'default',
                   boxShadow: isSelected
                     ? '0 0 0 2px #F0B90B, 0 6px 22px rgba(0,0,0,.07)'
                     : '0 6px 22px rgba(0,0,0,.07)',
@@ -75,7 +75,7 @@ export default function KYCUploadIdScreen() {
               justifyContent: 'center',
               gap: '6px',
               color: '#444',
-              cursor: 'pointer',
+              cursor: 'default',
               transition: 'all 0.18s'
             }}
             onClick={() => setFrontUploaded(!frontUploaded)}
@@ -100,7 +100,7 @@ export default function KYCUploadIdScreen() {
               justifyContent: 'center',
               gap: '6px',
               color: '#444',
-              cursor: 'pointer',
+              cursor: 'default',
               transition: 'all 0.18s'
             }}
             onClick={() => setBackUploaded(!backUploaded)}

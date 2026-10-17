@@ -1,0 +1,259 @@
+.container {
+  min-height: 844px;
+  background: #F5F5F5;
+  padding: 16px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Outfit', sans-serif;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.banner {
+  background: #0B0B0B;
+  color: #fff;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.bannerTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.bannerSub {
+  font-size: 13px;
+  color: #aaa;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* Range grid */
+.rangeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.rangeChip {
+  height: 44px;
+  background: #fff;
+  border: 1.5px solid #EAEAEA;
+  border-radius: 22px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  transition: all 0.15s;
+}
+
+.rangeChipActive {
+  background: #F0B90B;
+  border-color: #F0B90B;
+  color: #000;
+}
+
+/* Custom Dates */
+.datesRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.dateField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inputLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+}
+
+.dateInput {
+  height: 46px;
+  background: #fff;
+  border: 1.5px solid #EAEAEA;
+  border-radius: 16px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-family: 'Outfit', sans-serif;
+  color: #111;
+  outline: none;
+}
+
+.inputWrap {
+  display: flex;
+}
+
+.input {
+  width: 100%;
+  height: 52px;
+  background: #fff;
+  border: 1.5px solid transparent;
+  border-radius: 26px;
+  padding: 0 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+  outline: none;
+  font-family: 'Outfit', sans-serif;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: #F0B90B;
+}
+
+/* Options */
+.optionsCard {
+  background: #fff;
+  border-radius: 20px;
+  padding: 12px 16px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+}
+
+.optionRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+.optionRow:last-child {
+  border-bottom: none;
+}
+
+.optionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+.optionSub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: #F0B90B;
+  cursor: default;
+}
+
+/* Format */
+.formatRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.formatBtn {
+  height: 48px;
+  background: #fff;
+  border: 1.5px solid #EAEAEA;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  transition: all 0.15s;
+}
+
+.formatBtnActive {
+  background: #0B0B0B;
+  border-color: #0B0B0B;
+  color: #F0B90B;
+}
+
+/* Success toast */
+.successToast {
+  background: #DCFCE7;
+  border: 1.5px solid #86EFAC;
+  color: #15803D;
+  border-radius: 18px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.2s ease;
+}
+
+.toastTitle {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.toastSub {
+  font-size: 12px;
+  color: #166534;
+  margin-top: 2px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btnWrap {
+  margin-top: 10px;
+}
+
+.btn {
+  width: 100%;
+  height: 56px;
+  background: #F0B90B;
+  color: #000;
+  border: none;
+  border-radius: 28px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  transition: transform 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+}

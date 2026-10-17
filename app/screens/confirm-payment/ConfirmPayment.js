@@ -1,14 +1,14 @@
 'use client';
 import { useApp } from '../../context/AppContext';
-import PageHeader from '../../components/PageHeader';
+import { IconHome, IconCheck } from '../../components/Icons';
 import styles from './ConfirmPayment.module.css';
 
 export default function ConfirmPaymentScreen() {
   const { navigate, goBack, state } = useApp();
   const purchase = state.pendingPurchase || {
-    type: 'Airtime Recharge',
+    type: 'Airtime',
     provider: 'MTN',
-    recipient: '08012345678',
+    recipient: '080 0000 0000',
     amount: 1000,
     fee: 0,
     cashback: 20,
@@ -19,72 +19,58 @@ export default function ConfirmPaymentScreen() {
     navigate('enter-pin');
   };
 
+  const rows = [
+    { label: 'Service',   value: purchase.type },
+    { label: 'Network',   value: purchase.provider },
+    purchase.plan ? { label: 'Plan', value: purchase.plan } : null,
+    purchase.customerName ? { label: 'Customer', value: purchase.customerName } : null,
+    { label: 'Recipient', value: purchase.recipient },
+    { label: 'Fee',       value: `₦${(purchase.fee || 0).toLocaleString()}.00` },
+    { label: 'Total',     value: `₦${(purchase.total || 0).toLocaleString()}` },
+  ].filter(Boolean);
+
   return (
-    <div className={styles.container}>
-      <PageHeader title="Confirm Payment" onBack={goBack} />
+    <div className={styles.scrim} onClick={goBack}>
+      {/* Bottom sheet panel */}
+      <div className={styles.sheet} onClick={e => e.stopPropagation()}>
+        {/* Drag handle */}
+        <div className={styles.handle} />
 
-      <div className={styles.content}>
-        <div className={styles.amountCard}>
-          <div className={styles.amountLabel}>Total Payable Amount</div>
-          <div className={styles.amountVal}>₦{purchase.total?.toLocaleString() || '0'}.00</div>
+        <div className={styles.topLabel}>Confirm Payment</div>
+        <div className={styles.amount}>₦{(purchase.total || 0).toLocaleString()}</div>
+
+        {/* Details card */}
+        <div className={styles.detailCard}>
+          {rows.map((r, i) => (
+            <div key={i} className={styles.row}>
+              <span className={styles.rowLabel}>{r.label}</span>
+              <span className={styles.rowValue}>{r.value}</span>
+            </div>
+          ))}
         </div>
 
-        <div className={styles.detailsCard}>
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Transaction Type</span>
-            <span className={styles.detailValue}>{purchase.type}</span>
-          </div>
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Provider / Network</span>
-            <span className={styles.detailValue}>{purchase.provider}</span>
-          </div>
-          {purchase.plan && (
-            <div className={styles.detailRow}>
-              <span className={styles.detailLabel}>Package / Plan</span>
-              <span className={styles.detailValue}>{purchase.plan}</span>
+        {/* Wallet row */}
+        <div className={styles.walletRow}>
+          <div className={styles.walletLeft}>
+            <div className={styles.walletIcon}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18"/>
+              </svg>
             </div>
-          )}
-          {purchase.customerName && (
-            <div className={styles.detailRow}>
-              <span className={styles.detailLabel}>Customer Name</span>
-              <span className={styles.detailValue}>{purchase.customerName}</span>
+            <div>
+              <div className={styles.walletName}>Wallet</div>
+              <div className={styles.walletBal}>Balance ₦{(state.user?.balance || 0).toLocaleString()}.00</div>
             </div>
-          )}
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Recipient</span>
-            <span className={styles.detailValue}>{purchase.recipient}</span>
           </div>
-          <div className={styles.divider} />
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Subtotal</span>
-            <span className={styles.detailValue}>₦{purchase.amount?.toLocaleString() || '0'}.00</span>
-          </div>
-          {purchase.fee > 0 && (
-            <div className={styles.detailRow}>
-              <span className={styles.detailLabel}>Convenience Fee</span>
-              <span className={styles.detailValue}>₦{purchase.fee.toLocaleString()}.00</span>
-            </div>
-          )}
-          {purchase.cashback > 0 && (
-            <div className={styles.detailRow}>
-              <span className={styles.detailLabel}>Cashback Bonus</span>
-              <span className={styles.detailValue} style={{ color: '#16A34A' }}>
-                +₦{purchase.cashback.toLocaleString()}.00
-              </span>
-            </div>
-          )}
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12l5 5 9-10"/>
+          </svg>
         </div>
 
-        <div className={styles.walletInfo}>
-          <span className={styles.walletLabel}>Pay via Wallet Balance</span>
-          <span className={styles.walletBalance}>₦{state.user.balance.toLocaleString()}.00</span>
-        </div>
-
-        <div className={styles.btnWrap}>
-          <button type="button" className={styles.btn} onClick={handlePay}>
-            Pay ₦{purchase.total?.toLocaleString() || '0'}.00
-          </button>
-        </div>
+        {/* Pay button */}
+        <button type="button" className={styles.payBtn} onClick={handlePay}>
+          Pay ₦{(purchase.total || 0).toLocaleString()}
+        </button>
       </div>
     </div>
   );

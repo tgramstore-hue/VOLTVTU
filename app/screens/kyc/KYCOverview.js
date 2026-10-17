@@ -63,7 +63,7 @@ export default function KYCOverviewScreen() {
               alignItems: 'center',
               justifyContent: 'space-between',
               boxShadow: '0 0 0 2px #F0B90B, 0 6px 22px rgba(0,0,0,.07)',
-              cursor: 'pointer'
+              cursor: 'default'
             }}
             onClick={() => navigate('kyc-bvn-nin')}
           >

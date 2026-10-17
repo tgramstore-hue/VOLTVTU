@@ -62,7 +62,7 @@ export default function KYCBvnNinScreen() {
         {/* Consent Checkbox */}
         <div
           className="fx"
-          style={{ gap: '12px', marginTop: '22px', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+          style={{ gap: '12px', marginTop: '22px', display: 'flex', alignItems: 'center', cursor: 'default' }}
           onClick={() => setAgreed(!agreed)}
         >
           <div style={{ width: '24px', height: '24px', borderRadius: '8px', background: agreed ? '#F0B90B' : '#ddd', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', flex: 'none', transition: 'background 0.2s' }}>

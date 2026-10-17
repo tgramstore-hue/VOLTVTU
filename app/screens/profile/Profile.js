@@ -1,17 +1,109 @@
 'use client';
 import { useRef } from 'react';
 import { useApp } from '../../context/AppContext';
-import {
-  IconShield, IconLock, IconHeadphones, IconChevronRight, IconUser,
-  IconBank, IconList
-} from '../../components/Icons';
 import styles from './Profile.module.css';
+
+function ChevronRight() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 18l6-6-6-6"/>
+    </svg>
+  );
+}
+
+function CameraIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+      <circle cx="12" cy="13" r="4"/>
+    </svg>
+  );
+}
+
+const menuItems = [
+  {
+    id: 'personal-info',
+    label: 'Personal Information',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+    ),
+    screen: 'profile-info',
+  },
+  {
+    id: 'transaction-history',
+    label: 'Transaction History',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+        <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+      </svg>
+    ),
+    screen: 'transactions',
+  },
+  {
+    id: 'kyc',
+    label: 'KYC Verification',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    ),
+    screen: 'kyc-overview',
+  },
+  {
+    id: 'security',
+    label: 'Security & PIN',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    ),
+    screen: 'create-pin',
+  },
+  {
+    id: 'notifications',
+    label: 'Notifications',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    ),
+    screen: 'notifications',
+  },
+  {
+    id: 'invite',
+    label: 'Invite & Earn',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <path d="M14 14h3v3m0 4h4m0-4v4"/>
+      </svg>
+    ),
+    screen: 'rewards',
+  },
+  {
+    id: 'help',
+    label: 'Help & Support',
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+      </svg>
+    ),
+    screen: 'help-support',
+  },
+];
 
 export default function ProfileScreen() {
   const { state, navigate, updateUser } = useApp();
   const fileInputRef = useRef(null);
 
-  const handleAvatarClick = () => {
+  const handleAvatarClick = (e) => {
+    e.stopPropagation();
     fileInputRef.current?.click();
   };
 
@@ -26,14 +118,18 @@ export default function ProfileScreen() {
     }
   };
 
+  const handleItem = (item) => {
+    if (item.screen) navigate(item.screen);
+  };
+
   return (
     <div className={styles.container}>
-      {/* Sticky Top Header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 50, background: 'var(--bg)', padding: '24px 0 12px' }}>
-        <h1 style={{ fontSize: '22px', fontWeight: 700, margin: 0 }}>Profile &amp; Settings</h1>
+      {/* Sticky header */}
+      <div className={styles.header}>
+        <h1 className={styles.headerTitle}>Me</h1>
       </div>
 
-      {/* Hidden File Input for Avatar Upload */}
+      {/* Hidden file input */}
       <input
         ref={fileInputRef}
         type="file"
@@ -42,106 +138,57 @@ export default function ProfileScreen() {
         onChange={handleFileChange}
       />
 
-      {/* User Info Card */}
+      {/* Avatar card with camera badge on top of user profile icon */}
       <div className={styles.userCard}>
-        <div style={{ position: 'relative', cursor: 'pointer' }} onClick={handleAvatarClick} title="Tap to upload profile picture">
-          <div className={styles.avatar}>
+        <div
+          className={styles.avatarWrap}
+          onClick={handleAvatarClick}
+          role="button"
+          aria-label="Upload profile photo"
+        >
+          <div className={styles.avatarCircle}>
             {state.user.profileImage ? (
               <img
                 src={state.user.profileImage}
                 alt="Profile"
-                style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                className={styles.avatarImg}
               />
             ) : (
-              state.user.initial
+              <div className={styles.avatarInitial}>{state.user.initial || 'E'}</div>
             )}
           </div>
-          <div style={{
-            position: 'absolute',
-            bottom: -2,
-            right: -2,
-            width: 22,
-            height: 22,
-            borderRadius: '50%',
-            background: '#F0B90B',
-            color: '#000',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '12px',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
-          }}>
-            📷
+          <div className={styles.cameraBadge} title="Change profile photo">
+            <CameraIcon />
           </div>
         </div>
-        <div style={{ flex: 1 }}>
-          <div className={styles.name}>{state.user.name} Effiong</div>
-          <div className={styles.phone}>{state.user.phone}</div>
-          <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>{state.user.email}</div>
-          <span
-            className={styles.tierPill}
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('kyc-overview')}
+
+        <div className={styles.userInfo} onClick={() => navigate('profile-info')}>
+          <div className={styles.userNameRow}>
+            <div className={styles.userName}>{state.user.name}</div>
+            <span className={styles.tierTag}>Tier {state.user.tier || 1}</span>
+          </div>
+          <div className={styles.userPhone}>{state.user.phone}</div>
+        </div>
+      </div>
+
+      {/* Menu list card */}
+      <div className={styles.menuCard}>
+        {menuItems.map((item) => (
+          <div
+            key={item.id}
+            className={styles.menuRow}
+            onClick={() => handleItem(item)}
           >
-            Tier {state.user.tier} · {state.user.tier === 1 ? 'Basic' : 'Verified'} Account ›
-          </span>
-        </div>
+            <div className={styles.menuLeft}>
+              <div className={styles.menuIcon}>{item.icon}</div>
+              <span className={styles.menuLabel}>{item.label}</span>
+            </div>
+            <ChevronRight />
+          </div>
+        ))}
       </div>
 
-      {/* KYC Upgrade Banner */}
-      <div className={styles.kycBanner} onClick={() => navigate('kyc-overview')}>
-        <div>
-          <div className={styles.kycTitle}>
-            {state.user.tier >= 2 ? 'Identity Verified (Tier 2)' : 'Upgrade to Tier 2 (KYC)'}
-          </div>
-          <div className={styles.kycSub}>
-            {state.user.tier >= 2
-              ? 'Daily limit: ₦5,000,000.00 Active'
-              : 'Unlock daily limit up to ₦5,000,000 with BVN or NIN'}
-          </div>
-        </div>
-        <IconChevronRight size={18} color="#854D0E" />
-      </div>
-
-      {/* Menu Sections */}
-      <div className={styles.menuSection}>
-        <div className={styles.menuItem} onClick={() => navigate('kyc-overview')}>
-          <div className={styles.menuLeft}>
-            <IconShield size={20} />
-            <span>Identity &amp; KYC Verification</span>
-          </div>
-          <span className={styles.menuChevron}>›</span>
-        </div>
-        <div className={styles.menuItem} onClick={() => navigate('transactions')}>
-          <div className={styles.menuLeft}>
-            <IconList size={20} />
-            <span>Transaction History</span>
-          </div>
-          <span className={styles.menuChevron}>›</span>
-        </div>
-        <div className={styles.menuItem} onClick={() => navigate('create-pin')}>
-          <div className={styles.menuLeft}>
-            <IconLock size={20} />
-            <span>Security &amp; Transaction PIN</span>
-          </div>
-          <span className={styles.menuChevron}>›</span>
-        </div>
-        <div className={styles.menuItem} onClick={() => navigate('add-money')}>
-          <div className={styles.menuLeft}>
-            <IconBank size={20} />
-            <span>Bank Transfer &amp; Funding Details</span>
-          </div>
-          <span className={styles.menuChevron}>›</span>
-        </div>
-        <div className={styles.menuItem} onClick={() => alert('Support line: WhatsApp 08000000000')}>
-          <div className={styles.menuLeft}>
-            <IconHeadphones size={20} />
-            <span>Customer Support &amp; WhatsApp</span>
-          </div>
-          <span className={styles.menuChevron}>›</span>
-        </div>
-      </div>
-
+      {/* Logout */}
       <button
         type="button"
         className={styles.logoutBtn}

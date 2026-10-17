@@ -55,13 +55,13 @@ export default function DashboardScreen() {
           <span className={styles.greeting}>Hi, {state.user.name.toUpperCase()}</span>
         </div>
         <div className={styles.headerIcons}>
-          <button type="button" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }} aria-label="Support" onClick={() => alert('Support line: WhatsApp 08000000000')}>
+          <button type="button" style={{ background: 'none', border: 'none', cursor: 'default', padding: 0 }} aria-label="Support" onClick={() => navigate('help-support')}>
             <IconHeadphones size={24} />
           </button>
-          <button type="button" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }} aria-label="Scan QR">
+          <button type="button" style={{ background: 'none', border: 'none', cursor: 'default', padding: 0 }} aria-label="Scan QR" onClick={() => navigate('add-money')}>
             <IconScan size={24} />
           </button>
-          <button type="button" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }} aria-label="Notifications">
+          <button type="button" style={{ background: 'none', border: 'none', cursor: 'default', padding: 0 }} aria-label="Notifications" onClick={() => navigate('notifications')}>
             <IconBell size={24} />
           </button>
         </div>
@@ -98,7 +98,7 @@ export default function DashboardScreen() {
             background: '#fff',
             borderRadius: '20px',
             boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
-            cursor: 'pointer'
+            cursor: 'default'
           }}
           onClick={() => navigate('transactions')}
         >

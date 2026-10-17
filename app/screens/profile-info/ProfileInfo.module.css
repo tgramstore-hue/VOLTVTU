@@ -1,0 +1,229 @@
+.container {
+  min-height: 844px;
+  background: #F5F5F5;
+  padding: 16px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Outfit', sans-serif;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 14px;
+}
+
+/* Avatar centered */
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.avatarWrap {
+  position: relative;
+  width: 86px;
+  height: 86px;
+  cursor: default;
+}
+
+.avatarCircle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid #F0B90B;
+  overflow: hidden;
+  background: #F0B90B;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatarInitial {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 800;
+  color: #000;
+  background: #F0B90B;
+}
+
+.cameraBadge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #F0B90B;
+  border: 2.5px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  cursor: default;
+}
+
+.changePhotoBtn {
+  background: none;
+  border: none;
+  color: #B08A00;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+}
+
+/* Tier status card */
+.tierCard {
+  background: #fff;
+  border-radius: 20px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+}
+
+.tierBadge {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.tierLimit {
+  font-size: 12px;
+  color: #777;
+  margin-top: 3px;
+}
+
+.upgradeBtn {
+  background: #FEF3C7;
+  color: #92400E;
+  border: none;
+  border-radius: 14px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  transition: transform 0.12s;
+}
+
+.upgradeBtn:active {
+  transform: scale(0.95);
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+}
+
+.verifiedTag {
+  background: #DCFCE7;
+  color: #15803D;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.input {
+  height: 52px;
+  background: #fff;
+  border: 1.5px solid transparent;
+  border-radius: 26px;
+  padding: 0 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+  outline: none;
+  transition: border-color 0.18s;
+  font-family: 'Outfit', sans-serif;
+}
+
+.input:focus {
+  border-color: #F0B90B;
+}
+
+.inputDisabled {
+  background: #EAEAEA;
+  color: #666;
+  box-shadow: none;
+}
+
+.successToast {
+  background: #DCFCE7;
+  border: 1px solid #86EFAC;
+  color: #15803D;
+  border-radius: 16px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.btnWrap {
+  margin-top: 14px;
+}
+
+.btn {
+  width: 100%;
+  height: 56px;
+  background: #F0B90B;
+  color: #000;
+  border: none;
+  border-radius: 28px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  transition: transform 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}

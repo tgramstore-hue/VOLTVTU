@@ -6,6 +6,14 @@ export const metadata = {
   description: 'Buy Airtime, Cheap Data Bundles, Pay Electricity Bills, Cable TV & Exam Pins Instantly.',
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
