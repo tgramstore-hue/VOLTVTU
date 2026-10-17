@@ -119,7 +119,7 @@ export default function ProfileScreen() {
           </div>
           <span className={styles.menuChevron}>›</span>
         </div>
-        <div className={styles.menuItem} onClick={() => navigate('unlock-pin')}>
+        <div className={styles.menuItem} onClick={() => navigate('create-pin')}>
           <div className={styles.menuLeft}>
             <IconLock size={20} />
             <span>Security &amp; Transaction PIN</span>

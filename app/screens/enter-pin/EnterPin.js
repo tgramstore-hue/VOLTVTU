@@ -11,6 +11,7 @@ export default function EnterPinScreen() {
   const [shake, setShake] = useState(false);
 
   const purchase = state.pendingPurchase || { total: 1000 };
+  const correctPin = state.user?.pin || '1234';
 
   const handlePress = (num) => {
     if (pinDigits.length >= 4) return;
@@ -18,7 +19,7 @@ export default function EnterPinScreen() {
     setPinDigits(next);
 
     if (next.length === 4) {
-      if (next === '1234') {
+      if (next === correctPin) {
         setTimeout(() => {
           navigate('processing');
         }, 250);
@@ -38,7 +39,7 @@ export default function EnterPinScreen() {
 
   return (
     <div className={styles.container}>
-      <PageHeader title="" onBack={goBack} />
+      <PageHeader title="Enter PIN" onBack={goBack} />
 
       <div className={styles.header}>
         <div className={styles.title}>Enter Transaction PIN</div>
@@ -81,6 +82,16 @@ export default function EnterPinScreen() {
           onClick={handleDelete}
         >
           <IconDelete size={22} />
+        </button>
+      </div>
+
+      <div style={{ textAlign: 'center', marginTop: 12 }}>
+        <button
+          type="button"
+          style={{ background: 'none', border: 'none', color: '#666', fontSize: 14, fontWeight: 500, cursor: 'pointer' }}
+          onClick={() => navigate('create-pin')}
+        >
+          Forgot or Change PIN?
         </button>
       </div>
     </div>

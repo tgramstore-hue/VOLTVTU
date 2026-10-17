@@ -17,6 +17,7 @@ import ExamPinsScreen from './screens/exam-pins/ExamPins';
 import BettingScreen from './screens/betting/Betting';
 import ConfirmPaymentScreen from './screens/confirm-payment/ConfirmPayment';
 import EnterPinScreen from './screens/enter-pin/EnterPin';
+import CreatePinScreen from './screens/create-pin/CreatePin';
 import ProcessingScreen from './screens/processing/Processing';
 import PaymentSuccessScreen from './screens/payment-success/PaymentSuccess';
 import PaymentFailedScreen from './screens/payment-failed/PaymentFailed';
@@ -70,6 +71,8 @@ export default function App() {
         return <ConfirmPaymentScreen />;
       case 'enter-pin':
         return <EnterPinScreen />;
+      case 'create-pin':
+        return <CreatePinScreen />;
       case 'processing':
         return <ProcessingScreen />;
       case 'payment-success':
