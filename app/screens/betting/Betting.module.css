@@ -101,8 +101,13 @@
   transition: all 0.18s;
 }
 
+.chip:hover {
+  background: #FEF3C7;
+  color: #000;
+}
+
 .chipActive {
-  background: var(--y);
+  background: #F0B90B;
   color: #000;
 }
 

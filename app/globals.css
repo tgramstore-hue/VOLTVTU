@@ -243,7 +243,7 @@ input::placeholder {
   height: 76px;
   border-radius: var(--radius-logo);
   background: var(--card-white);
-  box-shadow: var(--input-shadow);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -251,16 +251,17 @@ input::placeholder {
   gap: 5px;
   font-size: 15px;
   font-weight: 600;
-  border: none;
+  border: 2px solid transparent;
   color: #000;
-  transition: box-shadow var(--duration-fast), transform var(--duration-fast);
+  transition: border-color var(--duration-fast), transform var(--duration-fast);
   cursor: default;
 }
 
 .net.on {
   background: var(--card-white);
-  box-shadow: var(--yellow-glow);
-  transform: scale(1.04);
+  border-color: #F0B90B;
+  box-shadow: none;
+  transform: none;
 }
 
 /* Chip */
