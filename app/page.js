@@ -37,6 +37,7 @@ import KYCUploadIdScreen from './screens/kyc/KYCUploadId';
 import KYCProcessingScreen from './screens/kyc/KYCProcessing';
 import KYCVerifiedScreen from './screens/kyc/KYCVerified';
 import KYCFailedScreen from './screens/kyc/KYCFailed';
+import SecurityPinScreen from './screens/security-pin/SecurityPin';
 
 export default function App() {
   const { screen, direction } = useApp();
@@ -97,6 +98,8 @@ export default function App() {
         return <NotificationsScreen />;
       case 'help-support':
         return <HelpSupportScreen />;
+      case 'security-pin':
+        return <SecurityPinScreen />;
       case 'download-statement':
         return <DownloadStatementScreen />;
       case 'virtual-numbers':

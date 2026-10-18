@@ -62,13 +62,15 @@ export default function KYCOverviewScreen() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              boxShadow: '0 0 0 2px #F0B90B, 0 6px 22px rgba(0,0,0,.07)',
+              boxShadow: (user.kycLevel || 1) === 1 ? '0 0 0 2px #F0B90B, 0 6px 22px rgba(0,0,0,.07)' : undefined,
               cursor: 'default'
             }}
-            onClick={() => navigate('kyc-bvn-nin')}
+            onClick={() => {
+              if ((user.kycLevel || 1) === 1) navigate('kyc-bvn-nin');
+            }}
           >
             <div className="fx" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div className="ico" style={{ background: '#F0B90B', color: '#000' }}>
+              <div className="ico" style={{ background: (user.kycLevel || 1) >= 2 ? '#DCFCE7' : '#FFF8D6', color: (user.kycLevel || 1) >= 2 ? '#15803D' : '#B08A00' }}>
                 <IconShield size={22} />
               </div>
               <div>
@@ -76,25 +78,54 @@ export default function KYCOverviewScreen() {
                 <div style={{ fontSize: '13px', color: '#777', marginTop: '2px' }}>Daily limit ₦5,000,000</div>
               </div>
             </div>
-            <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '10px', fontSize: '12px', fontWeight: 600, background: '#FEF3C7', color: '#92400E' }}>
-              Next
-            </span>
+            {(user.kycLevel || 1) >= 2 ? (
+              <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '10px', fontSize: '12px', fontWeight: 600, background: '#DCFCE7', color: '#15803D' }}>
+                Done
+              </span>
+            ) : (
+              <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '10px', fontSize: '12px', fontWeight: 600, background: '#FEF3C7', color: '#92400E' }}>
+                Next
+              </span>
+            )}
           </div>
 
           {/* Tier 3 */}
-          <div className="card fx sp" style={{ padding: '16px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div
+            className="card fx sp"
+            style={{
+              padding: '16px 18px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              boxShadow: (user.kycLevel || 1) === 2 ? '0 0 0 2px #F0B90B, 0 6px 22px rgba(0,0,0,.07)' : undefined,
+              cursor: (user.kycLevel || 1) >= 2 ? 'pointer' : 'default',
+            }}
+            onClick={() => {
+              if ((user.kycLevel || 1) >= 2) navigate('kyc-upload-id');
+            }}
+          >
             <div className="fx" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div className="ico">
-                <IconLock size={22} />
+              <div className="ico" style={{ background: (user.kycLevel || 1) === 3 ? '#DCFCE7' : (user.kycLevel || 1) === 2 ? '#FFF8D6' : '#F1F1F1', color: (user.kycLevel || 1) === 3 ? '#15803D' : (user.kycLevel || 1) === 2 ? '#B08A00' : '#888' }}>
+                {(user.kycLevel || 1) >= 2 ? <IconShield size={22} /> : <IconLock size={22} />}
               </div>
               <div>
-                <div style={{ fontWeight: 600 }}>Tier 3 · ID &amp; selfie</div>
+                <div style={{ fontWeight: 600 }}>Tier 3 · ID &amp; Selfie</div>
                 <div style={{ fontSize: '13px', color: '#777', marginTop: '2px' }}>Daily limit ₦20,000,000</div>
               </div>
             </div>
-            <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '10px', fontSize: '12px', fontWeight: 600, background: '#F1F1F1', color: '#555' }}>
-              Locked
-            </span>
+            {(user.kycLevel || 1) === 3 ? (
+              <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '10px', fontSize: '12px', fontWeight: 600, background: '#DCFCE7', color: '#15803D' }}>
+                Done
+              </span>
+            ) : (user.kycLevel || 1) === 2 ? (
+              <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '10px', fontSize: '12px', fontWeight: 600, background: '#FEF3C7', color: '#92400E' }}>
+                Next
+              </span>
+            ) : (
+              <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '10px', fontSize: '12px', fontWeight: 600, background: '#F1F1F1', color: '#555' }}>
+                Locked
+              </span>
+            )}
           </div>
         </div>
       </div>

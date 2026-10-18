@@ -193,10 +193,10 @@ export default function HistoryScreen() {
 
         <div className={styles.inOutStats}>
           <span className={styles.statIn}>
-            In: <strong>₦{(totalInflow || 15000).toLocaleString()}</strong>
+            In: <strong>₦{totalInflow.toLocaleString()}</strong>
           </span>
           <span className={styles.statOut}>
-            Out: <strong>₦{(totalOutflow || 18800).toLocaleString()}</strong>
+            Out: <strong>₦{totalOutflow.toLocaleString()}</strong>
           </span>
         </div>
       </div>
@@ -269,9 +269,16 @@ export default function HistoryScreen() {
 
           {filtered.length === 0 && (
             <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>📂</div>
+              <div className={styles.emptyIconWrap}>
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#B08A00" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <line x1="6" y1="8" x2="18" y2="8" />
+                  <line x1="6" y1="12" x2="14" y2="12" />
+                  <line x1="6" y1="16" x2="10" y2="16" />
+                </svg>
+              </div>
               <div className={styles.emptyTitle}>No matching transactions</div>
-              <div className={styles.emptySub}>Try adjusting your filters or date period.</div>
+              <div className={styles.emptySub}>Your transaction history will appear here once you make top-ups or pay bills.</div>
             </div>
           )}
         </div>

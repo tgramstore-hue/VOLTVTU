@@ -9,13 +9,13 @@ export default function UnlockPINScreen() {
   const [pin, setPin] = useState('');
   const [shake, setShake] = useState(false);
 
-  const correctPin = state.user?.pin || '1234';
+  const correctPin = state.user?.loginPin || '123456';
 
   const addDigit = useCallback((d) => {
-    if (pin.length >= 4) return;
+    if (pin.length >= 6) return;
     const next = pin + d;
     setPin(next);
-    if (next.length === 4) {
+    if (next.length === 6) {
       setTimeout(() => {
         if (next === correctPin) {
           navigate('splash-to-dash');
@@ -62,7 +62,7 @@ export default function UnlockPINScreen() {
         <div className={styles.subtitle}>Enter your PIN to unlock</div>
 
         <div className={`${styles.dots} ${shake ? styles.shake : ''}`}>
-          {[0, 1, 2, 3].map(i => (
+          {[0, 1, 2, 3, 4, 5].map(i => (
             <div key={i} className={`${styles.dot} ${i < pin.length ? styles.filled : ''}`} />
           ))}
         </div>

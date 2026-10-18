@@ -61,7 +61,7 @@ const menuItems = [
         <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
       </svg>
     ),
-    screen: 'create-pin',
+    screen: 'security-pin',
   },
   {
     id: 'notifications',
@@ -126,7 +126,7 @@ export default function ProfileScreen() {
     <div className={styles.container}>
       {/* Sticky header */}
       <div className={styles.header}>
-        <h1 className={styles.headerTitle}>Me</h1>
+        <h1 className={styles.headerTitle}>Profile</h1>
       </div>
 
       {/* Hidden file input */}
@@ -154,7 +154,7 @@ export default function ProfileScreen() {
                 className={styles.avatarImg}
               />
             ) : (
-              <div className={styles.avatarInitial}>{state.user.initial || 'E'}</div>
+              <div className={styles.avatarInitial}>{state.user.name ? state.user.name[0].toUpperCase() : 'U'}</div>
             )}
           </div>
           <div className={styles.cameraBadge} title="Change profile photo">
@@ -165,9 +165,11 @@ export default function ProfileScreen() {
         <div className={styles.userInfo} onClick={() => navigate('profile-info')}>
           <div className={styles.userNameRow}>
             <div className={styles.userName}>{state.user.name}</div>
-            <span className={styles.tierTag}>Tier {state.user.tier || 1}</span>
+            <span className={state.user.kycLevel === 3 ? styles.tier3 : state.user.kycLevel === 2 ? styles.tier2 : styles.tier1}>
+              Tier {state.user.kycLevel || 1}
+            </span>
           </div>
-          <div className={styles.userPhone}>{state.user.phone}</div>
+          <div className={styles.userPhone}>{state.user.phone || '080 0000 0000'}</div>
         </div>
       </div>
 
