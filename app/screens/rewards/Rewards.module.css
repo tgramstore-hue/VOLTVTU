@@ -26,26 +26,83 @@
 
 .title {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.3px;
+  color: #111;
 }
 
-/* Entrance animations */
-.pointsCard,
-.streakCard,
-.referralCard {
-  animation: rwd-fade-up 400ms cubic-bezier(0.2, 0, 0, 1) both;
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  background: #0B0B0B;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 13.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  animation: toastAnim 0.2s ease;
 }
 
-.pointsCard { animation-delay: 80ms; }
-.streakCard { animation-delay: 160ms; }
-.referralCard { animation-delay: 240ms; }
-
-@keyframes rwd-fade-up {
-  from { transform: translateY(18px); opacity: 0; }
-  to { transform: none; opacity: 1; }
+@keyframes toastAnim {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
+/* Main Tab Switcher */
+.tabNav {
+  display: flex;
+  background: #EFEFEF;
+  padding: 4px;
+  border-radius: 16px;
+  margin-top: 6px;
+  margin-bottom: 14px;
+  gap: 4px;
+}
+
+.tabBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: #666;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabBtnActive {
+  background: #FFFFFF;
+  color: #111;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tabContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeInTab 250ms ease-out both;
+}
+
+@keyframes fadeInTab {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Points Card */
 .pointsCard {
   background: #0B0B0B;
   color: #fff;
@@ -55,7 +112,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 10px;
 }
 
 .pointsTop {
@@ -91,7 +147,8 @@
   border-radius: 22px;
   font-size: 14px;
   font-weight: 700;
-  cursor: default;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
   transition: transform 0.15s;
 }
 
@@ -99,62 +156,11 @@
   transform: scale(0.97);
 }
 
-.referralCard {
-  background: #fff;
-  border-radius: 22px;
-  padding: 20px;
-  margin-top: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.refTitle {
-  font-size: 17px;
-  font-weight: 700;
-  color: #111;
-}
-
-.refSub {
-  font-size: 13px;
-  color: #666;
-  line-height: 1.4;
-}
-
-.codeBox {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #F5F5F5;
-  border: 1.5px dashed #ccc;
-  border-radius: 18px;
-  padding: 10px 16px;
-}
-
-.codeText {
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: #000;
-}
-
-.copyCodeBtn {
-  background: #0B0B0B;
-  color: #fff;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 14px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: default;
-}
-
+/* Daily Streak Card */
 .streakCard {
   background: #fff;
   border-radius: 22px;
   padding: 20px;
-  margin-top: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
@@ -162,7 +168,6 @@
   font-size: 15px;
   font-weight: 700;
   color: #111;
-  margin-bottom: 14px;
 }
 
 .daysRow {
@@ -217,4 +222,476 @@
 .dayLabel {
   font-size: 11px;
   color: #888;
+}
+
+/* Quick Jump Referral Card on Points Tab */
+.quickJumpCard {
+  background: #FFFFFF;
+  border: 1.5px solid #F0B90B;
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(240, 185, 11, 0.12);
+  transition: transform 0.15s;
+}
+
+.quickJumpCard:active {
+  transform: scale(0.98);
+}
+
+.quickJumpLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quickJumpIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FFF8D6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quickJumpTitle {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #111;
+}
+
+.quickJumpSub {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.quickJumpArrow {
+  font-size: 22px;
+  color: #888;
+  font-weight: 600;
+}
+
+/* Referral Section */
+.referralCard {
+  background: #fff;
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.refHeroBadge {
+  align-self: flex-start;
+  background: #FFF8D6;
+  color: #B08A00;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+}
+
+.refTitle {
+  font-size: 19px;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: -0.3px;
+}
+
+.refSub {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.45;
+}
+
+/* 3 Referral Stats Tiles */
+.refStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.refStatBlock {
+  background: #F8F9FA;
+  border: 1px solid #EFEFEF;
+  border-radius: 14px;
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.refStatLabel {
+  font-size: 10.5px;
+  color: #777;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.refStatVal {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111;
+  margin-top: 4px;
+}
+
+.refStatValGreen {
+  font-size: 16px;
+  font-weight: 800;
+  color: #15803D;
+  margin-top: 4px;
+}
+
+.refStatValAmber {
+  font-size: 16px;
+  font-weight: 800;
+  color: #D97706;
+  margin-top: 4px;
+}
+
+/* Referral Code Box */
+.codeBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F9F9F9;
+  border: 1.5px dashed #E0E0E0;
+  border-radius: 16px;
+  padding: 12px 14px;
+}
+
+.codeSubLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+.codeText {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #000;
+  margin-top: 2px;
+}
+
+.copyCodeBtn {
+  background: #0B0B0B;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+
+.copyCodeBtn:active {
+  transform: scale(0.95);
+}
+
+.shareBtn {
+  background: #F0B90B;
+  color: #000;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: transform 0.12s;
+  box-shadow: 0 2px 8px rgba(240, 185, 11, 0.3);
+}
+
+.shareBtn:active {
+  transform: scale(0.95);
+}
+
+/* Direct Referral Link Box */
+.linkBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #FFFDF0;
+  border: 1px solid #FFE58F;
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+
+.linkTextWrapper {
+  overflow: hidden;
+  flex: 1;
+}
+
+.linkSubLabel {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #B08A00;
+  letter-spacing: 0.5px;
+}
+
+.linkUrl {
+  font-size: 12px;
+  color: #333;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.copyLinkBtn {
+  background: #F0B90B;
+  color: #000;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* How It Works Card */
+.howItWorksCard {
+  background: #fff;
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.howTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 14px;
+}
+
+.howSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stepRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.stepNum {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #0B0B0B;
+  color: #F0B90B;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.stepHead {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #111;
+}
+
+.stepDesc {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* Referral List Card */
+.referralListCard {
+  background: #fff;
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.referralListHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listSectionTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111;
+}
+
+.filterPills {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.filterPills::-webkit-scrollbar {
+  display: none;
+}
+
+.filterPill {
+  background: #F3F4F6;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  color: #666;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.filterPillActive {
+  background: #0B0B0B;
+  color: #F0B90B;
+}
+
+.refUserList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.refUserRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F9F9F9;
+  border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid #F0F0F0;
+}
+
+.refUserLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.refAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #FFF8D6;
+  color: #B08A00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.refUserName {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #111;
+}
+
+.refUserPhone {
+  font-size: 11px;
+  color: #777;
+  margin-top: 1px;
+}
+
+.refUserDate {
+  font-size: 10.5px;
+  color: #999;
+  margin-top: 1px;
+}
+
+.statusBadgeDone {
+  background: #DCFCE7;
+  color: #15803D;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.statusBadgePending {
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+/* Empty Referrals Box */
+.emptyReferralBox {
+  background: #FAFAFA;
+  border-radius: 16px;
+  padding: 28px 16px;
+  text-align: center;
+  border: 1px dashed #E5E7EB;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.emptyRefIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #FFF8D6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.emptyRefTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111;
+}
+
+.emptyRefSub {
+  font-size: 12.5px;
+  color: #777;
+  line-height: 1.45;
+  max-width: 290px;
+}
+
+.inviteNowBtn {
+  height: 42px;
+  background: #F0B90B;
+  color: #000;
+  border: none;
+  border-radius: 21px;
+  padding: 0 24px;
+  font-size: 13.5px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 0 3px 12px rgba(240, 185, 11, 0.35);
+  transition: transform 0.15s;
+}
+
+.inviteNowBtn:active {
+  transform: scale(0.96);
 }

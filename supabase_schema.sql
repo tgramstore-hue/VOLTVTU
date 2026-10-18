@@ -170,3 +170,23 @@ CREATE POLICY "Users can view own streak"
 CREATE POLICY "Users can update own streak"
     ON public.daily_streaks FOR ALL
     USING (auth.uid() = user_id);
+
+-- 7. Referrals Table
+CREATE TABLE IF NOT EXISTS public.referrals (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    referrer_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    referred_user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    referred_name TEXT NOT NULL,
+    referred_phone TEXT,
+    status TEXT NOT NULL DEFAULT 'pending', -- 'pending' (signed up), 'completed' (funded & rewarded)
+    reward_amount NUMERIC(12, 2) NOT NULL DEFAULT 500.00,
+    reward_credited BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    completed_at TIMESTAMPTZ
+);
+
+ALTER TABLE public.referrals ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own referrals"
+    ON public.referrals FOR SELECT
+    USING (auth.uid() = referrer_id);
