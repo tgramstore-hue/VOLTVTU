@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
 import {
   IconNavyPhone, IconNavyData, IconNavyTV, IconNavyBetting,
@@ -116,7 +116,7 @@ const bottomBanners = [
 export default function DashboardScreen() {
   const {
     navigate, state, saveTransactionPin,
-    checkEmailVerification, getSupabase
+    checkEmailVerification, getSupabase, createVirtualAccount, authLoading
   } = useApp();
 
   // Create PIN Modal State
@@ -144,6 +144,8 @@ export default function DashboardScreen() {
   // On mount: check if fresh signup needs PIN modal or email notice
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    // Wait until auth loading is complete (profile loaded from DB)
+    if (authLoading) return;
 
     // Check if user has not created a transaction PIN yet
     if (!hasCreatedPin) {
@@ -161,7 +163,33 @@ export default function DashboardScreen() {
         setShowEmailModal(true);
       }
     }
-  }, [hasCreatedPin, isEmailVerified]);
+  }, [hasCreatedPin, isEmailVerified, authLoading]);
+
+  // Show email verified success banner when isEmailVerified flips to true
+  const [emailJustVerified, setEmailJustVerified] = useState(false);
+  const prevIsEmailVerified = useRef(false);
+  useEffect(() => {
+    if (isEmailVerified && !prevIsEmailVerified.current) {
+      setEmailJustVerified(true);
+      setShowEmailModal(false);
+      setTimeout(() => setEmailJustVerified(false), 4000);
+    }
+    prevIsEmailVerified.current = isEmailVerified;
+  }, [isEmailVerified]);
+
+  // Auto-create Paystack virtual account on first dashboard load if missing
+  useEffect(() => {
+    if (authLoading) return;
+    if (!state.supabaseUser?.id) return;
+    const va = state.user?.virtualAccount;
+    // If no account number or it's a placeholder (phone-number-based, 10 digits but not from Paystack)
+    const needsDVA = !va?.accountNumber || va?.bank === 'Wema Bank';
+    if (needsDVA) {
+      createVirtualAccount();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, state.supabaseUser?.id]);
+
 
   // Activity Gate: Blocks transactions & purchases if email is unverified
   const handleProtectedAction = (targetScreen) => {
@@ -282,6 +310,25 @@ export default function DashboardScreen() {
           </button>
         </div>
       </div>
+
+      {/* Email Verified Success Toast */}
+      {emailJustVerified && (
+        <div style={{
+          position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)',
+          background: '#16A34A', color: '#fff',
+          padding: '12px 20px', borderRadius: '14px',
+          fontSize: '14px', fontWeight: 700,
+          display: 'flex', alignItems: 'center', gap: '8px',
+          boxShadow: '0 4px 20px rgba(22,163,74,0.4)',
+          zIndex: 9999, animation: 'slideDown 0.3s ease',
+          whiteSpace: 'nowrap',
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          Email verified successfully!
+        </div>
+      )}
 
       {/* Persistent Email Verification Notice Banner (if unverified) */}
       {!isEmailVerified && (

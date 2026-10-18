@@ -77,9 +77,9 @@ export default function RegisterScreen() {
           login_pin: loginPin.trim(),
           transaction_pin: null,
           biometrics_enabled: false,
-          virtual_account_bank: 'Wema Bank',
-          virtual_account_number: phone.trim().replace(/\D/g, '').slice(-10),
-          virtual_account_name: `VTUFLASH / ${fullName.trim().toUpperCase()}`,
+          virtual_account_bank: null,
+          virtual_account_number: null,
+          virtual_account_name: null,
         });
       } catch (profileErr) {
         // Fallback gracefully if schema trigger handled profile
@@ -121,9 +121,9 @@ export default function RegisterScreen() {
           biometricsEnabled: false,
           referralCode: `VOLT-${userName.split(' ')[0]?.toUpperCase()?.slice(0, 4) || 'USER'}-${String(Date.now()).slice(-2)}`,
           virtualAccount: {
-            bank: 'Wema Bank',
-            accountNumber: userPhone.replace(/\D/g, '').slice(-10),
-            accountName: `VTUFLASH / ${userName.toUpperCase()}`,
+            bank: null,
+            accountNumber: null,
+            accountName: null,
           },
         },
         transactions: [],

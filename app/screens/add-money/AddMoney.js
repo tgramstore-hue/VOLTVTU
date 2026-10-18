@@ -7,12 +7,14 @@ import styles from './AddMoney.module.css';
 const QUICK_AMOUNTS = [1000, 2000, 5000, 10000, 20000, 50000];
 
 export default function AddMoneyScreen() {
-  const { navigate, goBack, state, setState, getSupabase } = useApp();
+  const { navigate, goBack, state, setState, getSupabase, createVirtualAccount } = useApp();
   const [tab, setTab] = useState('transfer');
   const [copied, setCopied] = useState(false);
   const [amount, setAmount] = useState('5000');
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [creatingDVA, setCreatingDVA] = useState(false);
+  const [dvaError, setDvaError] = useState('');
 
   const numAmount = Number(amount) || 0;
 
@@ -20,6 +22,20 @@ export default function AddMoneyScreen() {
     bank: 'Wema Bank',
     accountNumber: (state.user?.phone || '8123456789').replace(/\D/g, '').slice(-10) || '8123456789',
     accountName: `VTUFLASH / ${(state.user?.name || 'USER').toUpperCase()}`,
+  };
+
+  // Check if we have a real Paystack DVA; if not, auto-create one
+  const hasRealDVA = virtualAccount?.accountNumber && virtualAccount?.bank &&
+    virtualAccount?.bank !== 'Wema Bank' && virtualAccount?.accountNumber?.length === 10;
+
+  const handleCreateDVA = async () => {
+    setCreatingDVA(true);
+    setDvaError('');
+    const result = await createVirtualAccount();
+    setCreatingDVA(false);
+    if (!result) {
+      setDvaError('Could not create your virtual account. Please try again or contact support.');
+    }
   };
 
   const handleCopy = () => {
@@ -195,29 +211,63 @@ export default function AddMoneyScreen() {
 
         {tab === 'transfer' ? (
           <>
-            <div className={styles.accountCard}>
-              <div className={styles.accountTop}>
-                <span className={styles.bankName}>{virtualAccount.bank}</span>
-                <span className={styles.tag}>AUTOMATED</span>
-              </div>
-              <div className={styles.accountMid}>
-                <span className={styles.accLabel}>Dedicated Virtual Account</span>
-                <div className={styles.accNumberRow}>
-                  <span className={styles.accNumber}>{virtualAccount.accountNumber}</span>
-                  <button type="button" className={styles.copyBtn} onClick={handleCopy}>
-                    {copied ? 'Copied!' : 'Copy'}
-                  </button>
+            {!hasRealDVA ? (
+              <div style={{
+                background: '#FEF3C7', border: '1px solid #F0B90B',
+                borderRadius: 16, padding: '20px 16px',
+                display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center',
+                textAlign: 'center',
+              }}>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                </svg>
+                <div style={{ fontWeight: 800, fontSize: 15, color: '#92400E' }}>Setting Up Your Virtual Account</div>
+                <div style={{ fontSize: 13, color: '#78350F', lineHeight: 1.5 }}>
+                  Your dedicated Paystack bank account is being created. This is a real bank account number for instant transfers.
                 </div>
+                {dvaError && (
+                  <div style={{ background: '#FEE2E2', color: '#B91C1C', padding: '8px 12px', borderRadius: 10, fontSize: 13, fontWeight: 600, width: '100%' }}>
+                    {dvaError}
+                  </div>
+                )}
+                <button
+                  type="button"
+                  className={styles.btn}
+                  onClick={handleCreateDVA}
+                  disabled={creatingDVA}
+                  style={{ opacity: creatingDVA ? 0.6 : 1, cursor: creatingDVA ? 'not-allowed' : 'pointer' }}
+                >
+                  {creatingDVA ? 'Creating Account...' : 'Create My Virtual Account'}
+                </button>
               </div>
-              <div className={styles.accountBottom}>
-                <span className={styles.accNameLabel}>Account Name</span>
-                <span className={styles.accName}>{virtualAccount.accountName}</span>
-              </div>
-            </div>
+            ) : (
+              <>
+                <div className={styles.accountCard}>
+                  <div className={styles.accountTop}>
+                    <span className={styles.bankName}>{virtualAccount.bank}</span>
+                    <span className={styles.tag}>PAYSTACK</span>
+                  </div>
+                  <div className={styles.accountMid}>
+                    <span className={styles.accLabel}>Dedicated Virtual Account</span>
+                    <div className={styles.accNumberRow}>
+                      <span className={styles.accNumber}>{virtualAccount.accountNumber}</span>
+                      <button type="button" className={styles.copyBtn} onClick={handleCopy}>
+                        {copied ? 'Copied!' : 'Copy'}
+                      </button>
+                    </div>
+                  </div>
+                  <div className={styles.accountBottom}>
+                    <span className={styles.accNameLabel}>Account Name</span>
+                    <span className={styles.accName}>{virtualAccount.accountName}</span>
+                  </div>
+                </div>
 
-            <div className={styles.notice}>
-              💡 <strong>Instant Funding:</strong> Make a bank transfer to your dedicated virtual account number above. Your VTUflash wallet will fund automatically in seconds with 0% funding fee.
-            </div>
+                <div className={styles.notice}>
+                  💡 <strong>Instant Funding:</strong> Make a bank transfer to your dedicated virtual account number above. Your VTUflash wallet will fund automatically in seconds with 0% funding fee.
+                </div>
+              </>
+            )}
           </>
         ) : (
           <>

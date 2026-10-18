@@ -197,23 +197,56 @@ export function AppProvider({ children }) {
     return () => clearTimeout(timer);
   }, [getSupabase]);
 
-  // Listen for auth state changes
+  // Listen for auth state changes (sign out, email confirmed, user updated)
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const supabase = getSupabase();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
-        setState(prev => ({
-          ...INITIAL_STATE,
-        }));
+        setState(prev => ({ ...INITIAL_STATE }));
         setScreen('login');
         historyStack.current = ['login'];
         setActiveTab('home');
       }
+
+      // When user confirms their email, automatically update isEmailVerified
+      if (
+        (event === 'USER_UPDATED' || event === 'EMAIL_CONFIRMED' || event === 'TOKEN_REFRESHED') &&
+        session?.user?.email_confirmed_at
+      ) {
+        setState(prev => ({
+          ...prev,
+          user: { ...prev.user, isEmailVerified: true },
+        }));
+      }
     });
 
     return () => subscription?.unsubscribe();
+  }, [getSupabase]);
+
+  // Auto-recheck email verification when tab regains focus
+  // (user clicks verification link in email, switches back to app tab)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible') {
+        try {
+          const supabase = getSupabase();
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user?.email_confirmed_at) {
+            setState(prev => ({
+              ...prev,
+              user: { ...prev.user, isEmailVerified: true },
+            }));
+          }
+        } catch (e) {}
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [getSupabase]);
 
   const navigate = useCallback((to, dir = 'forward') => {
@@ -303,6 +336,7 @@ export function AppProvider({ children }) {
   }, [getSupabase]);
 
   const saveTransactionPin = useCallback(async (newPin) => {
+    // Update local state immediately
     setState(prev => ({
       ...prev,
       user: {
@@ -311,6 +345,7 @@ export function AppProvider({ children }) {
         hasCreatedTxPin: true,
       },
     }));
+    // Persist to Supabase so next login doesn't show PIN modal again
     try {
       const supabase = getSupabase();
       if (state.supabaseUser?.id) {
@@ -321,6 +356,31 @@ export function AppProvider({ children }) {
       }
     } catch (e) {}
   }, [getSupabase, state.supabaseUser]);
+
+  // Create Paystack Dedicated Virtual Account for user
+  const createVirtualAccount = useCallback(async () => {
+    try {
+      const res = await fetch('/api/paystack/create-dva', { method: 'POST' });
+      const data = await res.json();
+      if (data.success && data.accountNumber) {
+        setState(prev => ({
+          ...prev,
+          user: {
+            ...prev.user,
+            virtualAccount: {
+              bank: data.bank,
+              accountNumber: data.accountNumber,
+              accountName: data.accountName,
+            },
+          },
+        }));
+        return data;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }, []);
 
   const saveBiometrics = useCallback(async (enabled) => {
     setState(prev => ({
@@ -370,6 +430,7 @@ export function AppProvider({ children }) {
       navigate, goBack, switchTab,
       setPin, setPinError, setPurchase, updateUser,
       checkEmailVerification, saveTransactionPin, saveBiometrics,
+      createVirtualAccount,
       setState, getSupabase,
     }}>
       {children}
