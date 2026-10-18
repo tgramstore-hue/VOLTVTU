@@ -38,6 +38,7 @@ import KYCProcessingScreen from './screens/kyc/KYCProcessing';
 import KYCVerifiedScreen from './screens/kyc/KYCVerified';
 import KYCFailedScreen from './screens/kyc/KYCFailed';
 import SecurityPinScreen from './screens/security-pin/SecurityPin';
+import EmailConfirmedScreen from './screens/email-confirmed/EmailConfirmed';
 
 export default function App() {
   const { screen, direction } = useApp();
@@ -120,6 +121,8 @@ export default function App() {
         return <KYCVerifiedScreen />;
       case 'kyc-failed':
         return <KYCFailedScreen />;
+      case 'email-confirmed':
+        return <EmailConfirmedScreen />;
       default:
         return <DashboardScreen />;
     }

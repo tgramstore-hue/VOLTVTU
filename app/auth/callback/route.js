@@ -40,7 +40,8 @@ export async function GET(request) {
           .update({ is_email_verified: true })
           .eq('id', data.user.id);
       } catch (e) {}
-      return NextResponse.redirect(`${origin}${next}`);
+      // Redirect to email confirmed page
+      return NextResponse.redirect(`${origin}/?email_verified=true`);
     }
   }
 
@@ -53,7 +54,8 @@ export async function GET(request) {
           .update({ is_email_verified: true })
           .eq('id', data.user.id);
       } catch (e) {}
-      return NextResponse.redirect(`${origin}${next}`);
+      // Redirect to email confirmed page
+      return NextResponse.redirect(`${origin}/?email_verified=true`);
     }
   }
 

@@ -20,7 +20,7 @@ function IconCheck() {
 }
 
 export default function CreatePinScreen() {
-  const { goBack, updateUser } = useApp();
+  const { goBack, saveTransactionPin } = useApp();
   const [step, setStep] = useState(1);
   const [firstPin, setFirstPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
@@ -30,7 +30,7 @@ export default function CreatePinScreen() {
 
   const activeDigits = step === 1 ? firstPin : confirmPin;
 
-  const handlePress = (num) => {
+  const handlePress = async (num) => {
     if (success) return;
     setError('');
     if (step === 1) {
@@ -47,7 +47,7 @@ export default function CreatePinScreen() {
       if (next.length === 4) {
         if (next === firstPin) {
           setSuccess(true);
-          updateUser({ pin: next });
+          await saveTransactionPin(next);
           setTimeout(() => goBack(), 1000);
         } else {
           setShake(true);

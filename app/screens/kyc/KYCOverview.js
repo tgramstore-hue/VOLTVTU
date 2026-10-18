@@ -1,10 +1,38 @@
 'use client';
+import { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { IconChevronLeft, IconShield, IconLock, IconCheck } from '../../components/Icons';
 
 export default function KYCOverviewScreen() {
-  const { navigate, goBack, state } = useApp();
+  const { navigate, goBack, state, getSupabase } = useApp();
   const user = state.user;
+  const [showEmailNotice, setShowEmailNotice] = useState(false);
+  const [resendingEmail, setResendingEmail] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
+
+  const handleTier2Click = () => {
+    if ((user.kycLevel || 1) !== 1) return;
+    // Gate Tier 2 behind email verification
+    if (!user.isEmailVerified) {
+      setShowEmailNotice(true);
+      return;
+    }
+    navigate('kyc-bvn-nin');
+  };
+
+  const handleResendVerification = async () => {
+    setResendingEmail(true);
+    try {
+      const supabase = getSupabase();
+      const email = state.supabaseUser?.email || user.email;
+      if (email) {
+        await supabase.auth.resend({ type: 'signup', email });
+        setResendSuccess(true);
+        setTimeout(() => setResendSuccess(false), 4000);
+      }
+    } catch (e) {}
+    setResendingEmail(false);
+  };
 
   return (
     <div style={{ position: 'relative', width: '390px', minHeight: '844px', background: '#f5f5f5', color: '#000', overflowY: 'auto', overflowX: 'hidden', fontFamily: "'Outfit', sans-serif", paddingBottom: '90px' }}>
@@ -17,6 +45,48 @@ export default function KYCOverviewScreen() {
       </div>
 
       <div style={{ padding: '0 16px', marginTop: '10px' }}>
+        {/* Email Verification Notice */}
+        {showEmailNotice && (
+          <div style={{
+            padding: '16px', borderRadius: '14px', background: '#FEF3C7', border: '1px solid #F59E0B',
+            marginBottom: '16px', animation: 'fadeIn 0.3s ease'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#92400E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span style={{ fontWeight: 600, color: '#92400E', fontSize: '15px' }}>Email Verification Required</span>
+            </div>
+            <div style={{ fontSize: '13px', color: '#78350F', lineHeight: 1.5, marginBottom: '12px' }}>
+              You must verify your email address before upgrading to Tier 2. Please check your inbox for the verification link.
+            </div>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                style={{
+                  padding: '8px 16px', borderRadius: '10px', background: '#F59E0B', color: '#000',
+                  fontWeight: 600, fontSize: '13px', border: 'none', cursor: 'pointer',
+                  opacity: resendingEmail ? 0.6 : 1,
+                }}
+                disabled={resendingEmail}
+                onClick={handleResendVerification}
+              >
+                {resendSuccess ? '✓ Email Sent!' : resendingEmail ? 'Sending…' : 'Resend Verification Email'}
+              </button>
+              <button
+                type="button"
+                style={{
+                  padding: '8px 16px', borderRadius: '10px', background: 'transparent', color: '#92400E',
+                  fontWeight: 600, fontSize: '13px', border: 'none', cursor: 'pointer',
+                }}
+                onClick={() => setShowEmailNotice(false)}
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Tier Progress Card (black) */}
         <div className="card" style={{ padding: '18px', background: '#0B0B0B', color: '#fff' }}>
           <div className="fx sp" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -49,7 +119,7 @@ export default function KYCOverviewScreen() {
                 <div style={{ fontSize: '13px', color: '#777', marginTop: '2px' }}>Phone &amp; email</div>
               </div>
             </div>
-            <span style={{ display: 'inline-block', padding: '3px 10px', borderRaddius: '10px', borderRadius: '10px', fontSize: '12px', fontWeight: 600, background: '#DCFCE7', color: '#15803D' }}>
+            <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '10px', fontSize: '12px', fontWeight: 600, background: '#DCFCE7', color: '#15803D' }}>
               Done
             </span>
           </div>
@@ -63,11 +133,9 @@ export default function KYCOverviewScreen() {
               alignItems: 'center',
               justifyContent: 'space-between',
               boxShadow: (user.kycLevel || 1) === 1 ? '0 0 0 2px #F0B90B, 0 6px 22px rgba(0,0,0,.07)' : undefined,
-              cursor: 'default'
+              cursor: (user.kycLevel || 1) === 1 ? 'pointer' : 'default'
             }}
-            onClick={() => {
-              if ((user.kycLevel || 1) === 1) navigate('kyc-bvn-nin');
-            }}
+            onClick={handleTier2Click}
           >
             <div className="fx" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
               <div className="ico" style={{ background: (user.kycLevel || 1) >= 2 ? '#DCFCE7' : '#FFF8D6', color: (user.kycLevel || 1) >= 2 ? '#15803D' : '#B08A00' }}>
@@ -132,10 +200,11 @@ export default function KYCOverviewScreen() {
 
       {/* Stationary Bottom Button */}
       <div style={{ position: 'fixed', maxWidth: '390px', width: '100%', left: '50%', transform: 'translateX(-50%)', bottom: '24px', padding: '0 16px', boxSizing: 'border-box', zIndex: 40 }}>
-        <button type="button" className="btn" onClick={() => navigate('kyc-bvn-nin')}>
+        <button type="button" className="btn" onClick={handleTier2Click}>
           Start Verification
         </button>
       </div>
     </div>
   );
 }
+

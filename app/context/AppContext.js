@@ -13,7 +13,7 @@ const VALID_SCREENS = [
   'notifications', 'help-support', 'download-statement',
   'virtual-numbers', 'giftcard', 'kyc-overview', 'kyc-bvn-nin',
   'kyc-selfie', 'kyc-upload-id', 'kyc-processing', 'kyc-verified', 'kyc-failed',
-  'security-pin'
+  'security-pin', 'email-confirmed'
 ];
 
 const FRESH_USER = {
@@ -279,10 +279,32 @@ export function AppProvider({ children }) {
             user: { ...prev.user, isEmailVerified: true },
           }));
 
+          // Persist email verified flag
+          try { localStorage.setItem('vtu_email_verified', 'true'); } catch (e) {}
+
           // Mark in profiles table
           try {
             await supabase.from('profiles').update({ is_email_verified: true }).eq('id', verifiedUser.id);
           } catch (e) {}
+
+          // Show email confirmed screen
+          setScreen('email-confirmed');
+          historyStack.current = ['email-confirmed'];
+        }
+
+        // Also detect ?email_verified=true from the server callback redirect
+        const emailVerifiedParam = new URLSearchParams(window.location.search).get('email_verified');
+        if (emailVerifiedParam === 'true' && !verifiedUser) {
+          try {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          } catch (e) {}
+          try { localStorage.setItem('vtu_email_verified', 'true'); } catch (e) {}
+          setState(prev => ({
+            ...prev,
+            user: { ...prev.user, isEmailVerified: true },
+          }));
+          setScreen('email-confirmed');
+          historyStack.current = ['email-confirmed'];
         }
       } catch (err) {
         console.error('Error handling auth callback:', err);
