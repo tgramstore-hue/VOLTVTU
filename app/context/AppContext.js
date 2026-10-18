@@ -32,6 +32,8 @@ const FRESH_USER = {
   kycLevel: 1,
   loginPin: '',
   transactionPin: '',
+  hasCreatedTxPin: false,
+  isEmailVerified: false,
   biometricsEnabled: false,
   referralCode: '',
   referrals: [],
@@ -99,6 +101,10 @@ export function AppProvider({ children }) {
           const userName = profile?.full_name || session.user.user_metadata?.full_name || 'VTUflash User';
           const userPhone = profile?.phone || session.user.user_metadata?.phone || '';
           const userEmail = session.user.email || '';
+          const isEmailConfirmed = Boolean(session.user.email_confirmed_at);
+          const txPin = profile?.transaction_pin || '';
+          const hasTxPin = Boolean(txPin && txPin.length === 4);
+          const bioEnabled = profile?.biometrics_enabled === true;
 
           setState(prev => ({
             ...prev,
@@ -113,6 +119,10 @@ export function AppProvider({ children }) {
               voltPoints: profile?.volt_points || 0,
               kycLevel: profile?.kyc_level || 1,
               tier: `Tier ${profile?.kyc_level || 1}${profile?.kyc_level === 1 ? ' Standard' : profile?.kyc_level === 2 ? '' : ' Verified'}`,
+              transactionPin: txPin,
+              hasCreatedTxPin: hasTxPin,
+              isEmailVerified: isEmailConfirmed,
+              biometricsEnabled: bioEnabled,
               referralCode: profile?.referral_code || `VOLT-${userName.split(' ')[0]?.toUpperCase()?.slice(0,4) || 'USER'}-${String(Date.now()).slice(-2)}`,
               virtualAccount: {
                 bank: profile?.virtual_account_bank || 'Wema Bank',
@@ -275,6 +285,62 @@ export function AppProvider({ children }) {
     setState(s => ({ ...s, user: { ...s.user, ...updates } }));
   }, []);
 
+  const checkEmailVerification = useCallback(async () => {
+    try {
+      const supabase = getSupabase();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.email_confirmed_at) {
+        setState(prev => ({
+          ...prev,
+          user: { ...prev.user, isEmailVerified: true },
+        }));
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }, [getSupabase]);
+
+  const saveTransactionPin = useCallback(async (newPin) => {
+    setState(prev => ({
+      ...prev,
+      user: {
+        ...prev.user,
+        transactionPin: newPin,
+        hasCreatedTxPin: true,
+      },
+    }));
+    try {
+      const supabase = getSupabase();
+      if (state.supabaseUser?.id) {
+        await supabase
+          .from('profiles')
+          .update({ transaction_pin: newPin })
+          .eq('id', state.supabaseUser.id);
+      }
+    } catch (e) {}
+  }, [getSupabase, state.supabaseUser]);
+
+  const saveBiometrics = useCallback(async (enabled) => {
+    setState(prev => ({
+      ...prev,
+      user: {
+        ...prev.user,
+        biometricsEnabled: enabled,
+      },
+    }));
+    try {
+      const supabase = getSupabase();
+      if (state.supabaseUser?.id) {
+        await supabase
+          .from('profiles')
+          .update({ biometrics_enabled: enabled })
+          .eq('id', state.supabaseUser.id);
+      }
+    } catch (e) {}
+  }, [getSupabase, state.supabaseUser]);
+
   // Handle popstate for browser back/forward
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -303,6 +369,7 @@ export function AppProvider({ children }) {
       state, pin, pinError, authLoading,
       navigate, goBack, switchTab,
       setPin, setPinError, setPurchase, updateUser,
+      checkEmailVerification, saveTransactionPin, saveBiometrics,
       setState, getSupabase,
     }}>
       {children}

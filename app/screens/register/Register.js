@@ -75,8 +75,8 @@ export default function RegisterScreen() {
           volt_points: 100, // 100 bonus welcome points!
           kyc_level: 1,
           login_pin: loginPin.trim(),
-          transaction_pin: '1234',
-          biometrics_enabled: true,
+          transaction_pin: null,
+          biometrics_enabled: false,
           virtual_account_bank: 'Wema Bank',
           virtual_account_number: phone.trim().replace(/\D/g, '').slice(-10),
           virtual_account_name: `VTUFLASH / ${fullName.trim().toUpperCase()}`,
@@ -87,6 +87,7 @@ export default function RegisterScreen() {
 
       const userName = fullName.trim();
       const userPhone = phone.trim();
+      const isEmailConfirmed = Boolean(userObj?.email_confirmed_at);
 
       // Remember that user has an account
       try {
@@ -114,8 +115,10 @@ export default function RegisterScreen() {
           tier: 'Tier 1 Standard',
           kycLevel: 1,
           loginPin: loginPin.trim(),
-          transactionPin: '1234',
-          biometricsEnabled: true,
+          transactionPin: '',
+          hasCreatedTxPin: false,
+          isEmailVerified: isEmailConfirmed,
+          biometricsEnabled: false,
           referralCode: `VOLT-${userName.split(' ')[0]?.toUpperCase()?.slice(0, 4) || 'USER'}-${String(Date.now()).slice(-2)}`,
           virtualAccount: {
             bank: 'Wema Bank',

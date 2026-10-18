@@ -5,25 +5,31 @@ import { IconChevronLeft, IconLock, IconFingerprint, IconCheck, IconX } from '..
 import styles from './SecurityPin.module.css';
 
 export default function SecurityPinScreen() {
-  const { goBack, state, updateUser } = useApp();
+  const { goBack, state, updateUser, saveTransactionPin, saveBiometrics } = useApp();
 
-  // Biometrics toggle
-  const [biometrics, setBiometrics] = useState(state.user?.biometricsEnabled !== false);
+  // Biometrics toggle (Defaults to false / OFF)
+  const [biometrics, setBiometrics] = useState(state.user?.biometricsEnabled === true);
 
-  // Modals for changing PINs
+  // Check if user has created a transaction PIN before
+  const hasCreatedPin = Boolean(
+    state.user?.hasCreatedTxPin ||
+    (state.user?.transactionPin && state.user.transactionPin.length === 4)
+  );
+
+  // Modals for changing/creating PINs
   const [modalType, setModalType] = useState(null); // 'loginPin' | 'txPin' | null
 
-  // Change PIN states
+  // PIN input states
   const [currentPin, setCurrentPin] = useState('');
   const [newPin, setNewPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [successToast, setSuccessToast] = useState('');
 
-  const handleToggleBiometrics = () => {
+  const handleToggleBiometrics = async () => {
     const nextVal = !biometrics;
     setBiometrics(nextVal);
-    updateUser({ biometricsEnabled: nextVal });
+    await saveBiometrics(nextVal);
     setSuccessToast(nextVal ? 'Biometric authentication enabled' : 'Biometric authentication disabled');
     setTimeout(() => setSuccessToast(''), 2500);
   };
@@ -36,21 +42,25 @@ export default function SecurityPinScreen() {
     setErrorMsg('');
   };
 
-  const handleSavePin = () => {
+  const handleSavePin = async () => {
     setErrorMsg('');
     const isLogin = modalType === 'loginPin';
     const reqLen = isLogin ? 6 : 4;
     const pinName = isLogin ? 'Login PIN' : 'Transaction PIN';
-    const savedPin = isLogin ? (state.user?.loginPin || '123456') : (state.user?.transactionPin || '1234');
+    const isFirstTime = !isLogin && !hasCreatedPin;
 
-    if (currentPin.length !== reqLen) {
-      setErrorMsg(`Current ${pinName} must be ${reqLen} digits.`);
-      return;
+    if (!isFirstTime) {
+      const savedPin = isLogin ? (state.user?.loginPin || '123456') : (state.user?.transactionPin || '');
+      if (currentPin.length !== reqLen) {
+        setErrorMsg(`Current ${pinName} must be ${reqLen} digits.`);
+        return;
+      }
+      if (currentPin !== savedPin) {
+        setErrorMsg(`Incorrect current ${pinName}.`);
+        return;
+      }
     }
-    if (currentPin !== savedPin) {
-      setErrorMsg(`Incorrect current ${pinName}.`);
-      return;
-    }
+
     if (newPin.length !== reqLen) {
       setErrorMsg(`New ${pinName} must be exactly ${reqLen} digits.`);
       return;
@@ -64,8 +74,12 @@ export default function SecurityPinScreen() {
       updateUser({ loginPin: newPin });
       setSuccessToast('6-digit Login PIN updated successfully!');
     } else {
-      updateUser({ transactionPin: newPin });
-      setSuccessToast('4-digit Transaction PIN updated successfully!');
+      await saveTransactionPin(newPin);
+      setSuccessToast(
+        isFirstTime
+          ? '4-digit Transaction PIN created successfully!'
+          : '4-digit Transaction PIN updated successfully!'
+      );
     }
 
     setModalType(null);
@@ -113,7 +127,7 @@ export default function SecurityPinScreen() {
         </button>
       </div>
 
-      {/* Section 2: 4-Digit Transaction PIN */}
+      {/* Section 2: 4-Digit Transaction PIN (Shows 'Create PIN' first time, 'Change PIN' second time) */}
       <div className={styles.card}>
         <div className={styles.cardIconWrap}>
           <IconLock size={22} />
@@ -122,20 +136,28 @@ export default function SecurityPinScreen() {
           <div className={styles.cardTitle}>Transaction PIN (4-Digit)</div>
           <div className={styles.cardSub}>Required to authorize airtime, data, and bill payments</div>
           <div className={styles.pinIndicator}>
-            <span className={styles.pinDots}>••••</span>
-            <span className={styles.pinActiveBadge}>Active (4 digits)</span>
+            <span className={styles.pinDots}>{hasCreatedPin ? '••••' : '----'}</span>
+            <span className={hasCreatedPin ? styles.pinActiveBadge : styles.badgeDisabled}>
+              {hasCreatedPin ? 'Active (4 digits)' : 'Not Set Up'}
+            </span>
           </div>
         </div>
         <button
           type="button"
           className={styles.changeBtn}
+          style={{
+            background: hasCreatedPin ? '#FFFFFF' : '#F0B90B',
+            color: '#000000',
+            fontWeight: 800,
+            border: hasCreatedPin ? '1px solid #E5E7EB' : 'none',
+          }}
           onClick={() => openPinModal('txPin')}
         >
-          Change
+          {hasCreatedPin ? 'Change PIN' : 'Create PIN'}
         </button>
       </div>
 
-      {/* Section 3: Biometric Fingerprint Authentication */}
+      {/* Section 3: Biometric Fingerprint Authentication (Default OFF) */}
       <div className={styles.card}>
         <div className={styles.cardIconWrap} style={{ background: '#FFF8D6', color: '#B08A00' }}>
           <IconFingerprint size={24} />
@@ -145,7 +167,7 @@ export default function SecurityPinScreen() {
           <div className={styles.cardSub}>Sign in faster using your device fingerprint sensor</div>
           <div className={styles.statusRow}>
             <span className={biometrics ? styles.badgeEnabled : styles.badgeDisabled}>
-              {biometrics ? 'Enabled' : 'Disabled'}
+              {biometrics ? 'Enabled' : 'Disabled (Off)'}
             </span>
           </div>
         </div>
@@ -154,18 +176,23 @@ export default function SecurityPinScreen() {
           onClick={handleToggleBiometrics}
           role="switch"
           aria-checked={biometrics}
+          style={{ cursor: 'pointer' }}
         >
           <div className={styles.toggleThumb} />
         </div>
       </div>
 
-      {/* Change PIN Modal */}
+      {/* PIN Modal (Create or Change) */}
       {modalType && (
         <div className={styles.modalOverlay} onClick={() => setModalType(null)}>
           <div className={styles.modalSheet} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <div className={styles.modalTitle}>
-                {modalType === 'loginPin' ? 'Change 6-Digit Login PIN' : 'Change 4-Digit Transaction PIN'}
+                {modalType === 'loginPin'
+                  ? 'Change 6-Digit Login PIN'
+                  : hasCreatedPin
+                  ? 'Change 4-Digit Transaction PIN'
+                  : 'Create 4-Digit Transaction PIN'}
               </div>
               <button
                 type="button"
@@ -179,30 +206,35 @@ export default function SecurityPinScreen() {
             <div className={styles.modalSub}>
               {modalType === 'loginPin'
                 ? 'Enter your current 6-digit login PIN and set a new one.'
-                : 'Enter your current 4-digit transaction PIN and set a new one.'}
+                : hasCreatedPin
+                ? 'Enter your current 4-digit transaction PIN and set a new one.'
+                : 'Set a secure 4-digit PIN to authorize purchases and bill payments.'}
             </div>
 
             {errorMsg && <div className={styles.errorBox}>{errorMsg}</div>}
 
             <div className={styles.formFields}>
-              <div className={styles.fieldGroup}>
-                <label className={styles.inputLabel}>
-                  Current {modalType === 'loginPin' ? '6-Digit' : '4-Digit'} PIN
-                </label>
-                <input
-                  type="password"
-                  inputMode="numeric"
-                  maxLength={modalType === 'loginPin' ? 6 : 4}
-                  className={styles.pinInput}
-                  placeholder={modalType === 'loginPin' ? '••••••' : '••••'}
-                  value={currentPin}
-                  onChange={(e) => setCurrentPin(e.target.value.replace(/\D/g, ''))}
-                />
-              </div>
+              {/* Only ask for current PIN if it's changing an existing PIN */}
+              {(modalType === 'loginPin' || hasCreatedPin) && (
+                <div className={styles.fieldGroup}>
+                  <label className={styles.inputLabel}>
+                    Current {modalType === 'loginPin' ? '6-Digit' : '4-Digit'} PIN
+                  </label>
+                  <input
+                    type="password"
+                    inputMode="numeric"
+                    maxLength={modalType === 'loginPin' ? 6 : 4}
+                    className={styles.pinInput}
+                    placeholder={modalType === 'loginPin' ? '••••••' : '••••'}
+                    value={currentPin}
+                    onChange={(e) => setCurrentPin(e.target.value.replace(/\D/g, ''))}
+                  />
+                </div>
+              )}
 
               <div className={styles.fieldGroup}>
                 <label className={styles.inputLabel}>
-                  New {modalType === 'loginPin' ? '6-Digit' : '4-Digit'} PIN
+                  {modalType === 'txPin' && !hasCreatedPin ? 'Enter 4-Digit PIN' : `New ${modalType === 'loginPin' ? '6-Digit' : '4-Digit'} PIN`}
                 </label>
                 <input
                   type="password"
@@ -217,7 +249,7 @@ export default function SecurityPinScreen() {
 
               <div className={styles.fieldGroup}>
                 <label className={styles.inputLabel}>
-                  Confirm New {modalType === 'loginPin' ? '6-Digit' : '4-Digit'} PIN
+                  Confirm {modalType === 'txPin' && !hasCreatedPin ? '4-Digit PIN' : `New ${modalType === 'loginPin' ? '6-Digit' : '4-Digit'} PIN`}
                 </label>
                 <input
                   type="password"
@@ -236,7 +268,11 @@ export default function SecurityPinScreen() {
               className={styles.saveBtn}
               onClick={handleSavePin}
             >
-              Update {modalType === 'loginPin' ? 'Login PIN' : 'Transaction PIN'}
+              {modalType === 'loginPin'
+                ? 'Update Login PIN'
+                : hasCreatedPin
+                ? 'Update Transaction PIN'
+                : 'Save Transaction PIN'}
             </button>
           </div>
         </div>
