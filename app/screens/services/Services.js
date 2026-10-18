@@ -67,6 +67,43 @@ export function IconNavyGlobal() {
   );
 }
 
+export function IconNavyMore() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#0A1172">
+      <rect x="4" y="4" width="6" height="6" rx="1.5" />
+      <rect x="14" y="4" width="6" height="6" rx="1.5" />
+      <rect x="4" y="14" width="6" height="6" rx="1.5" />
+      <rect x="14" y="14" width="6" height="6" rx="1.5" />
+    </svg>
+  );
+}
+
+// Quick Access SVG Icons (replacing emojis)
+function IconPhoneSwap() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A1172" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99z" fill="#0A1172" opacity="0.12"/>
+      <path d="M7 10l3-3m0 0l3 3m-3-3v6M17 14l-3 3m0 0l-3-3m3 3V11"/>
+    </svg>
+  );
+}
+
+function IconGradCap() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="#0A1172">
+      <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+    </svg>
+  );
+}
+
+function IconCablePlug() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="#0A1172">
+      <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12zm-11-2l6-4-6-4v8z"/>
+    </svg>
+  );
+}
+
 const PRIMARY_SERVICES = [
   { id: 'airtime', label: 'Airtime', icon: IconNavyPhone, screen: 'airtime' },
   { id: 'data', label: 'Data', icon: IconNavyData, screen: 'data' },
@@ -75,7 +112,7 @@ const PRIMARY_SERVICES = [
   { id: 'electricity', label: 'Electricity', icon: IconNavyElectricity, screen: 'electricity' },
   { id: 'education', label: 'Education', icon: IconNavyEducation, screen: 'exam' },
   { id: 'giftcard', label: 'Gift Card', icon: IconNavyGiftCard, screen: 'giftcard' },
-  { id: 'global', label: 'Global Topup', icon: IconNavyGlobal, screen: 'virtual-numbers' },
+  { id: 'virtual-numbers', label: 'Buy Virtual Number', icon: IconNavyGlobal, screen: 'virtual-numbers' },
 ];
 
 export default function ServicesScreen() {
@@ -88,15 +125,16 @@ export default function ServicesScreen() {
         <div className={styles.title}>All Services</div>
       </div>
 
-      {/* Primary 8 Services Grid matching user's reference screenshot */}
-      <div className={styles.mainGridCard}>
-        {PRIMARY_SERVICES.map((s) => {
+      {/* Primary 8 Services Grid */}
+      <div className={styles.mainGridCard} style={{ '--i': 1 }}>
+        {PRIMARY_SERVICES.map((s, idx) => {
           const IconComp = s.icon;
           return (
             <div
               key={s.id}
               className={styles.gridItem}
               onClick={() => navigate(s.screen)}
+              style={{ '--j': idx }}
             >
               <div className={styles.iconBox}>
                 <IconComp />
@@ -110,6 +148,7 @@ export default function ServicesScreen() {
       {/* Virtual Numbers Feature Card */}
       <div
         className={styles.featureBanner}
+        style={{ '--i': 2 }}
         onClick={() => navigate('virtual-numbers')}
       >
         <div className={styles.featureLeft}>
@@ -131,6 +170,7 @@ export default function ServicesScreen() {
       {/* Gift Cards Feature Card */}
       <div
         className={styles.giftCardBanner}
+        style={{ '--i': 3 }}
         onClick={() => navigate('giftcard')}
       >
         <div className={styles.featureLeft}>
@@ -149,12 +189,14 @@ export default function ServicesScreen() {
         </button>
       </div>
 
-      {/* Quick Service Cards List */}
-      <div className={styles.sectionHeader}>Quick Access</div>
-      <div className={styles.quickList}>
+      {/* Quick Service Cards List with real icons */}
+      <div className={styles.sectionHeader} style={{ '--i': 4 }}>Quick Access</div>
+      <div className={styles.quickList} style={{ '--i': 5 }}>
         <div className={styles.quickRow} onClick={() => navigate('airtime')}>
           <div className={styles.quickLeft}>
-            <div className={styles.quickIconCircle}>📞</div>
+            <div className={styles.quickIconCircle}>
+              <IconPhoneSwap />
+            </div>
             <div>
               <div className={styles.quickTitle}>Airtime to Cash</div>
               <div className={styles.quickSub}>Convert excess airtime balance to wallet cash</div>
@@ -165,7 +207,9 @@ export default function ServicesScreen() {
 
         <div className={styles.quickRow} onClick={() => navigate('exam')}>
           <div className={styles.quickLeft}>
-            <div className={styles.quickIconCircle}>🎓</div>
+            <div className={styles.quickIconCircle}>
+              <IconGradCap />
+            </div>
             <div>
               <div className={styles.quickTitle}>Exam Registration PINs</div>
               <div className={styles.quickSub}>WAEC, NECO & NABTEB result check tokens</div>
@@ -176,7 +220,9 @@ export default function ServicesScreen() {
 
         <div className={styles.quickRow} onClick={() => navigate('cable')}>
           <div className={styles.quickLeft}>
-            <div className={styles.quickIconCircle}>📺</div>
+            <div className={styles.quickIconCircle}>
+              <IconCablePlug />
+            </div>
             <div>
               <div className={styles.quickTitle}>Cable TV Subscriptions</div>
               <div className={styles.quickSub}>Instant activation for DStv, GOtv & Startimes</div>

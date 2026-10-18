@@ -27,6 +27,7 @@
   justify-content: center;
   font-size: 30px;
   font-weight: 600;
+  overflow: hidden;
 }
 
 .welcome {
@@ -37,7 +38,8 @@
 
 .sensorWrap {
   position: absolute;
-  left: 115px;
+  left: 50%;
+  transform: translateX(-50%);
   top: 330px;
   width: 160px;
   height: 160px;
@@ -49,14 +51,19 @@
   inset: 0;
   border-radius: 50%;
   background: #F0B90B;
+  opacity: 0;
 }
 
-.pulse1 {
-  animation: pulse 2.4s ease-out 0s infinite;
+.pulseActive {
+  animation: pulse 2.4s ease-out infinite !important;
 }
 
-.pulse2 {
-  animation: pulse 2.4s ease-out 1.2s infinite;
+.pulse1.pulseActive {
+  animation-delay: 0s !important;
+}
+
+.pulse2.pulseActive {
+  animation-delay: 1.2s !important;
 }
 
 .sensor {
@@ -69,19 +76,52 @@
   justify-content: center;
   color: #000;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transition: background 0.4s, box-shadow 0.4s;
+}
+
+.sensorSuccess {
+  background: #DCFCE7;
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.2);
+}
+
+.sensorError {
+  background: #FEE2E2;
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.2);
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
 }
 
 .instructions {
   position: absolute;
   left: 0;
   right: 0;
-  top: 560px;
+  top: 540px;
   text-align: center;
+  padding: 0 20px;
 }
 
 .title {
   font-size: 20px;
   font-weight: 600;
+}
+
+.titleSuccess {
+  font-size: 20px;
+  font-weight: 700;
+  color: #16A34A;
+}
+
+.titleError {
+  font-size: 20px;
+  font-weight: 700;
+  color: #DC2626;
 }
 
 .subtitle {
@@ -95,6 +135,24 @@
   left: 16px;
   right: 16px;
   bottom: 30px;
+}
+
+.pinBtn {
+  width: 100%;
+  height: 52px;
+  background: #fff;
+  color: #111;
+  border: 1.5px solid #E5E5E5;
+  border-radius: 26px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  transition: transform 0.15s;
+}
+
+.pinBtn:active {
+  transform: scale(0.97);
 }
 
 @keyframes pulse {

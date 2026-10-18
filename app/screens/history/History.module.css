@@ -1,28 +1,44 @@
 .container {
   min-height: 844px;
-  background: #F8F9FA;
+  background: #F5F5F5;
   padding: 16px 18px 40px;
   display: flex;
   flex-direction: column;
+  gap: 14px;
   font-family: 'Outfit', sans-serif;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
-/* Top Nav matching Image 1: Back + Transactions + Download */
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Top Nav */
 .topNav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 0 14px;
+  padding: 4px 0 6px;
 }
 
 .backBtn {
-  background: none;
-  border: none;
-  padding: 6px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #EFEFEF;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: default;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  color: #111;
+  transition: transform 0.15s;
+}
+
+.backBtn:active {
+  transform: scale(0.92);
 }
 
 .navTitle {
@@ -32,41 +48,59 @@
   margin: 0;
 }
 
-.downloadLink {
-  background: none;
-  border: none;
-  color: #0D9488;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: default;
+.downloadStatementBtn {
+  height: 38px;
+  background: #FFF8D6;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+  border-radius: 19px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
   font-family: 'Outfit', sans-serif;
+  cursor: default;
+  transition: transform 0.15s, background-color 0.15s;
+}
+
+.downloadStatementBtn:active {
+  transform: scale(0.95);
+  background: #FEF08A;
 }
 
 /* Dropdown Filters Row */
 .dropdownsRow {
   display: flex;
   gap: 12px;
-  margin-bottom: 16px;
 }
 
 .selectWrap {
   flex: 1;
   position: relative;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border: 1px solid #EAEAEA;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.selectWrap:focus-within {
+  border-color: #F0B90B;
+  box-shadow: 0 0 0 2px rgba(240, 185, 11, 0.2);
 }
 
 .selectFilter {
   width: 100%;
   height: 44px;
   background: transparent;
-  border: 1px solid #EFEFEF;
-  border-radius: 12px;
+  border: none;
+  border-radius: 14px;
   padding: 0 32px 0 14px;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
-  color: #444;
+  color: #222;
   font-family: 'Outfit', sans-serif;
   appearance: none;
   outline: none;
@@ -83,13 +117,15 @@
   font-size: 12px;
 }
 
-/* Period Card matching Image 1 */
+/* Period Summary Card */
 .periodCard {
   background: #fff;
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 16px 18px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .periodTop {
@@ -101,74 +137,289 @@
 .monthSelector {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   cursor: default;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'Outfit', sans-serif;
 }
 
 .monthText {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 800;
   color: #111;
+  letter-spacing: -0.3px;
 }
 
-.monthCaret {
-  font-size: 12px;
-  color: #555;
-}
-
-.analysisBtn {
-  background: #0D9488;
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  padding: 5px 14px;
-  font-size: 12.5px;
+.periodBadge {
+  background: #FFF8D6;
+  color: #92400E;
+  font-size: 11px;
   font-weight: 700;
-  cursor: default;
-  font-family: 'Outfit', sans-serif;
+  padding: 3px 10px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 .inOutRow {
   display: flex;
-  gap: 20px;
-  font-size: 12.5px;
-  color: #777;
-  margin-top: 8px;
+  align-items: center;
+  justify-content: space-between;
+  background: #F9F9F9;
+  border-radius: 14px;
+  padding: 12px 16px;
 }
 
-.inOutRow strong {
+.inOutBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.inOutLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.inAmount {
+  font-size: 15px;
+  font-weight: 700;
+  color: #15803D;
+}
+
+.outAmount {
+  font-size: 15px;
+  font-weight: 700;
   color: #111;
+}
+
+.inOutDivider {
+  width: 1px;
+  height: 28px;
+  background: #E5E5E5;
+}
+
+/* Date Picker Dropdown */
+.datePickerCard {
+  background: #fff;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  animation: slideDown 0.22s cubic-bezier(0.2, 0, 0, 1);
+  border: 1px solid #EAEAEA;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.datePickerTabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  background: #F5F5F5;
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.dateTab {
+  flex: 1;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #777;
+  background: transparent;
+  cursor: default;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.18s;
+}
+
+.dateTabActive {
+  background: #F0B90B;
+  color: #000;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(240, 185, 11, 0.25);
+}
+
+.monthGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.monthChip {
+  height: 38px;
+  border: 1.5px solid #EFEFEF;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  cursor: default;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.15s;
+}
+
+.monthChip:active {
+  transform: scale(0.95);
+}
+
+.monthChipActive {
+  background: #F0B90B;
+  color: #000;
+  border-color: #F0B90B;
   font-weight: 700;
 }
 
-.outText {
+.yearGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.yearChip {
+  height: 42px;
+  border: 1.5px solid #EFEFEF;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  color: #444;
+  cursor: default;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.15s;
+}
+
+.yearChip:active {
+  transform: scale(0.95);
+}
+
+.yearChipActive {
+  background: #F0B90B;
+  color: #000;
+  border-color: #F0B90B;
+  font-weight: 700;
+}
+
+/* Custom Date Range */
+.customRange {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.customField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.customLabel {
+  font-size: 12px;
+  font-weight: 600;
   color: #777;
 }
 
-/* Transaction List matching Image 1 */
-.transactionsList {
+.customInput {
+  height: 44px;
+  border: 1.5px solid #EFEFEF;
+  border-radius: 12px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-family: 'Outfit', sans-serif;
+  color: #333;
+  outline: none;
   background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-  padding: 4px 16px;
-  display: flex;
-  flex-direction: column;
 }
 
-.txRow {
+.customInput:focus {
+  border-color: #F0B90B;
+  box-shadow: 0 0 0 2px rgba(240, 185, 11, 0.2);
+}
+
+.applyBtn {
+  height: 46px;
+  background: #F0B90B;
+  color: #000;
+  border: none;
+  border-radius: 23px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  margin-top: 4px;
+  box-shadow: 0 4px 14px rgba(240, 185, 11, 0.3);
+  transition: transform 0.15s;
+}
+
+.applyBtn:active {
+  transform: scale(0.97);
+}
+
+/* List section */
+.listSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2px;
+}
+
+.groupTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #222;
+}
+
+.recordsCount {
+  font-size: 12px;
+  color: #888;
+}
+
+.transactionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 0;
-  border-bottom: 1px solid #F6F6F6;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.02);
   cursor: default;
+  transition: transform 0.12s, box-shadow 0.12s;
+  animation: cardFadeUp 0.3s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
-.txRow:last-child {
-  border-bottom: none;
+@keyframes cardFadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.txLeft {
+.card:active {
+  transform: scale(0.98);
+}
+
+.left {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -176,37 +427,24 @@
   min-width: 0;
 }
 
-.circleCredit {
-  width: 38px;
-  height: 38px;
+.iconCircle {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconYellow {
+  background: #FFF8D6;
+  color: #B08A00;
+}
+
+.iconGreen {
   background: #DCFCE7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.circleDebit {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #CCFBF1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.circleNeutral {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #CCFBF1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  color: #15803D;
 }
 
 .txInfo {
@@ -216,24 +454,36 @@
 
 .txTitle {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: #111;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.txTime {
-  font-size: 11.5px;
-  color: #888;
-  margin-top: 2px;
+.subInfo {
+  font-size: 12px;
+  color: #777;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.txRight {
+.recipient {
+  color: #444;
+  font-weight: 500;
+}
+
+.time {
+  color: #888;
+}
+
+.right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 3px;
+  gap: 4px;
   flex-shrink: 0;
   margin-left: 10px;
 }
@@ -245,7 +495,7 @@
 }
 
 .amountGreen {
-  color: #0D9488;
+  color: #15803D;
 }
 
 .amountDark {
@@ -256,41 +506,76 @@
   display: flex;
 }
 
+/* Status pills */
 .pillSuccess {
-  font-size: 11px;
-  font-weight: 600;
-  color: #0D9488;
+  background: #DCFCE7;
+  color: #15803D;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2.5px 8px;
+  border-radius: 8px;
 }
 
 .pillPending {
-  font-size: 11px;
-  font-weight: 600;
-  color: #D97706;
+  background: #FEF3C7;
+  color: #92400E;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2.5px 8px;
+  border-radius: 8px;
 }
 
 .pillFailed {
-  font-size: 11px;
-  font-weight: 600;
-  color: #DC2626;
+  background: #FEE2E2;
+  color: #B91C1C;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2.5px 8px;
+  border-radius: 8px;
 }
 
 .pillReversed {
-  font-size: 11px;
-  font-weight: 600;
-  color: #7C3AED;
+  background: #EDE9FE;
+  color: #6D28D9;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2.5px 8px;
+  border-radius: 8px;
 }
 
 .pillDefault {
-  font-size: 11px;
-  font-weight: 600;
-  color: #666;
+  background: #F3F4F6;
+  color: #374151;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2.5px 8px;
+  border-radius: 8px;
 }
 
-.emptyState {
+/* Empty state */
+.emptyCard {
+  background: #fff;
+  border-radius: 20px;
+  padding: 36px 20px;
   text-align: center;
-  padding: 30px 10px;
-  font-size: 13.5px;
-  color: #888;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.emptyIcon {
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.emptyTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+}
+
+.emptySub {
+  font-size: 13px;
+  color: #777;
+  margin-top: 4px;
 }
 
 /* Receipt Sheet Modal */
@@ -301,6 +586,12 @@
   display: flex;
   align-items: flex-end;
   z-index: 300;
+  animation: fadeIn 0.18s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .receiptSheet {
@@ -311,6 +602,12 @@
   padding: 16px 20px 32px;
   display: flex;
   flex-direction: column;
+  animation: sheetUp 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
 
 .receiptHandle {
@@ -325,7 +622,7 @@
   text-align: center;
   font-size: 15px;
   font-weight: 700;
-  color: #666;
+  color: #777;
 }
 
 .receiptAmountLarge {
@@ -379,4 +676,10 @@
   font-family: 'Outfit', sans-serif;
   cursor: default;
   margin-top: 20px;
+  box-shadow: 0 4px 14px rgba(240, 185, 11, 0.35);
+  transition: transform 0.15s;
+}
+
+.closeBtn:active {
+  transform: scale(0.98);
 }

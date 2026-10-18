@@ -2,9 +2,8 @@
 import { useApp } from '../../context/AppContext';
 import {
   IconNavyPhone, IconNavyData, IconNavyTV, IconNavyBetting,
-  IconNavyElectricity, IconNavyEducation, IconNavyGiftCard, IconNavyGlobal
+  IconNavyElectricity, IconNavyEducation, IconNavyGiftCard, IconNavyMore
 } from '../services/Services';
-import PromoCarousel from '../../components/PromoCarousel';
 import styles from './Dashboard.module.css';
 
 const services = [
@@ -15,14 +14,101 @@ const services = [
   { icon: IconNavyElectricity, label: 'Electricity', screen: 'electricity' },
   { icon: IconNavyEducation, label: 'Education', screen: 'exam' },
   { icon: IconNavyGiftCard, label: 'Gift Card', screen: 'giftcard' },
-  { icon: IconNavyGlobal, label: 'Global Topup', screen: 'virtual-numbers' },
+  { icon: IconNavyMore, label: 'More', screen: 'services' },
 ];
 
-const banners = [
-  { bg: '#F0B90B', color: '#000', subColor: '#3d3000', title: 'Invite & Earn', sub: 'Refer a friend and earn on every purchase.', btnBg: '#000', btnColor: '#fff', btnText: 'Go', screen: 'rewards' },
-  { bg: '#0B0B0B', color: '#fff', subColor: '#bdbdbd', title: 'Cheap Data Bundles', sub: 'All networks, delivered instantly.', btnBg: '#F0B90B', btnColor: '#000', btnText: 'Buy', screen: 'data' },
-  { bg: '#fff', color: '#000', subColor: '#666', title: 'Pay Bills Fast', sub: 'DStv, GOtv, Startimes & electricity.', btnBg: '#000', btnColor: '#fff', btnText: 'Pay', screen: 'cable' },
-  { bg: '#0B0B0B', color: '#fff', subColor: '#bdbdbd', title: 'Virtual Phone Numbers', sub: 'Receive SMS verification OTPs globally.', btnBg: '#F0B90B', btnColor: '#000', btnText: 'Get', screen: 'virtual-numbers' },
+const topBanners = [
+  {
+    bg: '#18191E',
+    color: '#fff',
+    subColor: '#aaa',
+    title: 'Trade & Buy Gift Cards',
+    sub: 'Amazon, Steam, Apple & Razer rates.',
+    btnBg: '#F0B90B',
+    btnColor: '#000',
+    btnText: 'Trade',
+    screen: 'giftcard'
+  },
+  {
+    bg: '#0D1C13',
+    color: '#fff',
+    subColor: '#98d8aa',
+    title: 'Airtime to Cash',
+    sub: 'Convert MTN, Airtel & Glo to cash.',
+    btnBg: '#22C55E',
+    btnColor: '#fff',
+    btnText: 'Convert',
+    screen: 'services'
+  },
+  {
+    bg: '#081B2B',
+    color: '#fff',
+    subColor: '#93c5fd',
+    title: 'Buy Virtual Numbers',
+    sub: 'USA, UK, Canada SMS verification.',
+    btnBg: '#38BDF8',
+    btnColor: '#000',
+    btnText: 'Get Now',
+    screen: 'virtual-numbers'
+  },
+  {
+    bg: '#1C1908',
+    color: '#fff',
+    subColor: '#e0d890',
+    title: 'Cheap SME Data Plans',
+    sub: '1GB from ₦280 instant delivery.',
+    btnBg: '#F0B90B',
+    btnColor: '#000',
+    btnText: 'Buy Data',
+    screen: 'data'
+  },
+];
+
+const bottomBanners = [
+  {
+    bg: '#F0B90B',
+    color: '#000',
+    subColor: '#3d3000',
+    title: 'Invite & Earn Rewards',
+    sub: 'Refer friends & earn on every purchase.',
+    btnBg: '#000',
+    btnColor: '#fff',
+    btnText: 'Invite',
+    screen: 'rewards'
+  },
+  {
+    bg: '#0B0B0B',
+    color: '#fff',
+    subColor: '#bdbdbd',
+    title: 'Pay Bills Instantly',
+    sub: 'DStv, GOtv, Startimes & Disco tokens.',
+    btnBg: '#F0B90B',
+    btnColor: '#000',
+    btnText: 'Pay',
+    screen: 'cable'
+  },
+  {
+    bg: '#fff',
+    color: '#000',
+    subColor: '#666',
+    title: '24/7 Fast Support',
+    sub: 'WhatsApp & customer support available.',
+    btnBg: '#000',
+    btnColor: '#fff',
+    btnText: 'Chat',
+    screen: 'help-support'
+  },
+  {
+    bg: '#0B0B0B',
+    color: '#fff',
+    subColor: '#bdbdbd',
+    title: 'Exam Result Pins',
+    sub: 'WAEC, NECO & NABTEB instant tokens.',
+    btnBg: '#F0B90B',
+    btnColor: '#000',
+    btnText: 'Buy',
+    screen: 'exam'
+  },
 ];
 
 export default function DashboardScreen() {
@@ -99,40 +185,41 @@ export default function DashboardScreen() {
         </div>
       </div>
 
-      {/* Card showing Last Transaction (replacing Reseller Service - Today's Sales) */}
-      <div
-        className={styles.resellerCard}
-        style={{ cursor: 'pointer', '--i': 2 }}
-        onClick={() => navigate('transactions')}
-      >
-        <span>
-          Last Transaction:{' '}
-          <b>{latestTx ? `${latestTx.title} (₦${Math.abs(latestTx.amount).toLocaleString()}.00)` : 'None yet'}</b>
-        </span>
-        <span style={{ fontSize: '18px', fontWeight: 600, color: '#666' }}>›</span>
-      </div>
-
-      {/* Carousel Banner (Replaces quick actions 'To Wallet, To Bank, Save, Withdraw') */}
-      <div style={{ marginTop: '10px', '--i': 3 }}>
-        <PromoCarousel />
-      </div>
-
-      {/* Services Grid with deep Navy Blue icons matching Services Tab */}
-      <div className={styles.servicesGrid} style={{ '--i': 4 }}>
-        {services.map(({ icon: Icon, label, screen }) => (
-          <div key={label} className={styles.serviceItem} onClick={() => navigate(screen)}>
-            <div className={styles.serviceIcon}>
-              <Icon />
+      {/* Last Transaction Card (matching reference design) */}
+      {latestTx && (
+        <div
+          className={styles.lastTxCard}
+          style={{ cursor: 'pointer', '--i': 2 }}
+          onClick={() => navigate('transactions')}
+        >
+          <div className={styles.lastTxLeft}>
+            <div className={styles.lastTxIcon}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={latestTx.amount > 0 ? '#16A34A' : '#0D9488'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                {latestTx.amount > 0 ? (
+                  <><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></>
+                ) : (
+                  <><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></>
+                )}
+              </svg>
             </div>
-            <span>{label}</span>
+            <div className={styles.lastTxInfo}>
+              <div className={styles.lastTxTitle}>{latestTx.title}</div>
+              <div className={styles.lastTxTime}>{latestTx.time || 'Just now'}</div>
+            </div>
           </div>
-        ))}
-      </div>
+          <div className={styles.lastTxRight}>
+            <div className={styles.lastTxAmount}>
+              {latestTx.amount > 0 ? '+' : '-'}₦{Math.abs(latestTx.amount).toLocaleString()}.00
+            </div>
+            <span className={styles.lastTxArrow}>›</span>
+          </div>
+        </div>
+      )}
 
-      {/* Bottom Banner Carousel closer to menu tab (restored) */}
-      <div className={styles.carouselWrap} style={{ '--i': 5 }}>
+      {/* Top Banner Carousel (Replaces 'To Wallet, To Bank, Save, Withdraw' with matching 96px banner size) */}
+      <div className={styles.carouselWrap} style={{ '--i': 3 }}>
         <div className={styles.carouselTrack}>
-          {[...banners, banners[0]].map((b, i) => (
+          {[...topBanners, topBanners[0]].map((b, i) => (
             <div key={i} className={styles.bannerSlide} style={{ background: b.bg, color: b.color }}>
               <div>
                 <div className={styles.bannerTitle}>{b.title}</div>
@@ -151,7 +238,49 @@ export default function DashboardScreen() {
         </div>
       </div>
 
-      {/* Carousel Dots */}
+      {/* Top Carousel Dots */}
+      <div className={styles.dots}>
+        <div className={styles.dot} style={{ animation: 'd1 15s ease-in-out infinite' }} />
+        <div className={styles.dot} style={{ animation: 'd2 15s ease-in-out infinite' }} />
+        <div className={styles.dot} style={{ animation: 'd3 15s ease-in-out infinite' }} />
+        <div className={styles.dot} style={{ animation: 'd4 15s ease-in-out infinite' }} />
+      </div>
+
+      {/* Services Grid with deep Navy Blue icons & 'More' replacing Global Topup */}
+      <div className={styles.servicesGrid} style={{ '--i': 4 }}>
+        {services.map(({ icon: Icon, label, screen }) => (
+          <div key={label} className={styles.serviceItem} onClick={() => navigate(screen)}>
+            <div className={styles.serviceIcon}>
+              <Icon />
+            </div>
+            <span>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom Banner Carousel closer to menu tab (uniform 96px size with top carousel) */}
+      <div className={styles.carouselWrap} style={{ '--i': 5 }}>
+        <div className={styles.carouselTrack}>
+          {[...bottomBanners, bottomBanners[0]].map((b, i) => (
+            <div key={i} className={styles.bannerSlide} style={{ background: b.bg, color: b.color }}>
+              <div>
+                <div className={styles.bannerTitle}>{b.title}</div>
+                <div className={styles.bannerSub} style={{ color: b.subColor }}>{b.sub}</div>
+              </div>
+              <button
+                type="button"
+                className={styles.bannerBtn}
+                style={{ background: b.btnBg, color: b.btnColor }}
+                onClick={() => navigate(b.screen)}
+              >
+                {b.btnText}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom Carousel Dots */}
       <div className={styles.dots}>
         <div className={styles.dot} style={{ animation: 'd1 15s ease-in-out infinite' }} />
         <div className={styles.dot} style={{ animation: 'd2 15s ease-in-out infinite' }} />

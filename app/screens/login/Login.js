@@ -81,13 +81,6 @@ export default function LoginScreen() {
         </button>
       </div>
 
-      <div className={styles.orText}>or use your fingerprint</div>
-      <div className={styles.fingerWrap}>
-        <button className={styles.fingerBtn} onClick={() => navigate('fingerprint')}>
-          <IconFingerprint size={26} />
-        </button>
-      </div>
-
       <div className={styles.homeBar} />
     </div>
   );
