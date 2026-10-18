@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/PageHeader';
 import NetworkSelector, { PROVIDERS } from '../../components/NetworkSelector';
+import PromoCarousel, { BETTING_PROMOS } from '../../components/PromoCarousel';
 import styles from './Betting.module.css';
 
 const QUICK_AMOUNTS = [500, 1000, 2000, 5000];
@@ -121,6 +122,11 @@ export default function BettingScreen() {
           >
             Continue
           </button>
+        </div>
+
+        {/* Bottom Promo Carousel */}
+        <div style={{ marginTop: '20px', marginBottom: '24px' }}>
+          <PromoCarousel items={BETTING_PROMOS} title="Explore Other Services" />
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/PageHeader';
 import NetworkSelector, { PROVIDERS } from '../../components/NetworkSelector';
+import PromoCarousel, { DATA_PROMOS } from '../../components/PromoCarousel';
 import styles from './Data.module.css';
 
 const DATA_PLANS = {
@@ -148,6 +149,11 @@ export default function DataScreen() {
           >
             Continue
           </button>
+        </div>
+
+        {/* Bottom Promo Carousel */}
+        <div style={{ marginTop: '20px', marginBottom: '24px' }}>
+          <PromoCarousel items={DATA_PROMOS} title="Explore Other Services" />
         </div>
       </div>
     </div>

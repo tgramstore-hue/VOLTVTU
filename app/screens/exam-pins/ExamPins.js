@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/PageHeader';
 import NetworkSelector, { PROVIDERS } from '../../components/NetworkSelector';
+import PromoCarousel, { EXAM_PROMOS } from '../../components/PromoCarousel';
 import styles from './ExamPins.module.css';
 
 const EXAM_PRICES = {
@@ -115,6 +116,11 @@ export default function ExamPinsScreen() {
           >
             Continue
           </button>
+        </div>
+
+        {/* Bottom Promo Carousel */}
+        <div style={{ marginTop: '20px', marginBottom: '24px' }}>
+          <PromoCarousel items={EXAM_PROMOS} title="Explore Other Services" />
         </div>
       </div>
     </div>

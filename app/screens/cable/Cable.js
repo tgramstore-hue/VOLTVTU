@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/PageHeader';
 import NetworkSelector, { PROVIDERS } from '../../components/NetworkSelector';
+import PromoCarousel, { CABLE_PROMOS } from '../../components/PromoCarousel';
 import styles from './Cable.module.css';
 
 const PACKAGES = {
@@ -150,6 +151,11 @@ export default function CableScreen() {
           >
             Continue
           </button>
+        </div>
+
+        {/* Bottom Promo Carousel */}
+        <div style={{ marginTop: '20px', marginBottom: '24px' }}>
+          <PromoCarousel items={CABLE_PROMOS} title="Explore Other Services" />
         </div>
       </div>
     </div>

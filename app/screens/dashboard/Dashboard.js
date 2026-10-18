@@ -5,6 +5,7 @@ import {
   IconWallet, IconPhone, IconData, IconTV, IconBolt,
   IconExam, IconBetting
 } from '../../components/Icons';
+import PromoCarousel from '../../components/PromoCarousel';
 import styles from './Dashboard.module.css';
 
 // SVG Icons matching the reference design in navy blue style
@@ -116,8 +117,23 @@ export default function DashboardScreen() {
         </div>
       </div>
 
-      {/* Recent Transaction pill */}
-      <div style={{ padding: '0 16px', marginTop: '12px', '--i': 2 }}>
+      {/* Carousel Banner (Replaces quick actions section right below balance card) */}
+      <div style={{ marginTop: '4px', '--i': 2 }}>
+        <PromoCarousel />
+      </div>
+
+      {/* Services Grid matching exact reference arrangement */}
+      <div className={styles.servicesGrid} style={{ '--i': 3 }}>
+        {services.map(({ icon: Icon, label, screen }) => (
+          <div key={label} className={styles.serviceItem} onClick={() => navigate(screen)}>
+            <div className={styles.serviceIcon}><Icon size={24} /></div>
+            <span>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Recent Transaction Card */}
+      <div style={{ padding: '0 16px', marginTop: '16px', marginBottom: '24px', '--i': 4 }}>
         <div
           className="card"
           style={{
@@ -128,7 +144,7 @@ export default function DashboardScreen() {
             background: '#fff',
             borderRadius: '20px',
             boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
-            cursor: 'default'
+            cursor: 'pointer'
           }}
           onClick={() => navigate('transactions')}
         >
@@ -159,101 +175,6 @@ export default function DashboardScreen() {
             {!latestTx && <span style={{ fontSize: '13px', color: '#F0B90B', fontWeight: 600 }}>History ›</span>}
           </div>
         </div>
-      </div>
-
-      {/* Feature Promo Banner (Replaces transfer/withdrawal quick actions) */}
-      <div style={{ padding: '0 16px', marginTop: '14px', '--i': 3 }}>
-        <div
-          style={{
-            background: '#0B0B0B',
-            color: '#fff',
-            borderRadius: '22px',
-            padding: '16px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.1)',
-            cursor: 'default',
-          }}
-          onClick={() => navigate('virtual-numbers')}
-        >
-          <div style={{ flex: 1, paddingRight: '12px' }}>
-            <span style={{
-              display: 'inline-block',
-              background: 'rgba(240, 185, 11, 0.2)',
-              color: '#F0B90B',
-              fontSize: '11px',
-              fontWeight: 700,
-              padding: '2px 8px',
-              borderRadius: '8px',
-              marginBottom: '5px'
-            }}>HOT SERVICE</span>
-            <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff', letterSpacing: '-0.2px' }}>
-              Buy Virtual Phone Numbers
-            </div>
-            <div style={{ fontSize: '12px', color: '#aaa', marginTop: '2px' }}>
-              USA, UK, Canada & global SMS OTP verification
-            </div>
-          </div>
-          <button
-            type="button"
-            style={{
-              height: '38px',
-              padding: '0 16px',
-              borderRadius: '19px',
-              background: '#F0B90B',
-              color: '#000',
-              fontWeight: 700,
-              fontSize: '13px',
-              border: 'none',
-              cursor: 'default',
-              flexShrink: 0
-            }}
-            onClick={(e) => { e.stopPropagation(); navigate('virtual-numbers'); }}
-          >
-            Get Number
-          </button>
-        </div>
-      </div>
-
-      {/* Services Grid matching exact reference arrangement */}
-      <div className={styles.servicesGrid} style={{ '--i': 4 }}>
-        {services.map(({ icon: Icon, label, screen }) => (
-          <div key={label} className={styles.serviceItem} onClick={() => navigate(screen)}>
-            <div className={styles.serviceIcon}><Icon size={24} /></div>
-            <span>{label}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Banner Carousel */}
-      <div className={styles.carouselWrap} style={{ '--i': 5 }}>
-        <div className={styles.carouselTrack}>
-          {[...banners, banners[0]].map((b, i) => (
-            <div key={i} className={styles.bannerSlide} style={{ background: b.bg, color: b.color }}>
-              <div>
-                <div className={styles.bannerTitle}>{b.title}</div>
-                <div className={styles.bannerSub} style={{ color: b.subColor }}>{b.sub}</div>
-              </div>
-              <button
-                type="button"
-                className={styles.bannerBtn}
-                style={{ background: b.btnBg, color: b.btnColor }}
-                onClick={() => navigate(b.screen)}
-              >
-                {b.btnText}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Carousel Dots */}
-      <div className={styles.dots}>
-        <div className={styles.dot} style={{ animation: 'd1 15s ease-in-out infinite' }} />
-        <div className={styles.dot} style={{ animation: 'd2 15s ease-in-out infinite' }} />
-        <div className={styles.dot} style={{ animation: 'd3 15s ease-in-out infinite' }} />
-        <div className={styles.dot} style={{ animation: 'd4 15s ease-in-out infinite' }} />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/PageHeader';
 import NetworkSelector, { PROVIDERS } from '../../components/NetworkSelector';
+import PromoCarousel, { AIRTIME_PROMOS } from '../../components/PromoCarousel';
 import styles from './Airtime.module.css';
 
 const QUICK_AMOUNTS = [100, 200, 500, 1000];
@@ -144,6 +145,11 @@ export default function AirtimeScreen() {
           >
             Continue
           </button>
+        </div>
+
+        {/* Bottom Promo Carousel */}
+        <div style={{ marginTop: '20px', marginBottom: '24px' }}>
+          <PromoCarousel items={AIRTIME_PROMOS} title="More VTU Services" />
         </div>
       </div>
     </div>

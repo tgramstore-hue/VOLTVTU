@@ -1,0 +1,141 @@
+.wrapper {
+  width: 100%;
+  position: relative;
+  margin: 12px 0;
+}
+
+.carouselTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  padding: 0 16px;
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+
+.track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: 12px;
+  padding: 0 16px;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  flex: 0 0 calc(100% - 32px);
+  max-width: 100%;
+  scroll-snap-align: center;
+  border-radius: 20px;
+  padding: 18px 20px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+}
+
+.card:active {
+  transform: scale(0.985);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.cardIconWrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+
+.desc {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #999;
+  margin-bottom: 14px;
+}
+
+.actionRow {
+  display: flex;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 18px;
+  font-size: 12.5px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: #d4d4d8;
+  cursor: pointer;
+  transition: width 0.25s ease, background 0.25s ease;
+}
+
+.dotActive {
+  width: 20px;
+  background: #F0B90B;
+}
