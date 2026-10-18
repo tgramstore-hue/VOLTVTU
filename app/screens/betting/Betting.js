@@ -15,6 +15,27 @@ export default function BettingScreen() {
 
   const numAmount = Number(amount) || 0;
 
+  const handleQuickAmount = (val) => {
+    setAmount(String(val));
+    const recipientCust = customerId && customerId.trim().length >= 5 ? customerId.trim() : '9823471';
+    if (!customerId || customerId.trim().length < 5) {
+      setCustomerId(recipientCust);
+    }
+    const platObj = PROVIDERS.bettingPlatforms.find(b => b.id === platform);
+    setPurchase({
+      type: 'Betting Wallet Top-up',
+      category: 'betting',
+      provider: platObj ? platObj.label : platform.toUpperCase(),
+      recipient: recipientCust,
+      customerName: 'KINGSLEY O.',
+      amount: val,
+      fee: 50,
+      cashback: 0,
+      total: val + 50,
+    });
+    navigate('confirm-payment');
+  };
+
   const handleContinue = () => {
     if (!numAmount || !customerId) return;
     const platObj = PROVIDERS.bettingPlatforms.find(b => b.id === platform);
@@ -83,7 +104,7 @@ export default function BettingScreen() {
                 key={val}
                 type="button"
                 className={`${styles.chip} ${numAmount === val ? styles.chipActive : ''}`}
-                onClick={() => setAmount(String(val))}
+                onClick={() => handleQuickAmount(val)}
               >
                 ₦{val.toLocaleString()}
               </button>

@@ -68,7 +68,7 @@
 
 .stepBtn:active {
   transform: scale(0.92);
-  background: var(--y);
+  background: #F0B90B;
 }
 
 .stepValue {
@@ -141,7 +141,7 @@
 .btn {
   width: 100%;
   height: 56px;
-  background: var(--y);
+  background: #F0B90B;
   color: #000;
   border: none;
   border-radius: 28px;

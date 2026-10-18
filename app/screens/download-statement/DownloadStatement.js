@@ -1,23 +1,35 @@
 'use client';
 import { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import PageHeader from '../../components/PageHeader';
 import styles from './DownloadStatement.module.css';
 
 export default function DownloadStatementScreen() {
   const { state, goBack } = useApp();
 
-  const [timeRange, setTimeRange] = useState('30d');
-  const [startDate, setStartDate] = useState('2026-09-18');
-  const [endDate, setEndDate] = useState('2026-10-18');
-  const [email, setEmail] = useState(state.user.email || 'etim@example.com');
-  const [includeAddress, setIncludeAddress] = useState(true);
-  const [includeSeal, setIncludeSeal] = useState(true);
-  const [fileFormat, setFileFormat] = useState('pdf');
+  const [timeRange, setTimeRange] = useState('last_month');
+  const [startDate, setStartDate] = useState('18 Sep, 2026');
+  const [endDate, setEndDate] = useState('17 Oct, 2026');
+  const [email, setEmail] = useState(state.user.email || 'w*@gmail.com');
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState('Volt Wallet - 9482103841');
+  const [fileType, setFileType] = useState('PDF Document (.pdf)');
+  const [showAccountModal, setShowAccountModal] = useState(false);
+  const [showFileTypeModal, setShowFileTypeModal] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const handleDownload = (e) => {
+  const handleTimeRangeChange = (val) => {
+    setTimeRange(val);
+    if (val === 'last_month') {
+      setStartDate('18 Sep, 2026');
+      setEndDate('17 Oct, 2026');
+    } else if (val === 'last_2_months') {
+      setStartDate('18 Aug, 2026');
+      setEndDate('17 Oct, 2026');
+    }
+  };
+
+  const handleContinue = (e) => {
     e.preventDefault();
     setIsGenerating(true);
 
@@ -25,16 +37,18 @@ export default function DownloadStatementScreen() {
       setIsGenerating(false);
       setSuccess(true);
 
-      // Create downloadable statement file
+      // Trigger text statement download
       const statementContent = `==========================================================
 VTUFLASH FINANCIAL SERVICES - OFFICIAL ACCOUNT STATEMENT
 ==========================================================
 Account Holder:   ${state.user.name.toUpperCase()}
 Phone Number:     ${state.user.phone}
+Account:          ${selectedAccount}
 Email Address:    ${email}
-${includeAddress ? `Residential Addr: ${state.user.address || 'Victoria Island, Lagos'}\n` : ''}${includeSeal ? `Account Volt Tag: VTU-948210 | KYC Verified Tier ${state.user.tier || 1}\n` : ''}Date Range:       ${timeRange === 'custom' ? `${startDate} to ${endDate}` : timeRange.toUpperCase()}
+Time Frame:       ${startDate} to ${endDate}
+Format:           ${fileType}
 Generated On:     ${new Date().toLocaleString()}
-Current Balance:  ₦${(state.user.balance || 0).toLocaleString()}.00
+Balance:          ₦${(state.user.balance || 0).toLocaleString()}.00
 ----------------------------------------------------------
 TRANSACTION SUMMARY
 ----------------------------------------------------------
@@ -47,184 +61,217 @@ ${state.transactions
   )
   .join('\n')}
 ==========================================================
-This is an authentic computer-generated statement issued by VTUflash.
+This is an authentic statement issued by VTUflash.
 ==========================================================`;
 
       const blob = new Blob([statementContent], { type: 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `VTUflash_Statement_${state.user.name}_${new Date().toISOString().slice(0, 10)}.txt`;
+      link.download = `VTUflash_Statement_${new Date().toISOString().slice(0, 10)}.txt`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-    }, 1200);
+    }, 1000);
   };
 
   return (
     <div className={styles.container}>
-      <PageHeader title="Download Statement" onBack={goBack} />
+      {/* Top Header matching Image 2 */}
+      <div className={styles.topNav}>
+        <button type="button" className={styles.backBtn} onClick={goBack} aria-label="Go back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#222" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <h1 className={styles.navTitle}>Download Statement</h1>
+        <div style={{ width: 28 }} />
+      </div>
 
-      <form onSubmit={handleDownload} className={styles.content}>
-        {/* Banner */}
-        <div className={styles.banner}>
-          <div className={styles.bannerTitle}>Account Statement of Transactions</div>
-          <div className={styles.bannerSub}>
-            Generate an official breakdown of all your VTU credits, debits, and bill payments.
+      <form onSubmit={handleContinue} className={styles.content}>
+        {/* Card 1: Time Frame */}
+        <div className={styles.card}>
+          <div className={styles.cardTitle}>Time Frame</div>
+
+          <div className={styles.pillsRow}>
+            <button
+              type="button"
+              className={`${styles.timePill} ${timeRange === 'last_month' ? styles.timePillActive : ''}`}
+              onClick={() => handleTimeRangeChange('last_month')}
+            >
+              Last month
+              {timeRange === 'last_month' && <span className={styles.checkCorner}>✓</span>}
+            </button>
+
+            <button
+              type="button"
+              className={`${styles.timePill} ${timeRange === 'last_2_months' ? styles.timePillActive : ''}`}
+              onClick={() => handleTimeRangeChange('last_2_months')}
+            >
+              Last 2 months
+              {timeRange === 'last_2_months' && <span className={styles.checkCorner}>✓</span>}
+            </button>
+
+            <button
+              type="button"
+              className={`${styles.timePill} ${timeRange === 'custom' ? styles.timePillActive : ''}`}
+              onClick={() => handleTimeRangeChange('custom')}
+            >
+              Custom
+              {timeRange === 'custom' && <span className={styles.checkCorner}>✓</span>}
+            </button>
           </div>
-        </div>
 
-        {/* Time frame selector */}
-        <div className={styles.section}>
-          <label className={styles.sectionTitle}>Select Time Frame</label>
-          <div className={styles.rangeGrid}>
-            {[
-              { id: '30d', label: 'Last 30 Days' },
-              { id: '90d', label: 'Last 3 Months' },
-              { id: 'month', label: 'This Month' },
-              { id: 'custom', label: 'Custom Range' },
-            ].map((r) => (
-              <button
-                key={r.id}
-                type="button"
-                className={`${styles.rangeChip} ${timeRange === r.id ? styles.rangeChipActive : ''}`}
-                onClick={() => setTimeRange(r.id)}
-              >
-                {r.label}
-              </button>
-            ))}
-          </div>
-        </div>
+          <div className={styles.dashedDivider} />
 
-        {/* Custom Date inputs */}
-        {timeRange === 'custom' && (
           <div className={styles.datesRow}>
-            <div className={styles.dateField}>
-              <label className={styles.inputLabel}>Start Date</label>
+            <div className={styles.dateBlock}>
+              <span className={styles.dateLabel}>Start Date</span>
               <input
-                type="date"
+                type="text"
                 className={styles.dateInput}
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
               />
             </div>
-            <div className={styles.dateField}>
-              <label className={styles.inputLabel}>End Date</label>
+            <div className={styles.dateBlock}>
+              <span className={styles.dateLabel}>End Date</span>
               <input
-                type="date"
+                type="text"
                 className={styles.dateInput}
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Delivery email */}
-        <div className={styles.section}>
-          <label className={styles.sectionTitle}>Send Statement To Email</label>
-          <div className={styles.inputWrap}>
-            <input
-              type="email"
-              className={styles.input}
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+        {/* Card 2: Email */}
+        <div className={styles.card}>
+          <div className={styles.cardTitle}>Email</div>
+          <div className={styles.cardSubtitle}>
+            Your account statement will be sent to your email.
+          </div>
+
+          <div className={styles.selectRow}>
+            {isEditingEmail ? (
+              <input
+                type="email"
+                className={styles.emailEditInput}
+                value={email}
+                autoFocus
+                onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => setIsEditingEmail(false)}
+              />
+            ) : (
+              <span className={styles.emailText}>{email}</span>
+            )}
+            <button
+              type="button"
+              className={styles.editBtn}
+              onClick={() => setIsEditingEmail(!isEditingEmail)}
+            >
+              {isEditingEmail ? 'Save' : 'Edit >'}
+            </button>
           </div>
         </div>
 
-        {/* Options */}
-        <div className={styles.section}>
-          <label className={styles.sectionTitle}>Statement Preferences</label>
-          <div className={styles.optionsCard}>
-            <div className={styles.optionRow}>
-              <div>
-                <div className={styles.optionTitle}>Include Residential Address</div>
-                <div className={styles.optionSub}>Based on your KYC submission</div>
-              </div>
-              <input
-                type="checkbox"
-                className={styles.checkbox}
-                checked={includeAddress}
-                onChange={(e) => setIncludeAddress(e.target.checked)}
-              />
-            </div>
+        {/* Card 3: Based On */}
+        <div className={styles.card}>
+          <div className={styles.cardTitle}>Based On</div>
+          <div className={styles.cardSubtitle}>
+            Select the account number you want to generate a statement for
+          </div>
 
-            <div className={styles.optionRow}>
-              <div>
-                <div className={styles.optionTitle}>Official KYC Seal & Volt Tag</div>
-                <div className={styles.optionSub}>Includes verification watermark</div>
-              </div>
-              <input
-                type="checkbox"
-                className={styles.checkbox}
-                checked={includeSeal}
-                onChange={(e) => setIncludeSeal(e.target.checked)}
-              />
-            </div>
+          <div
+            className={styles.selectRow}
+            onClick={() => setShowAccountModal(true)}
+          >
+            <span className={styles.selectPlaceholder}>{selectedAccount}</span>
+            <span className={styles.chevron}>›</span>
           </div>
         </div>
 
-        {/* Format */}
-        <div className={styles.section}>
-          <label className={styles.sectionTitle}>File Format</label>
-          <div className={styles.formatRow}>
-            <button
-              type="button"
-              className={`${styles.formatBtn} ${fileFormat === 'pdf' ? styles.formatBtnActive : ''}`}
-              onClick={() => setFileFormat('pdf')}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-              </svg>
-              <span>PDF Document</span>
-            </button>
-            <button
-              type="button"
-              className={`${styles.formatBtn} ${fileFormat === 'csv' ? styles.formatBtnActive : ''}`}
-              onClick={() => setFileFormat('csv')}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                <line x1="3" y1="9" x2="21" y2="9"/>
-                <line x1="3" y1="15" x2="21" y2="15"/>
-                <line x1="9" y1="3" x2="9" y2="21"/>
-              </svg>
-              <span>Excel / CSV</span>
-            </button>
+        {/* Card 4: File Type */}
+        <div className={styles.card}>
+          <div className={styles.cardTitle}>File Type</div>
+          <div className={styles.cardSubtitle}>
+            Select the format in which you would like to receive your account statement
+          </div>
+
+          <div
+            className={styles.selectRow}
+            onClick={() => setShowFileTypeModal(true)}
+          >
+            <span className={styles.selectPlaceholder}>{fileType}</span>
+            <span className={styles.chevron}>›</span>
           </div>
         </div>
 
         {/* Success toast */}
         {success && (
           <div className={styles.successToast}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#15803D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-            <div>
-              <div className={styles.toastTitle}>Statement Generated!</div>
-              <div className={styles.toastSub}>Downloaded & dispatched to {email}</div>
-            </div>
+            ✓ Statement generated and sent to {email}!
           </div>
         )}
 
-        {/* Submit */}
+        {/* Unified Yellow Continue Button */}
         <div className={styles.btnWrap}>
           <button
             type="submit"
             className={styles.btn}
-            disabled={isGenerating || !email}
+            disabled={isGenerating}
           >
-            {isGenerating ? 'Generating Statement...' : 'Download & Email Statement'}
+            {isGenerating ? 'Generating...' : 'Continue'}
           </button>
         </div>
       </form>
+
+      {/* Account Select Modal */}
+      {showAccountModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowAccountModal(false)}>
+          <div className={styles.modalSheet} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalTitle}>Select Account</div>
+            {[
+              'Volt Wallet - 9482103841',
+              'Moniepoint Virtual - 8492019482',
+              'Wema Bank Virtual - 0192837465',
+            ].map((acc) => (
+              <div
+                key={acc}
+                className={styles.modalOption}
+                onClick={() => { setSelectedAccount(acc); setShowAccountModal(false); }}
+              >
+                <span>{acc}</span>
+                {selectedAccount === acc && <span className={styles.modalCheck}>✓</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* File Type Select Modal */}
+      {showFileTypeModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowFileTypeModal(false)}>
+          <div className={styles.modalSheet} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalTitle}>Select File Format</div>
+            {[
+              'PDF Document (.pdf)',
+              'Excel Spreadsheet (.csv)',
+            ].map((ft) => (
+              <div
+                key={ft}
+                className={styles.modalOption}
+                onClick={() => { setFileType(ft); setShowFileTypeModal(false); }}
+              >
+                <span>{ft}</span>
+                {fileType === ft && <span className={styles.modalCheck}>✓</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

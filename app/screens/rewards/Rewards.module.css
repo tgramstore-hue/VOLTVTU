@@ -68,7 +68,7 @@
 }
 
 .redeemBtn {
-  background: var(--y);
+  background: #F0B90B;
   color: #000;
   border: none;
   height: 44px;
@@ -184,7 +184,7 @@
 }
 
 .dayCoinToday {
-  background: var(--y);
+  background: #F0B90B;
   color: #000;
   box-shadow: 0 4px 12px rgba(240, 185, 11, 0.4);
 }

@@ -35,6 +35,29 @@ export default function DataScreen() {
   const currentPlans = DATA_PLANS[tab] || [];
   const activePlanObj = currentPlans.find(p => p.id === selectedPlan) || currentPlans[0];
 
+  const handleSelectPlan = (plan) => {
+    setSelectedPlan(plan.id);
+    const recipientPhone = phone && phone.trim().length >= 10 ? phone.trim() : '08012345678';
+    if (!phone || phone.trim().length < 10) {
+      setPhone(recipientPhone);
+    }
+    const providerObj = PROVIDERS.networks.find(n => n.id === network);
+    setPurchase({
+      type: 'Data Bundle',
+      category: 'data',
+      provider: providerObj ? providerObj.label : network.toUpperCase(),
+      network,
+      plan: plan.name,
+      validity: plan.validity,
+      recipient: recipientPhone,
+      amount: plan.price,
+      fee: 0,
+      cashback: Math.round(plan.price * 0.01),
+      total: plan.price,
+    });
+    navigate('confirm-payment');
+  };
+
   const handleContinue = () => {
     if (!activePlanObj || !phone) return;
     const providerObj = PROVIDERS.networks.find(n => n.id === network);
@@ -104,7 +127,7 @@ export default function DataScreen() {
               <div
                 key={plan.id}
                 className={`${styles.planCard} ${selectedPlan === plan.id ? styles.planCardActive : ''}`}
-                onClick={() => setSelectedPlan(plan.id)}
+                onClick={() => handleSelectPlan(plan)}
               >
                 <div>
                   <div className={styles.planName}>{plan.name}</div>

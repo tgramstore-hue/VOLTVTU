@@ -9,9 +9,12 @@
 :root {
   /* Brand Colors */
   --brand-yellow: #F0B90B;
+  --y: #F0B90B;
   --near-black: #0B0B0B;
   --page-bg: #F5F5F5;
+  --bg: #F5F5F5;
   --card-white: #ffffff;
+  --mut: #777777;
 
   /* Text Colors */
   --text-primary: #000000;

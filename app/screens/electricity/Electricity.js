@@ -16,6 +16,29 @@ export default function ElectricityScreen() {
 
   const numAmount = Number(amount) || 0;
 
+  const handleQuickAmount = (val) => {
+    setAmount(String(val));
+    const recipientMeter = meterNo && meterNo.trim().length >= 10 ? meterNo.trim() : '04192837461';
+    if (!meterNo || meterNo.trim().length < 10) {
+      setMeterNo(recipientMeter);
+    }
+    const discoObj = PROVIDERS.electricityProviders.find(d => d.id === disco);
+    setPurchase({
+      type: 'Electricity Bill',
+      category: 'electricity',
+      provider: discoObj ? `${discoObj.label} Electric` : disco.toUpperCase(),
+      meterType: meterType.toUpperCase(),
+      recipient: recipientMeter,
+      customerName: 'MARY O. JOHNSON',
+      address: '14 Adeniran Ogunsanya, Surulere, Lagos',
+      amount: val,
+      fee: 100,
+      cashback: 0,
+      total: val + 100,
+    });
+    navigate('confirm-payment');
+  };
+
   const handleContinue = () => {
     if (!numAmount || !meterNo) return;
     const discoObj = PROVIDERS.electricityProviders.find(d => d.id === disco);
@@ -107,7 +130,7 @@ export default function ElectricityScreen() {
                 key={val}
                 type="button"
                 className={`${styles.chip} ${numAmount === val ? styles.chipActive : ''}`}
-                onClick={() => setAmount(String(val))}
+                onClick={() => handleQuickAmount(val)}
               >
                 ₦{val.toLocaleString()}
               </button>

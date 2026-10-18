@@ -45,6 +45,28 @@ export default function CableScreen() {
     }
   };
 
+  const handleSelectPackage = (pkg) => {
+    setSelectedPkg(pkg.id);
+    const recipientIuc = iuc && iuc.trim().length >= 10 ? iuc.trim() : '1029384756';
+    if (!iuc || iuc.trim().length < 10) {
+      setIuc(recipientIuc);
+    }
+    const providerObj = PROVIDERS.cableProviders.find(p => p.id === provider);
+    setPurchase({
+      type: 'Cable TV Subscription',
+      category: 'cable',
+      provider: providerObj ? providerObj.label : provider.toUpperCase(),
+      plan: pkg.name,
+      recipient: recipientIuc,
+      customerName: 'JOHN DOE OKON',
+      amount: pkg.price,
+      fee: 0,
+      cashback: 0,
+      total: pkg.price,
+    });
+    navigate('confirm-payment');
+  };
+
   const handleContinue = () => {
     if (!activePkgObj || !iuc) return;
     const providerObj = PROVIDERS.cableProviders.find(p => p.id === provider);
@@ -107,7 +129,7 @@ export default function CableScreen() {
               <div
                 key={pkg.id}
                 className={`${styles.packageCard} ${selectedPkg === pkg.id ? styles.packageCardActive : ''}`}
-                onClick={() => setSelectedPkg(pkg.id)}
+                onClick={() => handleSelectPackage(pkg)}
               >
                 <div>
                   <div className={styles.packageName}>{pkg.name}</div>

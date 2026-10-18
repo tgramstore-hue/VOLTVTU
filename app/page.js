@@ -28,6 +28,8 @@ import ProfileInfoScreen from './screens/profile-info/ProfileInfo';
 import NotificationsScreen from './screens/notifications/Notifications';
 import HelpSupportScreen from './screens/help-support/HelpSupport';
 import DownloadStatementScreen from './screens/download-statement/DownloadStatement';
+import VirtualNumbersScreen from './screens/virtual-numbers/VirtualNumbers';
+import GiftCardScreen from './screens/giftcard/GiftCard';
 import KYCOverviewScreen from './screens/kyc/KYCOverview';
 import KYCBvnNinScreen from './screens/kyc/KYCBvnNin';
 import KYCSelfieScreen from './screens/kyc/KYCSelfie';
@@ -97,6 +99,10 @@ export default function App() {
         return <HelpSupportScreen />;
       case 'download-statement':
         return <DownloadStatementScreen />;
+      case 'virtual-numbers':
+        return <VirtualNumbersScreen />;
+      case 'giftcard':
+        return <GiftCardScreen />;
       case 'kyc-overview':
         return <KYCOverviewScreen />;
       case 'kyc-bvn-nin':

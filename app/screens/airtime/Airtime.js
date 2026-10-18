@@ -16,6 +16,28 @@ export default function AirtimeScreen() {
   const numAmount = Number(amount) || 0;
   const cashback = Math.round(numAmount * 0.02);
 
+  const handleQuickAmount = (val) => {
+    setAmount(String(val));
+    const recipientPhone = phone && phone.trim().length >= 10 ? phone.trim() : '08012345678';
+    if (!phone || phone.trim().length < 10) {
+      setPhone(recipientPhone);
+    }
+    const providerObj = PROVIDERS.networks.find((n) => n.id === network);
+    const cb = Math.round(val * 0.02);
+    setPurchase({
+      type: 'Airtime',
+      category: 'airtime',
+      provider: providerObj ? providerObj.label : network.toUpperCase(),
+      network,
+      recipient: recipientPhone,
+      amount: val,
+      fee: 0,
+      cashback: cb,
+      total: val,
+    });
+    navigate('confirm-payment');
+  };
+
   const handleContinue = () => {
     if (!numAmount || !phone) return;
     const providerObj = PROVIDERS.networks.find((n) => n.id === network);
@@ -79,7 +101,7 @@ export default function AirtimeScreen() {
                 key={val}
                 type="button"
                 className={`${styles.amountChip} ${numAmount === val ? styles.amountChipActive : ''}`}
-                onClick={() => setAmount(String(val))}
+                onClick={() => handleQuickAmount(val)}
               >
                 ₦{val.toLocaleString()}
               </button>
