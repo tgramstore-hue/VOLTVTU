@@ -1,21 +1,39 @@
 'use client';
-import { createContext, useContext, useState, useCallback, useRef } from 'react';
+import { createContext, useContext, useState, useRef, useCallback, useEffect } from 'react';
 
 const AppContext = createContext(null);
 
+const VALID_SCREENS = [
+  'splash', 'login', 'register', 'fingerprint', 'unlock-pin',
+  'dashboard', 'services', 'rewards', 'profile', 'profile-info',
+  'airtime', 'data', 'cable', 'electricity', 'exam', 'betting',
+  'confirm-payment', 'enter-pin', 'create-pin', 'processing',
+  'payment-success', 'payment-failed', 'add-money', 'transactions',
+  'notifications', 'help-support', 'download-statement',
+  'virtual-numbers', 'giftcard', 'kyc-overview', 'kyc-bvn-nin',
+  'kyc-selfie', 'kyc-upload-id', 'kyc-processing', 'kyc-verified', 'kyc-failed'
+];
+
 const INITIAL_STATE = {
   user: {
-    name: 'Etim',
-    initial: 'E',
-    phone: '080 0000 0000',
-    email: 'etim@example.com',
-    balance: 15400,
-    cashback: 320,
+    name: 'Etim Emmanuel',
+    phone: '08123456789',
+    email: 'etim@vtuflash.com',
+    avatar: null,
+    balance: 45200,
+    cashback: 1250,
+    bonus: 3400,
+    commission: 890,
     voltPoints: 2450,
-    tier: 1,
-    kycStatus: 'none', // none | pending | verified | failed
-    profileImage: null,
-    address: '14 Adeleke Street, Victoria Island, Lagos',
+    tier: 'Tier 2 Verified',
+    bvn: '22334455667',
+    nin: '11223344556',
+    kycLevel: 2,
+    virtualAccount: {
+      bank: 'Wema Bank',
+      accountNumber: '9018258821',
+      accountName: 'VTUFLASH / ETIM EMMANUEL',
+    },
   },
   transactions: [
     { id: 1, type: 'airtime', category: 'airtime', title: 'MTN Airtime Top-Up', amount: -1000, status: 'successful', date: 'today', time: '2:34 PM', icon: 'phone', recipient: '08012345678', ref: 'VTU-TX-849201' },
@@ -41,6 +59,55 @@ export function AppProvider({ children }) {
   const [pinError, setPinError] = useState(false);
   const historyStack = useRef(['splash']);
 
+  const getTabForScreen = (scr) => {
+    if (['dashboard'].includes(scr)) return 'home';
+    if (['services'].includes(scr)) return 'services';
+    if (['rewards'].includes(scr)) return 'rewards';
+    if (['profile'].includes(scr)) return 'me';
+    return null;
+  };
+
+  // Sync initial route from URL or localStorage on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let path = window.location.pathname.replace(/^\/+/, '').split('/')[0];
+    if (path === 'history') path = 'transactions';
+    if (path === 'me') path = 'profile';
+
+    if (path && VALID_SCREENS.includes(path)) {
+      setScreen(path);
+      historyStack.current = [path];
+      const tab = getTabForScreen(path);
+      if (tab) setActiveTab(tab);
+    } else {
+      const saved = localStorage.getItem('vtu_current_screen');
+      if (saved && VALID_SCREENS.includes(saved) && saved !== 'splash') {
+        setScreen(saved);
+        historyStack.current = [saved];
+        const tab = getTabForScreen(saved);
+        if (tab) setActiveTab(tab);
+        window.history.replaceState({ screen: saved }, '', saved === 'dashboard' ? '/' : `/${saved}`);
+      }
+    }
+
+    const handlePopState = (e) => {
+      let target = e.state?.screen;
+      if (!target) {
+        let p = window.location.pathname.replace(/^\/+/, '').split('/')[0];
+        if (p === 'history') p = 'transactions';
+        target = VALID_SCREENS.includes(p) ? p : 'dashboard';
+      }
+      setDirection('back');
+      setScreen(target);
+      const tab = getTabForScreen(target);
+      if (tab) setActiveTab(tab);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const navigate = useCallback((to, dir = 'forward') => {
     setDirection(dir);
     setPrevScreen(screen);
@@ -48,11 +115,16 @@ export function AppProvider({ children }) {
     if (dir === 'forward') {
       historyStack.current.push(to);
     }
-    // Update active tab if screen matches a tab
-    if (to === 'dashboard') setActiveTab('home');
-    else if (to === 'services') setActiveTab('services');
-    else if (to === 'rewards') setActiveTab('rewards');
-    else if (to === 'profile') setActiveTab('me');
+
+    const tab = getTabForScreen(to);
+    if (tab) setActiveTab(tab);
+
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('vtu_current_screen', to);
+        window.history.pushState({ screen: to }, '', to === 'dashboard' ? '/' : `/${to}`);
+      } catch (e) {}
+    }
   }, [screen]);
 
   const goBack = useCallback(() => {
@@ -62,10 +134,16 @@ export function AppProvider({ children }) {
       setDirection('back');
       setPrevScreen(screen);
       setScreen(prev);
-      if (prev === 'dashboard') setActiveTab('home');
-      else if (prev === 'services') setActiveTab('services');
-      else if (prev === 'rewards') setActiveTab('rewards');
-      else if (prev === 'profile') setActiveTab('me');
+
+      const tab = getTabForScreen(prev);
+      if (tab) setActiveTab(tab);
+
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('vtu_current_screen', prev);
+          window.history.pushState({ screen: prev }, '', prev === 'dashboard' ? '/' : `/${prev}`);
+        } catch (e) {}
+      }
     }
   }, [screen]);
 
@@ -82,6 +160,13 @@ export function AppProvider({ children }) {
     const targetScreen = tabScreenMap[tab] || 'dashboard';
     setScreen(targetScreen);
     historyStack.current = [targetScreen];
+
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('vtu_current_screen', targetScreen);
+        window.history.pushState({ screen: targetScreen }, '', targetScreen === 'dashboard' ? '/' : `/${targetScreen}`);
+      } catch (e) {}
+    }
   }, [screen]);
 
   const setPurchase = useCallback((purchase) => {

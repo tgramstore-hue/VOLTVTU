@@ -12,7 +12,10 @@ import {
   IconBank,
   IconWallet,
   IconChevronLeft,
+  IconChevronRight,
   IconDownload,
+  IconCheck,
+  IconX,
 } from '../../components/Icons';
 import styles from './History.module.css';
 
@@ -36,37 +39,39 @@ const STATUSES = [
 ];
 
 const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
+  { num: '01', name: 'Jan', full: 'January' },
+  { num: '02', name: 'Feb', full: 'February' },
+  { num: '03', name: 'Mar', full: 'March' },
+  { num: '04', name: 'Apr', full: 'April' },
+  { num: '05', name: 'May', full: 'May' },
+  { num: '06', name: 'Jun', full: 'June' },
+  { num: '07', name: 'Jul', full: 'July' },
+  { num: '08', name: 'Aug', full: 'August' },
+  { num: '09', name: 'Sep', full: 'September' },
+  { num: '10', name: 'Oct', full: 'October' },
+  { num: '11', name: 'Nov', full: 'November' },
+  { num: '12', name: 'Dec', full: 'December' },
 ];
 
 const YEARS = ['2024', '2025', '2026'];
-
-const ICON_MAP = {
-  phone: IconPhone,
-  airtime: IconPhone,
-  data: IconData,
-  tv: IconTV,
-  cable: IconTV,
-  bolt: IconBolt,
-  electricity: IconBolt,
-  exam: IconExam,
-  betting: IconBetting,
-  plus: IconPlus,
-  funding: IconPlus,
-  bank: IconBank,
-  wallet: IconWallet,
-};
 
 export default function HistoryScreen() {
   const { state, goBack, navigate } = useApp();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [selectedMonth, setSelectedMonth] = useState('October');
+
+  // Date selection states
+  const [selectedMonth, setSelectedMonth] = useState('10');
   const [selectedYear, setSelectedYear] = useState('2026');
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [dateMode, setDateMode] = useState('month'); // 'month' | 'year' | 'custom'
-  const [activeReceipt, setActiveReceipt] = useState(null);
+  const [showDateModal, setShowDateModal] = useState(false);
+  const [modalTab, setModalTab] = useState('month'); // 'month' | 'timeframe'
+  const [timeframeDuration, setTimeframeDuration] = useState('3m'); // '3m' | '6m' | 'custom'
+  const [startDate, setStartDate] = useState('Aug, 2026');
+  const [endDate, setEndDate] = useState('Oct, 2026');
+
+  // Modals for receipt
+  const [selectedTx, setSelectedTx] = useState(null);
+  const [showFullReceipt, setShowFullReceipt] = useState(false);
 
   // Filter transactions
   const filtered = state.transactions.filter((t) => {
@@ -88,36 +93,80 @@ export default function HistoryScreen() {
     .filter((t) => t.amount < 0 && t.status === 'successful')
     .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 
-  const renderStatusPill = (status) => {
+  const getMonthObj = (num) => MONTHS.find((m) => m.num === num) || MONTHS[9];
+  const displayPeriod = `${getMonthObj(selectedMonth).name}, ${selectedYear}`;
+
+  const renderStatus = (status) => {
     switch (status) {
       case 'successful':
-        return <span className={styles.pillSuccess}>SUCCESSFUL</span>;
+        return <span className={styles.statusSuccess}>Successful</span>;
       case 'pending':
-        return <span className={styles.pillPending}>PENDING</span>;
+        return <span className={styles.statusPending}>Pending</span>;
       case 'failed':
-        return <span className={styles.pillFailed}>FAILED</span>;
+        return <span className={styles.statusFailed}>Failed</span>;
       case 'reversed':
-        return <span className={styles.pillReversed}>REVERSED</span>;
+        return <span className={styles.statusReversed}>Reversed</span>;
       default:
-        return <span className={styles.pillDefault}>{status.toUpperCase()}</span>;
+        return <span className={styles.statusDefault}>{status}</span>;
     }
   };
 
-  const getServiceIcon = (t) => {
-    const IconComp = ICON_MAP[t.icon] || ICON_MAP[t.type] || ICON_MAP[t.category] || IconPhone;
-    const isCredit = t.amount > 0;
+  const renderRowIcon = (item) => {
+    const isCredit = item.amount > 0;
+    if (isCredit) {
+      return (
+        <div className={styles.circleInflow} aria-label="Incoming transaction">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <polyline points="19 12 12 19 5 12" />
+          </svg>
+        </div>
+      );
+    }
+    if (item.category === 'electricity') {
+      return (
+        <div className={styles.circleOutflow} aria-label="Electricity bill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08A00" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
+        </div>
+      );
+    }
+    if (item.category === 'betting') {
+      return (
+        <div className={styles.circleOutflow} aria-label="Betting funding">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08A00" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+        </div>
+      );
+    }
     return (
-      <div className={`${styles.iconCircle} ${isCredit ? styles.iconGreen : styles.iconYellow}`}>
-        <IconComp size={20} />
+      <div className={styles.circleOutflow} aria-label="Outgoing transaction">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08A00" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="12" y1="19" x2="12" y2="5" />
+          <polyline points="5 12 12 5 19 12" />
+        </svg>
       </div>
     );
   };
 
-  const displayPeriod = `${selectedMonth.substring(0, 3)} ${selectedYear}`;
+  const handleApplyDuration = (dur) => {
+    setTimeframeDuration(dur);
+    if (dur === '3m') {
+      setStartDate('Aug, 2026');
+      setEndDate('Oct, 2026');
+    } else if (dur === '6m') {
+      setStartDate('May, 2026');
+      setEndDate('Oct, 2026');
+    }
+  };
 
   return (
     <div className={styles.container}>
-      {/* Top Header */}
+      {/* Top Navigation */}
       <div className={styles.topNav}>
         <button type="button" className={styles.backBtn} onClick={goBack} aria-label="Go back">
           <IconChevronLeft size={22} />
@@ -125,7 +174,7 @@ export default function HistoryScreen() {
         <h1 className={styles.navTitle}>Transactions</h1>
         <button
           type="button"
-          className={styles.downloadStatementBtn}
+          className={styles.statementBtn}
           onClick={() => navigate('download-statement')}
         >
           <IconDownload size={15} />
@@ -133,7 +182,26 @@ export default function HistoryScreen() {
         </button>
       </div>
 
-      {/* Dropdown Filters Row */}
+      {/* Top In / Out Summary Header (exactly like Image 1) */}
+      <div className={styles.summaryBar}>
+        <div className={styles.periodPill} onClick={() => setShowDateModal(true)}>
+          <span className={styles.periodLabel}>{displayPeriod}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </div>
+
+        <div className={styles.inOutStats}>
+          <span className={styles.statIn}>
+            In: <strong>₦{(totalInflow || 15000).toLocaleString()}</strong>
+          </span>
+          <span className={styles.statOut}>
+            Out: <strong>₦{(totalOutflow || 18800).toLocaleString()}</strong>
+          </span>
+        </div>
+      </div>
+
+      {/* Filters Row */}
       <div className={styles.dropdownsRow}>
         <div className={styles.selectWrap}>
           <select
@@ -162,163 +230,37 @@ export default function HistoryScreen() {
         </div>
       </div>
 
-      {/* Period Summary Card with month/year dropdown */}
-      <div className={styles.periodCard}>
-        <div className={styles.periodTop}>
-          <button
-            type="button"
-            className={styles.monthSelector}
-            onClick={() => setShowDatePicker(!showDatePicker)}
-          >
-            <span className={styles.monthText}>{displayPeriod}</span>
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#111"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              style={{ transform: showDatePicker ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
-          <div className={styles.periodBadge}>Summary</div>
-        </div>
-
-        <div className={styles.inOutRow}>
-          <div className={styles.inOutBlock}>
-            <span className={styles.inOutLabel}>Inflow</span>
-            <span className={styles.inAmount}>+₦{(totalInflow || 15000).toLocaleString()}.00</span>
-          </div>
-          <div className={styles.inOutDivider} />
-          <div className={styles.inOutBlock}>
-            <span className={styles.inOutLabel}>Outflow</span>
-            <span className={styles.outAmount}>-₦{(totalOutflow || 23800).toLocaleString()}.00</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Date Picker Dropdown (matching design system) */}
-      {showDatePicker && (
-        <div className={styles.datePickerCard}>
-          <div className={styles.datePickerTabs}>
-            <button
-              type="button"
-              className={`${styles.dateTab} ${dateMode === 'month' ? styles.dateTabActive : ''}`}
-              onClick={() => setDateMode('month')}
-            >
-              Month
-            </button>
-            <button
-              type="button"
-              className={`${styles.dateTab} ${dateMode === 'year' ? styles.dateTabActive : ''}`}
-              onClick={() => setDateMode('year')}
-            >
-              Year
-            </button>
-            <button
-              type="button"
-              className={`${styles.dateTab} ${dateMode === 'custom' ? styles.dateTabActive : ''}`}
-              onClick={() => setDateMode('custom')}
-            >
-              Custom
-            </button>
-          </div>
-
-          {dateMode === 'month' && (
-            <div className={styles.monthGrid}>
-              {MONTHS.map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  className={`${styles.monthChip} ${selectedMonth === m ? styles.monthChipActive : ''}`}
-                  onClick={() => {
-                    setSelectedMonth(m);
-                    setShowDatePicker(false);
-                  }}
-                >
-                  {m.substring(0, 3)}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {dateMode === 'year' && (
-            <div className={styles.yearGrid}>
-              {YEARS.map((y) => (
-                <button
-                  key={y}
-                  type="button"
-                  className={`${styles.yearChip} ${selectedYear === y ? styles.yearChipActive : ''}`}
-                  onClick={() => {
-                    setSelectedYear(y);
-                    setShowDatePicker(false);
-                  }}
-                >
-                  {y}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {dateMode === 'custom' && (
-            <div className={styles.customRange}>
-              <div className={styles.customField}>
-                <label className={styles.customLabel}>From Date</label>
-                <input type="date" className={styles.customInput} />
-              </div>
-              <div className={styles.customField}>
-                <label className={styles.customLabel}>To Date</label>
-                <input type="date" className={styles.customInput} />
-              </div>
-              <button
-                type="button"
-                className={styles.applyBtn}
-                onClick={() => setShowDatePicker(false)}
-              >
-                Apply Date Filter
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Transaction List */}
-      <div className={styles.listSection}>
-        <div className={styles.listHeader}>
-          <span className={styles.groupTitle}>Activity Logs</span>
+      {/* Activity Section with Single Joint White Card Container (Matching Image 1) */}
+      <div className={styles.activitySection}>
+        <div className={styles.activityHeader}>
+          <h2 className={styles.activityTitle}>Activity</h2>
           <span className={styles.recordsCount}>{filtered.length} records</span>
         </div>
 
-        <div className={styles.transactionsList}>
-          {filtered.map((item) => {
+        <div className={styles.jointCard}>
+          {filtered.map((item, idx) => {
             const isCredit = item.amount > 0;
             return (
               <div
                 key={item.id}
-                className={styles.card}
-                onClick={() => setActiveReceipt(item)}
+                className={styles.jointRow}
+                style={{ animationDelay: `${idx * 40}ms` }}
+                onClick={() => setSelectedTx(item)}
               >
-                <div className={styles.left}>
-                  {getServiceIcon(item)}
-                  <div className={styles.txInfo}>
+                <div className={styles.rowLeft}>
+                  {renderRowIcon(item)}
+                  <div className={styles.rowInfo}>
                     <div className={styles.txTitle}>{item.title}</div>
-                    <div className={styles.subInfo}>
-                      {item.recipient && <span className={styles.recipient}>{item.recipient} • </span>}
-                      <span className={styles.time}>{item.time || 'Today'}</span>
-                    </div>
+                    <div className={styles.txTime}>{item.time || '2:34 PM'}</div>
                   </div>
                 </div>
 
-                <div className={styles.right}>
+                <div className={styles.rowRight}>
                   <div className={`${styles.txAmount} ${isCredit ? styles.amountGreen : styles.amountDark}`}>
                     {isCredit ? '+' : '-'}₦{Math.abs(item.amount).toLocaleString()}.00
                   </div>
                   <div className={styles.statusWrap}>
-                    {renderStatusPill(item.status)}
+                    {renderStatus(item.status)}
                   </div>
                 </div>
               </div>
@@ -326,60 +268,298 @@ export default function HistoryScreen() {
           })}
 
           {filtered.length === 0 && (
-            <div className={styles.emptyCard}>
+            <div className={styles.emptyState}>
               <div className={styles.emptyIcon}>📂</div>
               <div className={styles.emptyTitle}>No matching transactions</div>
-              <div className={styles.emptySub}>Try adjusting your category or status filters.</div>
+              <div className={styles.emptySub}>Try adjusting your filters or date period.</div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Receipt Modal */}
-      {activeReceipt && (
-        <div className={styles.receiptOverlay} onClick={() => setActiveReceipt(null)}>
-          <div className={styles.receiptSheet} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.receiptHandle} />
-            <div className={styles.receiptHeader}>Transaction Receipt</div>
-            <div className={styles.receiptAmountLarge}>
-              {activeReceipt.amount > 0 ? '+' : '-'}₦{Math.abs(activeReceipt.amount).toLocaleString()}.00
-            </div>
-            <div className={styles.receiptPillRow}>
-              {renderStatusPill(activeReceipt.status)}
+      {/* Date Picker Modal (Matching Images 2 & 3 with VTUflash Yellow Design System) */}
+      {showDateModal && (
+        <div className={styles.modalOverlay} onClick={() => setShowDateModal(false)}>
+          <div className={styles.dateModalSheet} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalTopHeader}>
+              <div className={styles.modalTabs}>
+                <button
+                  type="button"
+                  className={`${styles.tabBtn} ${modalTab === 'month' ? styles.tabBtnActive : ''}`}
+                  onClick={() => setModalTab('month')}
+                >
+                  Month
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.tabBtn} ${modalTab === 'timeframe' ? styles.tabBtnActive : ''}`}
+                  onClick={() => setModalTab('timeframe')}
+                >
+                  Time Frame
+                </button>
+              </div>
+              <button
+                type="button"
+                className={styles.modalCloseBtn}
+                onClick={() => setShowDateModal(false)}
+                aria-label="Close"
+              >
+                <IconX size={20} />
+              </button>
             </div>
 
-            <div className={styles.receiptDetails}>
-              <div className={styles.receiptRow}>
-                <span className={styles.receiptLabel}>Transaction</span>
-                <span className={styles.receiptVal}>{activeReceipt.title}</span>
+            {/* Tab 1: Month & Year Picker (Matching Image 3) */}
+            {modalTab === 'month' && (
+              <div className={styles.monthPickerBody}>
+                <div className={styles.wheelContainer}>
+                  {/* Month column */}
+                  <div className={styles.wheelCol}>
+                    <div className={styles.colLabel}>Month</div>
+                    <div className={styles.wheelList}>
+                      {MONTHS.map((m) => (
+                        <div
+                          key={m.num}
+                          className={`${styles.wheelItem} ${selectedMonth === m.num ? styles.wheelItemActive : ''}`}
+                          onClick={() => setSelectedMonth(m.num)}
+                        >
+                          <span className={styles.wheelNum}>{m.num}</span>
+                          <span className={styles.wheelName}>({m.name})</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Year column */}
+                  <div className={styles.wheelCol}>
+                    <div className={styles.colLabel}>Year</div>
+                    <div className={styles.wheelList}>
+                      {YEARS.map((y) => (
+                        <div
+                          key={y}
+                          className={`${styles.wheelItem} ${selectedYear === y ? styles.wheelItemActive : ''}`}
+                          onClick={() => setSelectedYear(y)}
+                        >
+                          <span className={styles.wheelNum}>{y}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className={styles.confirmBtn}
+                  onClick={() => setShowDateModal(false)}
+                >
+                  Confirm
+                </button>
               </div>
-              {activeReceipt.recipient && (
-                <div className={styles.receiptRow}>
-                  <span className={styles.receiptLabel}>Recipient</span>
-                  <span className={styles.receiptVal}>{activeReceipt.recipient}</span>
+            )}
+
+            {/* Tab 2: Time Frame Picker (Matching Image 2) */}
+            {modalTab === 'timeframe' && (
+              <div className={styles.timeframeBody}>
+                <div className={styles.fieldSection}>
+                  <label className={styles.sectionLabel}>Duration</label>
+                  <div className={styles.durationPills}>
+                    <button
+                      type="button"
+                      className={`${styles.durPill} ${timeframeDuration === '3m' ? styles.durPillActive : ''}`}
+                      onClick={() => handleApplyDuration('3m')}
+                    >
+                      Last 3 months
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.durPill} ${timeframeDuration === '6m' ? styles.durPillActive : ''}`}
+                      onClick={() => handleApplyDuration('6m')}
+                    >
+                      Last 6 months
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.durPill} ${timeframeDuration === 'custom' ? styles.durPillActive : ''}`}
+                      onClick={() => setTimeframeDuration('custom')}
+                    >
+                      Custom
+                    </button>
+                  </div>
+                </div>
+
+                <div className={styles.fieldSection}>
+                  <label className={styles.sectionLabel}>Start Date</label>
+                  <div className={styles.dateRowSelect}>
+                    <span>{startDate}</span>
+                    <IconChevronRight size={18} />
+                  </div>
+                </div>
+
+                <div className={styles.fieldSection}>
+                  <label className={styles.sectionLabel}>End Date</label>
+                  <div className={styles.dateRowSelect}>
+                    <span>{endDate}</span>
+                    <IconChevronRight size={18} />
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className={styles.confirmBtn}
+                  onClick={() => setShowDateModal(false)}
+                >
+                  Confirm
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Transaction Modal (Summary with "View Receipt" button) */}
+      {selectedTx && !showFullReceipt && (
+        <div className={styles.modalOverlay} onClick={() => setSelectedTx(null)}>
+          <div className={styles.summarySheet} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.sheetHandle} />
+            <div className={styles.sheetHeader}>Transaction Details</div>
+
+            <div className={styles.sheetAmount}>
+              {selectedTx.amount > 0 ? '+' : '-'}₦{Math.abs(selectedTx.amount).toLocaleString()}.00
+            </div>
+            <div className={styles.sheetStatusWrap}>
+              {renderStatus(selectedTx.status)}
+            </div>
+
+            <div className={styles.sheetDetailsCard}>
+              <div className={styles.detailRow}>
+                <span className={styles.detailLabel}>Transaction</span>
+                <span className={styles.detailVal}>{selectedTx.title}</span>
+              </div>
+              {selectedTx.recipient && (
+                <div className={styles.detailRow}>
+                  <span className={styles.detailLabel}>Recipient</span>
+                  <span className={styles.detailVal}>{selectedTx.recipient}</span>
                 </div>
               )}
-              <div className={styles.receiptRow}>
-                <span className={styles.receiptLabel}>Reference</span>
-                <span className={styles.receiptVal}>{activeReceipt.ref || 'VTU-TX-849201'}</span>
+              <div className={styles.detailRow}>
+                <span className={styles.detailLabel}>Reference</span>
+                <span className={styles.detailVal}>{selectedTx.ref || 'VTU-TX-849201'}</span>
               </div>
-              <div className={styles.receiptRow}>
-                <span className={styles.receiptLabel}>Date & Time</span>
-                <span className={styles.receiptVal}>{activeReceipt.time || 'Oct 17th, 21:22:32'}</span>
+              <div className={styles.detailRow}>
+                <span className={styles.detailLabel}>Date & Time</span>
+                <span className={styles.detailVal}>{selectedTx.time || 'Oct 18, 2:34 PM'}</span>
               </div>
-              <div className={styles.receiptRow}>
-                <span className={styles.receiptLabel}>Payment Method</span>
-                <span className={styles.receiptVal}>VTUflash Wallet</span>
+              <div className={styles.detailRow}>
+                <span className={styles.detailLabel}>Payment Method</span>
+                <span className={styles.detailVal}>VTUflash Wallet</span>
               </div>
             </div>
 
-            <button
-              type="button"
-              className={styles.closeBtn}
-              onClick={() => setActiveReceipt(null)}
-            >
-              Done
-            </button>
+            <div className={styles.actionButtonsCol}>
+              <button
+                type="button"
+                className={styles.viewReceiptBtn}
+                onClick={() => setShowFullReceipt(true)}
+              >
+                View Receipt
+              </button>
+
+              <button
+                type="button"
+                className={styles.sheetDoneBtn}
+                onClick={() => setSelectedTx(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full Official Receipt Modal (Ready for screenshotting / download) */}
+      {selectedTx && showFullReceipt && (
+        <div className={styles.modalOverlay} onClick={() => setShowFullReceipt(false)}>
+          <div className={styles.fullReceiptSheet} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.sheetHandle} />
+
+            <div className={styles.receiptCardPrintable}>
+              <div className={styles.receiptTopBrand}>
+                <div className={styles.receiptLogoWrap}>
+                  <span className={styles.receiptLogoV}>VTU</span>
+                  <span className={styles.receiptLogoFlash}>flash</span>
+                </div>
+                <div className={styles.receiptTitleSmall}>Transaction Receipt</div>
+              </div>
+
+              <div className={styles.receiptSuccessStamp}>
+                <div className={styles.stampCircle}>
+                  <IconCheck size={26} />
+                </div>
+                <div className={styles.stampText}>Transaction Successful</div>
+              </div>
+
+              <div className={styles.receiptTotalAmount}>
+                {selectedTx.amount > 0 ? '+' : '-'}₦{Math.abs(selectedTx.amount).toLocaleString()}.00
+              </div>
+
+              <div className={styles.receiptDividerDashed} />
+
+              <div className={styles.receiptMetaGrid}>
+                <div className={styles.metaRow}>
+                  <span className={styles.metaKey}>Service</span>
+                  <span className={styles.metaVal}>{selectedTx.title}</span>
+                </div>
+                {selectedTx.recipient && (
+                  <div className={styles.metaRow}>
+                    <span className={styles.metaKey}>Recipient</span>
+                    <span className={styles.metaVal}>{selectedTx.recipient}</span>
+                  </div>
+                )}
+                <div className={styles.metaRow}>
+                  <span className={styles.metaKey}>Transaction Ref</span>
+                  <span className={styles.metaValRef}>{selectedTx.ref || 'VTU-TX-849201'}</span>
+                </div>
+                <div className={styles.metaRow}>
+                  <span className={styles.metaKey}>Date & Time</span>
+                  <span className={styles.metaVal}>{selectedTx.time || 'Oct 18th, 2026, 2:34 PM'}</span>
+                </div>
+                <div className={styles.metaRow}>
+                  <span className={styles.metaKey}>Payment Type</span>
+                  <span className={styles.metaVal}>Wallet Debit</span>
+                </div>
+                <div className={styles.metaRow}>
+                  <span className={styles.metaKey}>Status</span>
+                  <span className={styles.metaValSuccess}>SUCCESSFUL</span>
+                </div>
+              </div>
+
+              <div className={styles.receiptBarcodeWrap}>
+                <div className={styles.barcodeLines} />
+                <span className={styles.barcodeNumber}>VTU-849201984210</span>
+              </div>
+            </div>
+
+            <div className={styles.receiptActionsRow}>
+              <button
+                type="button"
+                className={styles.downloadReceiptBtn}
+                onClick={() => {
+                  alert('Receipt downloaded successfully!');
+                }}
+              >
+                <IconDownload size={18} />
+                <span>Download / Share</span>
+              </button>
+              <button
+                type="button"
+                className={styles.closeReceiptModalBtn}
+                onClick={() => {
+                  setShowFullReceipt(false);
+                  setSelectedTx(null);
+                }}
+              >
+                Done
+              </button>
+            </div>
           </div>
         </div>
       )}

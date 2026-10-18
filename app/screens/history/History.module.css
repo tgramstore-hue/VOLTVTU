@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 0 6px;
+  padding: 4px 0 2px;
 }
 
 .backBtn {
@@ -48,26 +48,80 @@
   margin: 0;
 }
 
-.downloadStatementBtn {
+/* Yellow + Black Statement Button */
+.statementBtn {
   height: 38px;
-  background: #FFF8D6;
-  color: #92400E;
-  border: 1px solid #FDE68A;
+  background: #F0B90B;
+  color: #000;
+  border: none;
   border-radius: 19px;
-  padding: 0 14px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 700;
   font-family: 'Outfit', sans-serif;
   cursor: default;
+  box-shadow: 0 3px 12px rgba(240, 185, 11, 0.35);
   transition: transform 0.15s, background-color 0.15s;
 }
 
-.downloadStatementBtn:active {
+.statementBtn:active {
   transform: scale(0.95);
-  background: #FEF08A;
+  background: #d8a407;
+}
+
+/* Summary Bar (In / Out Header exactly like Image 1) */
+.summaryBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 4px 2px;
+}
+
+.periodPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  cursor: default;
+  border: 1px solid #EAEAEA;
+  transition: all 0.15s;
+}
+
+.periodPill:hover, .periodPill:active {
+  border-color: #F0B90B;
+  background: #FFFDF5;
+}
+
+.periodLabel {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #111;
+}
+
+.inOutStats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  color: #444;
+}
+
+.statIn strong {
+  color: #111;
+  font-weight: 800;
+  margin-left: 2px;
+}
+
+.statOut strong {
+  color: #111;
+  font-weight: 800;
+  margin-left: 2px;
 }
 
 /* Dropdown Filters Row */
@@ -93,11 +147,11 @@
 
 .selectFilter {
   width: 100%;
-  height: 44px;
+  height: 42px;
   background: transparent;
   border: none;
   border-radius: 14px;
-  padding: 0 32px 0 14px;
+  padding: 0 30px 0 14px;
   font-size: 13.5px;
   font-weight: 600;
   color: #222;
@@ -117,343 +171,110 @@
   font-size: 12px;
 }
 
-/* Period Summary Card */
-.periodCard {
-  background: #fff;
-  border-radius: 20px;
-  padding: 16px 18px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.periodTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.monthSelector {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: default;
-  background: none;
-  border: none;
-  padding: 0;
-  font-family: 'Outfit', sans-serif;
-}
-
-.monthText {
-  font-size: 18px;
-  font-weight: 800;
-  color: #111;
-  letter-spacing: -0.3px;
-}
-
-.periodBadge {
-  background: #FFF8D6;
-  color: #92400E;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.inOutRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #F9F9F9;
-  border-radius: 14px;
-  padding: 12px 16px;
-}
-
-.inOutBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.inOutLabel {
-  font-size: 11px;
-  font-weight: 600;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.inAmount {
-  font-size: 15px;
-  font-weight: 700;
-  color: #15803D;
-}
-
-.outAmount {
-  font-size: 15px;
-  font-weight: 700;
-  color: #111;
-}
-
-.inOutDivider {
-  width: 1px;
-  height: 28px;
-  background: #E5E5E5;
-}
-
-/* Date Picker Dropdown */
-.datePickerCard {
-  background: #fff;
-  border-radius: 20px;
-  padding: 16px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
-  animation: slideDown 0.22s cubic-bezier(0.2, 0, 0, 1);
-  border: 1px solid #EAEAEA;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.datePickerTabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 14px;
-  background: #F5F5F5;
-  border-radius: 12px;
-  padding: 4px;
-}
-
-.dateTab {
-  flex: 1;
-  height: 36px;
-  border: none;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #777;
-  background: transparent;
-  cursor: default;
-  font-family: 'Outfit', sans-serif;
-  transition: all 0.18s;
-}
-
-.dateTabActive {
-  background: #F0B90B;
-  color: #000;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(240, 185, 11, 0.25);
-}
-
-.monthGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
-
-.monthChip {
-  height: 38px;
-  border: 1.5px solid #EFEFEF;
-  border-radius: 12px;
-  background: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  color: #444;
-  cursor: default;
-  font-family: 'Outfit', sans-serif;
-  transition: all 0.15s;
-}
-
-.monthChip:active {
-  transform: scale(0.95);
-}
-
-.monthChipActive {
-  background: #F0B90B;
-  color: #000;
-  border-color: #F0B90B;
-  font-weight: 700;
-}
-
-.yearGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.yearChip {
-  height: 42px;
-  border: 1.5px solid #EFEFEF;
-  border-radius: 12px;
-  background: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  color: #444;
-  cursor: default;
-  font-family: 'Outfit', sans-serif;
-  transition: all 0.15s;
-}
-
-.yearChip:active {
-  transform: scale(0.95);
-}
-
-.yearChipActive {
-  background: #F0B90B;
-  color: #000;
-  border-color: #F0B90B;
-  font-weight: 700;
-}
-
-/* Custom Date Range */
-.customRange {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.customField {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.customLabel {
-  font-size: 12px;
-  font-weight: 600;
-  color: #777;
-}
-
-.customInput {
-  height: 44px;
-  border: 1.5px solid #EFEFEF;
-  border-radius: 12px;
-  padding: 0 14px;
-  font-size: 14px;
-  font-family: 'Outfit', sans-serif;
-  color: #333;
-  outline: none;
-  background: #fff;
-}
-
-.customInput:focus {
-  border-color: #F0B90B;
-  box-shadow: 0 0 0 2px rgba(240, 185, 11, 0.2);
-}
-
-.applyBtn {
-  height: 46px;
-  background: #F0B90B;
-  color: #000;
-  border: none;
-  border-radius: 23px;
-  font-size: 14px;
-  font-weight: 700;
-  font-family: 'Outfit', sans-serif;
-  cursor: default;
-  margin-top: 4px;
-  box-shadow: 0 4px 14px rgba(240, 185, 11, 0.3);
-  transition: transform 0.15s;
-}
-
-.applyBtn:active {
-  transform: scale(0.97);
-}
-
-/* List section */
-.listSection {
+/* Activity Section */
+.activitySection {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 2px;
 }
 
-.listHeader {
+.activityHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2px;
+  padding: 0 4px;
 }
 
-.groupTitle {
-  font-size: 14px;
-  font-weight: 700;
-  color: #222;
+.activityTitle {
+  font-size: 17px;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: -0.3px;
+  margin: 0;
 }
 
 .recordsCount {
-  font-size: 12px;
+  font-size: 12.5px;
   color: #888;
+  font-weight: 500;
 }
 
-.transactionsList {
+/* Single Unified Joint Card Container ("how joint it is" - Image 1) */
+.jointCard {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
-.card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 14px 16px;
+.jointRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.02);
+  padding: 14px 18px;
+  border-bottom: 1px solid #F4F4F5;
   cursor: default;
-  transition: transform 0.12s, box-shadow 0.12s;
-  animation: cardFadeUp 0.3s cubic-bezier(0.2, 0, 0, 1) both;
+  background: #fff;
+  transition: background 0.12s;
+  animation: rowFadeUp 0.3s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
-@keyframes cardFadeUp {
+@keyframes rowFadeUp {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.card:active {
-  transform: scale(0.98);
+.jointRow:last-child {
+  border-bottom: none;
 }
 
-.left {
+.jointRow:active {
+  background: #FAFAFA;
+}
+
+.rowLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex: 1;
   min-width: 0;
 }
 
-.iconCircle {
-  width: 42px;
-  height: 42px;
+/* Circular Icons matching Image 1 */
+.circleInflow {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  background: #DCFCE7;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-.iconYellow {
+.circleOutflow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   background: #FFF8D6;
   color: #B08A00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.iconGreen {
-  background: #DCFCE7;
-  color: #15803D;
-}
-
-.txInfo {
+.rowInfo {
   min-width: 0;
   flex: 1;
 }
 
 .txTitle {
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 700;
   color: #111;
   white-space: nowrap;
@@ -461,31 +282,22 @@
   text-overflow: ellipsis;
 }
 
-.subInfo {
+.txTime {
   font-size: 12px;
-  color: #777;
+  color: #888;
   margin-top: 3px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.recipient {
-  color: #444;
-  font-weight: 500;
-}
-
-.time {
-  color: #888;
-}
-
-.right {
+.rowRight {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 3px;
   flex-shrink: 0;
-  margin-left: 10px;
+  margin-left: 12px;
 }
 
 .txAmount {
@@ -495,7 +307,7 @@
 }
 
 .amountGreen {
-  color: #15803D;
+  color: #16A34A;
 }
 
 .amountDark {
@@ -506,64 +318,45 @@
   display: flex;
 }
 
-/* Status pills */
-.pillSuccess {
-  background: #DCFCE7;
-  color: #15803D;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2.5px 8px;
-  border-radius: 8px;
+/* Status texts exactly like Image 1 */
+.statusSuccess {
+  font-size: 12px;
+  font-weight: 600;
+  color: #16A34A;
 }
 
-.pillPending {
-  background: #FEF3C7;
-  color: #92400E;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2.5px 8px;
-  border-radius: 8px;
+.statusPending {
+  font-size: 12px;
+  font-weight: 600;
+  color: #D97706;
 }
 
-.pillFailed {
-  background: #FEE2E2;
-  color: #B91C1C;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2.5px 8px;
-  border-radius: 8px;
+.statusFailed {
+  font-size: 12px;
+  font-weight: 600;
+  color: #DC2626;
 }
 
-.pillReversed {
-  background: #EDE9FE;
-  color: #6D28D9;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2.5px 8px;
-  border-radius: 8px;
+.statusReversed {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7C3AED;
 }
 
-.pillDefault {
-  background: #F3F4F6;
-  color: #374151;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 2.5px 8px;
-  border-radius: 8px;
+.statusDefault {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
 }
 
-/* Empty state */
-.emptyCard {
-  background: #fff;
-  border-radius: 20px;
-  padding: 36px 20px;
+.emptyState {
+  padding: 40px 20px;
   text-align: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .emptyIcon {
   font-size: 38px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .emptyTitle {
@@ -578,23 +371,246 @@
   margin-top: 4px;
 }
 
-/* Receipt Sheet Modal */
-.receiptOverlay {
+/* Modal Overlay */
+.modalOverlay {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: flex-end;
   z-index: 300;
-  animation: fadeIn 0.18s ease;
+  animation: overlayFadeIn 0.2s ease;
 }
 
-@keyframes fadeIn {
+@keyframes overlayFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-.receiptSheet {
+/* Date Picker Bottom Sheet Modal (Images 2 & 3) */
+.dateModalSheet {
+  width: 100%;
+  background: #fff;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  padding: 18px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  animation: sheetSlideUp 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes sheetSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modalTopHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #EFEFEF;
+  padding-bottom: 12px;
+}
+
+.modalTabs {
+  display: flex;
+  gap: 24px;
+}
+
+.tabBtn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: #777;
+  cursor: default;
+  padding: 4px 0 8px;
+  position: relative;
+  font-family: 'Outfit', sans-serif;
+  transition: color 0.15s;
+}
+
+.tabBtnActive {
+  color: #111;
+  font-weight: 800;
+}
+
+.tabBtnActive::after {
+  content: '';
+  position: absolute;
+  bottom: -13px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #F0B90B;
+  border-radius: 2px;
+}
+
+.modalCloseBtn {
+  background: none;
+  border: none;
+  padding: 6px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+/* Month Picker Body (Image 3) */
+.monthPickerBody {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 18px;
+}
+
+.wheelContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.wheelCol {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.colLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wheelList {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1.5px solid #F0F0F0;
+  border-radius: 16px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scrollbar-width: thin;
+}
+
+.wheelItem {
+  padding: 10px 14px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: default;
+  transition: background 0.15s;
+}
+
+.wheelItem:hover {
+  background: #F7F7F7;
+}
+
+.wheelItemActive {
+  background: #FFF8D6;
+  border: 1px solid #F0B90B;
+}
+
+.wheelNum {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111;
+}
+
+.wheelName {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Time Frame Body (Image 2) */
+.timeframeBody {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 18px;
+}
+
+.fieldSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionLabel {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #333;
+}
+
+.durationPills {
+  display: flex;
+  gap: 10px;
+}
+
+.durPill {
+  flex: 1;
+  height: 42px;
+  border-radius: 12px;
+  border: 1.5px solid #EAEAEA;
+  background: #F9F9F9;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  cursor: default;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.15s;
+}
+
+.durPillActive {
+  background: #FFF8D6;
+  border-color: #F0B90B;
+  color: #000;
+  font-weight: 800;
+}
+
+.dateRowSelect {
+  height: 48px;
+  border-radius: 14px;
+  background: #F9F9F9;
+  border: 1.5px solid #EFEFEF;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+  cursor: default;
+}
+
+/* Confirm Action Button */
+.confirmBtn {
+  height: 52px;
+  background: #F0B90B;
+  color: #000;
+  border: none;
+  border-radius: 26px;
+  font-size: 16px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  box-shadow: 0 4px 16px rgba(240, 185, 11, 0.35);
+  margin-top: 8px;
+  transition: transform 0.15s;
+}
+
+.confirmBtn:active {
+  transform: scale(0.97);
+}
+
+/* Transaction Details Sheet Modal */
+.summarySheet {
   width: 100%;
   background: #fff;
   border-top-left-radius: 28px;
@@ -602,30 +618,25 @@
   padding: 16px 20px 32px;
   display: flex;
   flex-direction: column;
-  animation: sheetUp 0.25s cubic-bezier(0.2, 0, 0, 1);
+  animation: sheetSlideUp 0.25s cubic-bezier(0.2, 0, 0, 1);
 }
 
-@keyframes sheetUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
-.receiptHandle {
+.sheetHandle {
   width: 40px;
   height: 4px;
   background: #E2E8F0;
   border-radius: 2px;
-  margin: 0 auto 16px;
+  margin: 0 auto 14px;
 }
 
-.receiptHeader {
+.sheetHeader {
   text-align: center;
   font-size: 15px;
   font-weight: 700;
   color: #777;
 }
 
-.receiptAmountLarge {
+.sheetAmount {
   text-align: center;
   font-size: 32px;
   font-weight: 800;
@@ -633,38 +644,46 @@
   margin-top: 6px;
 }
 
-.receiptPillRow {
+.sheetStatusWrap {
   display: flex;
   justify-content: center;
   margin-top: 4px;
   margin-bottom: 16px;
 }
 
-.receiptDetails {
+.sheetDetailsCard {
   background: #F8F9FA;
   border-radius: 18px;
-  padding: 12px 16px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.receiptRow {
+.detailRow {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 13.5px;
 }
 
-.receiptLabel {
+.detailLabel {
   color: #777;
 }
 
-.receiptVal {
-  font-weight: 600;
+.detailVal {
+  font-weight: 700;
   color: #111;
 }
 
-.closeBtn {
+.actionButtonsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* View Receipt Yellow Button */
+.viewReceiptBtn {
   width: 100%;
   height: 52px;
   background: #F0B90B;
@@ -672,14 +691,218 @@
   border: none;
   border-radius: 26px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
   font-family: 'Outfit', sans-serif;
   cursor: default;
-  margin-top: 20px;
   box-shadow: 0 4px 14px rgba(240, 185, 11, 0.35);
   transition: transform 0.15s;
 }
 
-.closeBtn:active {
+.viewReceiptBtn:active {
   transform: scale(0.98);
+}
+
+.sheetDoneBtn {
+  width: 100%;
+  height: 46px;
+  background: #F4F4F5;
+  color: #555;
+  border: none;
+  border-radius: 23px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+}
+
+/* Full Official Receipt Modal (Printable/Screenshot-ready) */
+.fullReceiptSheet {
+  width: 100%;
+  background: #fff;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  padding: 16px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: sheetSlideUp 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.receiptCardPrintable {
+  background: #FAFAFA;
+  border: 1.5px dashed #E2E8F0;
+  border-radius: 22px;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.receiptTopBrand {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.receiptLogoWrap {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.receiptLogoV {
+  color: #111;
+}
+
+.receiptLogoFlash {
+  color: #F0B90B;
+}
+
+.receiptTitleSmall {
+  font-size: 12px;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.receiptSuccessStamp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.stampCircle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #DCFCE7;
+  color: #16A34A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stampText {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #15803D;
+}
+
+.receiptTotalAmount {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 900;
+  color: #111;
+}
+
+.receiptDividerDashed {
+  height: 1px;
+  border-top: 1.5px dashed #DDD;
+  margin: 4px 0;
+}
+
+.receiptMetaGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.metaKey {
+  color: #777;
+}
+
+.metaVal {
+  color: #111;
+  font-weight: 700;
+}
+
+.metaValRef {
+  color: #111;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.metaValSuccess {
+  color: #16A34A;
+  font-weight: 800;
+}
+
+.receiptBarcodeWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding-top: 8px;
+}
+
+.barcodeLines {
+  width: 180px;
+  height: 36px;
+  background: repeating-linear-gradient(
+    90deg,
+    #111,
+    #111 2px,
+    transparent 2px,
+    transparent 5px,
+    #111 5px,
+    #111 9px,
+    transparent 9px,
+    transparent 11px
+  );
+}
+
+.barcodeNumber {
+  font-size: 11px;
+  color: #777;
+  font-family: monospace;
+  letter-spacing: 2px;
+}
+
+.receiptActionsRow {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.downloadReceiptBtn {
+  flex: 1;
+  height: 50px;
+  background: #F0B90B;
+  color: #000;
+  border: none;
+  border-radius: 25px;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
+  box-shadow: 0 4px 14px rgba(240, 185, 11, 0.35);
+}
+
+.closeReceiptModalBtn {
+  width: 90px;
+  height: 50px;
+  background: #F4F4F5;
+  color: #333;
+  border: none;
+  border-radius: 25px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: default;
 }

@@ -20,15 +20,16 @@ export default function RewardsScreen() {
 
   const handleRedeem = () => {
     if (voltPoints <= 0) return;
+    const nairaVal = voltPoints / 10;
     setState(prev => ({
       ...prev,
       user: {
         ...prev.user,
-        balance: prev.user.balance + voltPoints,
+        balance: prev.user.balance + nairaVal,
         voltPoints: 0,
       },
     }));
-    alert(`Successfully converted ${voltPoints.toLocaleString()} Volt Points to ₦${voltPoints.toLocaleString()}.00 in your wallet!`);
+    alert(`Successfully converted ${voltPoints.toLocaleString()} Volt Points to ₦${nairaVal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} in your wallet!`);
   };
 
   const handleClaimDaily = () => {
@@ -56,7 +57,7 @@ export default function RewardsScreen() {
           <div>
             <div className={styles.pointsLabel}>Available Volt Points</div>
             <div className={styles.pointsValue}>{voltPoints.toLocaleString()} pts</div>
-            <div className={styles.pointsCashEq}>≈ ₦{voltPoints.toLocaleString()}.00 Naira Value</div>
+            <div className={styles.pointsCashEq}>≈ ₦{(voltPoints / 10).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Naira Value</div>
           </div>
           <div className="ico" style={{ background: '#F0B90B', color: '#000', width: 48, height: 48 }}>
             <IconGift size={24} />
@@ -79,14 +80,15 @@ export default function RewardsScreen() {
           <button
             type="button"
             style={{
-              background: claimed ? '#DCFCE7' : '#F0B90B',
-              color: claimed ? '#15803D' : '#000',
+              background: claimed ? '#16A34A' : '#F0B90B',
+              color: claimed ? '#FFFFFF' : '#000000',
               border: 'none',
-              padding: '6px 12px',
+              padding: '6px 14px',
               borderRadius: '14px',
               fontSize: '12px',
-              fontWeight: 700,
-              cursor: claimed ? 'default' : 'pointer'
+              fontWeight: 800,
+              cursor: claimed ? 'default' : 'pointer',
+              boxShadow: claimed ? '0 2px 8px rgba(22, 163, 74, 0.3)' : '0 2px 8px rgba(240, 185, 11, 0.3)',
             }}
             onClick={handleClaimDaily}
           >

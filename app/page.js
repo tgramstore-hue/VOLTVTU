@@ -123,10 +123,10 @@ export default function App() {
   };
 
   const animClass = direction === 'forward'
-    ? 'anim-fade-up'
+    ? 'anim-slide-forward'
     : direction === 'back'
-    ? 'anim-fade-in'
-    : 'anim-fade-in';
+    ? 'anim-slide-back'
+    : 'anim-tab-switch';
 
   const isTabScreen = ['dashboard', 'services', 'rewards', 'profile'].includes(screen);
 
