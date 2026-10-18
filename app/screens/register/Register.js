@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import styles from './Register.module.css';
 
 export default function RegisterScreen() {
-  const { navigate, updateUser, setState } = useApp();
+  const { navigate, setState, getSupabase } = useApp();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -20,7 +20,7 @@ export default function RegisterScreen() {
     password.trim().length >= 6 &&
     loginPin.trim().length === 6;
 
-  const handleCreate = (e) => {
+  const handleCreate = async (e) => {
     e?.preventDefault();
     setError('');
 
@@ -46,13 +46,56 @@ export default function RegisterScreen() {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
 
-      // Create fresh new account with 0 balance, 0 transactions
+    try {
+      const supabase = getSupabase();
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: email.trim(),
+        password: password.trim(),
+        options: {
+          data: {
+            full_name: fullName.trim(),
+            phone: phone.trim(),
+          },
+        },
+      });
+
+      if (signUpError) {
+        setError(signUpError.message);
+        setLoading(false);
+        return;
+      }
+
+      const userObj = data?.user;
+      const userId = userObj?.id || `user_${Date.now()}`;
+
+      // Insert profile into database
+      try {
+        await supabase.from('profiles').upsert({
+          id: userId,
+          email: email.trim(),
+          full_name: fullName.trim(),
+          phone: phone.trim(),
+          wallet_balance: 0.00,
+          volt_points: 100, // 100 bonus welcome points!
+          kyc_level: 1,
+          login_pin: loginPin.trim(),
+          transaction_pin: '1234',
+          virtual_account_bank: 'Wema Bank',
+          virtual_account_number: phone.trim().replace(/\D/g, '').slice(-10),
+          virtual_account_name: `VTUFLASH / ${fullName.trim().toUpperCase()}`,
+        });
+      } catch (profileErr) {
+        // Fallback gracefully if schema trigger handled profile
+      }
+
+      // Update app context
       setState((prev) => ({
         ...prev,
+        supabaseUser: userObj,
+        isAuthenticated: true,
         user: {
+          ...prev.user,
           name: fullName.trim(),
           phone: phone.trim(),
           email: email.trim(),
@@ -61,12 +104,13 @@ export default function RegisterScreen() {
           cashback: 0,
           bonus: 0,
           commission: 0,
-          voltPoints: 0,
+          voltPoints: 100,
           tier: 'Tier 1 Standard',
           kycLevel: 1,
           loginPin: loginPin.trim(),
           transactionPin: '1234',
           biometricsEnabled: true,
+          referralCode: `VOLT-${fullName.trim().split(' ')[0]?.toUpperCase()?.slice(0, 4) || 'USER'}-${String(Date.now()).slice(-2)}`,
           virtualAccount: {
             bank: 'Wema Bank',
             accountNumber: phone.trim().replace(/\D/g, '').slice(-10),
@@ -77,7 +121,11 @@ export default function RegisterScreen() {
       }));
 
       navigate('dashboard');
-    }, 1100);
+    } catch (err) {
+      setError(err?.message || 'Failed to create account. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

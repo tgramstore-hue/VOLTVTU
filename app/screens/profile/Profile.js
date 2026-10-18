@@ -99,7 +99,7 @@ const menuItems = [
 ];
 
 export default function ProfileScreen() {
-  const { state, navigate, updateUser } = useApp();
+  const { state, navigate, updateUser, setState, getSupabase } = useApp();
   const fileInputRef = useRef(null);
 
   const handleAvatarClick = (e) => {
@@ -120,6 +120,19 @@ export default function ProfileScreen() {
 
   const handleItem = (item) => {
     if (item.screen) navigate(item.screen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const supabase = getSupabase();
+      await supabase.auth.signOut();
+    } catch (e) {}
+    setState(prev => ({
+      ...prev,
+      supabaseUser: null,
+      isAuthenticated: false,
+    }));
+    navigate('login');
   };
 
   return (
@@ -194,7 +207,7 @@ export default function ProfileScreen() {
       <button
         type="button"
         className={styles.logoutBtn}
-        onClick={() => navigate('login')}
+        onClick={handleLogout}
       >
         Log Out
       </button>
