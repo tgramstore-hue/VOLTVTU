@@ -68,6 +68,10 @@ export default function LoginScreen() {
             const userPhone = profileDirect.phone || identifier;
             const userEmail = profileDirect.email || identifier;
 
+            const txPinDirect = profileDirect.transaction_pin || '';
+            const hasTxPinDirect = Boolean(txPinDirect && txPinDirect.length === 4);
+            const isEmailConfirmedDirect = Boolean(profileDirect.is_email_verified);
+
             setState((prev) => ({
               ...prev,
               isAuthenticated: true,
@@ -80,12 +84,14 @@ export default function LoginScreen() {
                 voltPoints: profileDirect.volt_points || 0,
                 kycLevel: profileDirect.kyc_level || 1,
                 loginPin: profileDirect.login_pin,
-                transactionPin: profileDirect.transaction_pin || '1234',
-                biometricsEnabled: profileDirect.biometrics_enabled ?? true,
+                transactionPin: txPinDirect,
+                hasCreatedTxPin: hasTxPinDirect,
+                isEmailVerified: isEmailConfirmedDirect,
+                biometricsEnabled: profileDirect.biometrics_enabled === true,
                 virtualAccount: {
-                  bank: profileDirect.virtual_account_bank || 'Wema Bank',
-                  accountNumber: profileDirect.virtual_account_number || userPhone.replace(/\D/g, '').slice(-10) || '0000000000',
-                  accountName: profileDirect.virtual_account_name || `VTUFLASH / ${userName.toUpperCase()}`,
+                  bank: profileDirect.virtual_account_bank || null,
+                  accountNumber: profileDirect.virtual_account_number || null,
+                  accountName: profileDirect.virtual_account_name || null,
                 },
               },
             }));
@@ -117,6 +123,9 @@ export default function LoginScreen() {
         const userName = profile?.full_name || data.user.user_metadata?.full_name || 'VTUflash User';
         const userPhone = profile?.phone || data.user.user_metadata?.phone || (identifier.includes('@') ? '' : identifier);
         const userEmail = data.user.email || identifier;
+        const txPin = profile?.transaction_pin || '';
+        const hasTxPin = Boolean(txPin && txPin.length === 4);
+        const isEmailConfirmed = Boolean(data.user.email_confirmed_at || profile?.is_email_verified);
 
         setState((prev) => ({
           ...prev,
@@ -131,12 +140,14 @@ export default function LoginScreen() {
             voltPoints: profile?.volt_points || 0,
             kycLevel: profile?.kyc_level || 1,
             loginPin: profile?.login_pin || password.trim(),
-            transactionPin: profile?.transaction_pin || '1234',
-            biometricsEnabled: profile?.biometrics_enabled ?? true,
+            transactionPin: txPin,
+            hasCreatedTxPin: hasTxPin,
+            isEmailVerified: isEmailConfirmed,
+            biometricsEnabled: profile?.biometrics_enabled === true,
             virtualAccount: {
-              bank: profile?.virtual_account_bank || 'Wema Bank',
-              accountNumber: profile?.virtual_account_number || userPhone.replace(/\D/g, '').slice(-10) || '0000000000',
-              accountName: profile?.virtual_account_name || `VTUFLASH / ${userName.toUpperCase()}`,
+              bank: profile?.virtual_account_bank || null,
+              accountNumber: profile?.virtual_account_number || null,
+              accountName: profile?.virtual_account_name || null,
             },
           },
         }));

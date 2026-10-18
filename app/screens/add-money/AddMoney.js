@@ -18,15 +18,14 @@ export default function AddMoneyScreen() {
 
   const numAmount = Number(amount) || 0;
 
-  const virtualAccount = state.user?.virtualAccount || {
-    bank: 'Wema Bank',
-    accountNumber: (state.user?.phone || '8123456789').replace(/\D/g, '').slice(-10) || '8123456789',
-    accountName: `VTUFLASH / ${(state.user?.name || 'USER').toUpperCase()}`,
-  };
+  const virtualAccount = state.user?.virtualAccount || null;
 
-  // Check if we have a real Paystack DVA; if not, auto-create one
-  const hasRealDVA = virtualAccount?.accountNumber && virtualAccount?.bank &&
-    virtualAccount?.bank !== 'Wema Bank' && virtualAccount?.accountNumber?.length === 10;
+  // Check if we have a real Paystack DVA assigned
+  const hasRealDVA = Boolean(
+    virtualAccount?.accountNumber &&
+    virtualAccount?.bank &&
+    virtualAccount.accountNumber.length === 10
+  );
 
   const handleCreateDVA = async () => {
     setCreatingDVA(true);

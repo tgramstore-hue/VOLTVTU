@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     virtual_account_name TEXT,
     login_pin TEXT DEFAULT '123456',       -- 6-digit login PIN
     transaction_pin TEXT DEFAULT NULL,     -- 4-digit transaction authorization PIN (created on first setup)
+    is_email_verified BOOLEAN NOT NULL DEFAULT FALSE, -- Synchronized with auth confirmation
     biometrics_enabled BOOLEAN NOT NULL DEFAULT FALSE, -- Disabled by default until user turns it on
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()

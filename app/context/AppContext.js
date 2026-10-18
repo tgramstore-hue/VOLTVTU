@@ -197,12 +197,85 @@ export function AppProvider({ children }) {
     return () => clearTimeout(timer);
   }, [getSupabase]);
 
+  // Handle email verification links / callbacks from Supabase
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleAuthCallback = async () => {
+      try {
+        const supabase = getSupabase();
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const tokenHash = urlParams.get('token_hash');
+        const type = urlParams.get('type');
+
+        let verifiedUser = null;
+
+        // 1. PKCE flow code exchange (default in @supabase/ssr)
+        if (code) {
+          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error && (data?.user || data?.session?.user)) {
+            verifiedUser = data.user || data.session.user;
+          }
+        }
+        // 2. Token hash OTP verification (magic link / email verify)
+        else if (tokenHash) {
+          const { data, error } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: type || 'email',
+          });
+          if (!error && (data?.user || data?.session?.user)) {
+            verifiedUser = data.user || data.session.user;
+          }
+        }
+        // 3. Hash fragment implicit flow (#access_token=...&refresh_token=...)
+        else if (window.location.hash.includes('access_token')) {
+          const hashParams = new URLSearchParams(window.location.hash.substring(1));
+          const accessToken = hashParams.get('access_token');
+          const refreshToken = hashParams.get('refresh_token');
+          if (accessToken && refreshToken) {
+            const { data, error } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+            if (!error && (data?.user || data?.session?.user)) {
+              verifiedUser = data.user || data.session.user;
+            }
+          }
+        }
+
+        if (verifiedUser) {
+          // Clean URL params without reload
+          try {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          } catch (e) {}
+
+          setState(prev => ({
+            ...prev,
+            supabaseUser: verifiedUser,
+            isAuthenticated: true,
+            user: { ...prev.user, isEmailVerified: true },
+          }));
+
+          // Mark in profiles table
+          try {
+            await supabase.from('profiles').update({ is_email_verified: true }).eq('id', verifiedUser.id);
+          } catch (e) {}
+        }
+      } catch (err) {
+        console.error('Error handling auth callback:', err);
+      }
+    };
+
+    handleAuthCallback();
+  }, [getSupabase]);
+
   // Listen for auth state changes (sign out, email confirmed, user updated)
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const supabase = getSupabase();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_OUT') {
         setState(prev => ({ ...INITIAL_STATE }));
         setScreen('login');
@@ -212,13 +285,16 @@ export function AppProvider({ children }) {
 
       // When user confirms their email, automatically update isEmailVerified
       if (
-        (event === 'USER_UPDATED' || event === 'EMAIL_CONFIRMED' || event === 'TOKEN_REFRESHED') &&
+        (event === 'USER_UPDATED' || event === 'EMAIL_CONFIRMED' || event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') &&
         session?.user?.email_confirmed_at
       ) {
         setState(prev => ({
           ...prev,
           user: { ...prev.user, isEmailVerified: true },
         }));
+        try {
+          await supabase.from('profiles').update({ is_email_verified: true }).eq('id', session.user.id);
+        } catch (e) {}
       }
     });
 
@@ -226,7 +302,7 @@ export function AppProvider({ children }) {
   }, [getSupabase]);
 
   // Auto-recheck email verification when tab regains focus
-  // (user clicks verification link in email, switches back to app tab)
+  // (user clicks verification link in email on mobile/tab, switches back to app tab)
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -234,12 +310,17 @@ export function AppProvider({ children }) {
       if (document.visibilityState === 'visible') {
         try {
           const supabase = getSupabase();
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user?.email_confirmed_at) {
+          // Force refresh session to pull latest email_confirmed_at claim from server
+          const { data: refreshData } = await supabase.auth.refreshSession();
+          const activeUser = refreshData?.user || (await supabase.auth.getUser())?.data?.user;
+          if (activeUser?.email_confirmed_at) {
             setState(prev => ({
               ...prev,
               user: { ...prev.user, isEmailVerified: true },
             }));
+            try {
+              await supabase.from('profiles').update({ is_email_verified: true }).eq('id', activeUser.id);
+            } catch (e) {}
           }
         } catch (e) {}
       }
@@ -321,19 +402,71 @@ export function AppProvider({ children }) {
   const checkEmailVerification = useCallback(async () => {
     try {
       const supabase = getSupabase();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.email_confirmed_at) {
+
+      // 1. Force refresh session from server (gets fresh JWT with updated email_confirmed_at)
+      let activeUser = null;
+      try {
+        const { data: refreshData } = await supabase.auth.refreshSession();
+        if (refreshData?.user?.email_confirmed_at) {
+          activeUser = refreshData.user;
+        }
+      } catch (e) {}
+
+      // 2. Fallback to getUser() (fresh network call to /auth/v1/user)
+      if (!activeUser) {
+        try {
+          const { data: userData } = await supabase.auth.getUser();
+          if (userData?.user?.email_confirmed_at) {
+            activeUser = userData.user;
+          }
+        } catch (e) {}
+      }
+
+      // 3. Fallback to getSession()
+      if (!activeUser) {
+        try {
+          const { data: sessionData } = await supabase.auth.getSession();
+          if (sessionData?.session?.user?.email_confirmed_at) {
+            activeUser = sessionData.session.user;
+          }
+        } catch (e) {}
+      }
+
+      // 4. Fallback: check profiles table flag
+      if (!activeUser && state.supabaseUser?.id) {
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('is_email_verified')
+            .eq('id', state.supabaseUser.id)
+            .maybeSingle();
+          if (profile?.is_email_verified) {
+            setState(prev => ({
+              ...prev,
+              user: { ...prev.user, isEmailVerified: true },
+            }));
+            return true;
+          }
+        } catch (e) {}
+      }
+
+      if (activeUser?.email_confirmed_at) {
         setState(prev => ({
           ...prev,
           user: { ...prev.user, isEmailVerified: true },
         }));
+        try {
+          await supabase.from('profiles').update({ is_email_verified: true }).eq('id', activeUser.id);
+        } catch (e) {}
         return true;
       }
+
       return false;
     } catch (e) {
+      console.error('checkEmailVerification error:', e);
       return false;
     }
-  }, [getSupabase]);
+  }, [getSupabase, state.supabaseUser?.id]);
 
   const saveTransactionPin = useCallback(async (newPin) => {
     // Update local state immediately

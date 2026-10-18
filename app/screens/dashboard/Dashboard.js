@@ -183,12 +183,12 @@ export default function DashboardScreen() {
     if (!state.supabaseUser?.id) return;
     const va = state.user?.virtualAccount;
     // If no account number or it's a placeholder (phone-number-based, 10 digits but not from Paystack)
-    const needsDVA = !va?.accountNumber || va?.bank === 'Wema Bank';
+    const needsDVA = !va?.accountNumber;
     if (needsDVA) {
       createVirtualAccount();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, state.supabaseUser?.id]);
+  }, [authLoading, state.supabaseUser?.id, state.user?.virtualAccount?.accountNumber]);
 
 
   // Activity Gate: Blocks transactions & purchases if email is unverified
@@ -262,8 +262,9 @@ export default function DashboardScreen() {
     setCheckingEmail(false);
     if (verified) {
       setShowEmailModal(false);
+      setEmailJustVerified(true);
     } else {
-      alert('Email not confirmed yet. Please click the link sent to ' + userEmail + ' then click this button again.');
+      alert('Email not confirmed yet. Please check your inbox or spam for the link sent to ' + userEmail + ' and click it, then tap this button again.');
     }
   };
 
