@@ -8,7 +8,6 @@ export default function RegisterScreen() {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loginPin, setLoginPin] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -17,8 +16,7 @@ export default function RegisterScreen() {
     fullName.trim().length >= 3 &&
     phone.trim().length >= 10 &&
     email.trim().includes('@') &&
-    password.trim().length >= 6 &&
-    loginPin.trim().length === 6;
+    loginPin.length === 6;
 
   const handleCreate = async (e) => {
     e?.preventDefault();
@@ -36,12 +34,8 @@ export default function RegisterScreen() {
       setError('Please enter a valid email address.');
       return;
     }
-    if (password.trim().length < 6) {
-      setError('Password must be at least 6 characters.');
-      return;
-    }
-    if (loginPin.trim().length !== 6) {
-      setError('Login PIN must be exactly 6 digits.');
+    if (loginPin.length !== 6) {
+      setError('Login Password/PIN must be exactly 6 digits (numbers only).');
       return;
     }
 
@@ -51,11 +45,12 @@ export default function RegisterScreen() {
       const supabase = getSupabase();
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: email.trim(),
-        password: password.trim(),
+        password: loginPin.trim(),
         options: {
           data: {
             full_name: fullName.trim(),
             phone: phone.trim(),
+            login_pin: loginPin.trim(),
           },
         },
       });
@@ -81,6 +76,7 @@ export default function RegisterScreen() {
           kyc_level: 1,
           login_pin: loginPin.trim(),
           transaction_pin: '1234',
+          biometrics_enabled: true,
           virtual_account_bank: 'Wema Bank',
           virtual_account_number: phone.trim().replace(/\D/g, '').slice(-10),
           virtual_account_name: `VTUFLASH / ${fullName.trim().toUpperCase()}`,
@@ -89,6 +85,16 @@ export default function RegisterScreen() {
         // Fallback gracefully if schema trigger handled profile
       }
 
+      const userName = fullName.trim();
+      const userPhone = phone.trim();
+
+      // Remember that user has an account
+      try {
+        localStorage.setItem('vtu_last_user_name', userName);
+        localStorage.setItem('vtu_last_user_phone', userPhone);
+        localStorage.setItem('vtu_has_account', 'true');
+      } catch (e) {}
+
       // Update app context
       setState((prev) => ({
         ...prev,
@@ -96,8 +102,8 @@ export default function RegisterScreen() {
         isAuthenticated: true,
         user: {
           ...prev.user,
-          name: fullName.trim(),
-          phone: phone.trim(),
+          name: userName,
+          phone: userPhone,
           email: email.trim(),
           avatar: null,
           balance: 0,
@@ -110,11 +116,11 @@ export default function RegisterScreen() {
           loginPin: loginPin.trim(),
           transactionPin: '1234',
           biometricsEnabled: true,
-          referralCode: `VOLT-${fullName.trim().split(' ')[0]?.toUpperCase()?.slice(0, 4) || 'USER'}-${String(Date.now()).slice(-2)}`,
+          referralCode: `VOLT-${userName.split(' ')[0]?.toUpperCase()?.slice(0, 4) || 'USER'}-${String(Date.now()).slice(-2)}`,
           virtualAccount: {
             bank: 'Wema Bank',
-            accountNumber: phone.trim().replace(/\D/g, '').slice(-10),
-            accountName: `VTUFLASH / ${fullName.trim().toUpperCase()}`,
+            accountNumber: userPhone.replace(/\D/g, '').slice(-10),
+            accountName: `VTUFLASH / ${userName.toUpperCase()}`,
           },
         },
         transactions: [],
@@ -207,31 +213,24 @@ export default function RegisterScreen() {
           required
         />
 
-        <label className={styles.label}>Password</label>
-        <input
-          className={styles.input}
-          type="password"
-          placeholder="Min 6 characters"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            if (error) setError('');
-          }}
-          required
-        />
-
-        <label className={styles.label}>Create 6-Digit Login PIN</label>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <label className={styles.label}>Create 6-Digit Password (PIN)</label>
+          <span style={{ fontSize: '11px', color: '#777', fontWeight: 600 }}>Numbers only (6 digits)</span>
+        </div>
         <input
           className={styles.input}
           type="password"
           inputMode="numeric"
+          pattern="[0-9]*"
           maxLength={6}
-          placeholder="6 digits (e.g. 123456)"
+          placeholder="••••••"
           value={loginPin}
           onChange={(e) => {
-            setLoginPin(e.target.value.replace(/\D/g, ''));
+            const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 6);
+            setLoginPin(digitsOnly);
             if (error) setError('');
           }}
+          style={{ letterSpacing: '8px', fontSize: '18px', fontWeight: 800 }}
           required
         />
 

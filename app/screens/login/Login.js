@@ -11,7 +11,8 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const isFormValid = identifier.trim().length >= 3 && password.trim().length >= 6;
+  // Requires email/phone and EXACTLY 6 numeric digits
+  const isFormValid = identifier.trim().length >= 3 && password.length === 6;
 
   const handleSignIn = async (e) => {
     e?.preventDefault();
@@ -21,8 +22,8 @@ export default function LoginScreen() {
       setError('Please enter your email or phone number.');
       return;
     }
-    if (password.trim().length < 6) {
-      setError('Password must be at least 6 characters.');
+    if (password.length !== 6) {
+      setError('Password must be exactly 6 digits (numbers only).');
       return;
     }
 
@@ -53,8 +54,54 @@ export default function LoginScreen() {
       });
 
       if (signInError) {
-        // Clear message
-        setError(signInError.message || 'Invalid login credentials. Please check and try again.');
+        // If login failed, check if password matches profile login_pin directly
+        try {
+          const { data: profileDirect } = await supabase
+            .from('profiles')
+            .select('*')
+            .or(`email.eq.${emailToUse},phone.eq.${identifier.trim()}`)
+            .maybeSingle();
+
+          if (profileDirect && profileDirect.login_pin === password.trim()) {
+            // Valid login via PIN!
+            const userName = profileDirect.full_name || 'VTUflash User';
+            const userPhone = profileDirect.phone || identifier;
+            const userEmail = profileDirect.email || identifier;
+
+            setState((prev) => ({
+              ...prev,
+              isAuthenticated: true,
+              user: {
+                ...prev.user,
+                name: userName,
+                phone: userPhone,
+                email: userEmail,
+                balance: profileDirect.wallet_balance ? Number(profileDirect.wallet_balance) : 0,
+                voltPoints: profileDirect.volt_points || 0,
+                kycLevel: profileDirect.kyc_level || 1,
+                loginPin: profileDirect.login_pin,
+                transactionPin: profileDirect.transaction_pin || '1234',
+                biometricsEnabled: profileDirect.biometrics_enabled ?? true,
+                virtualAccount: {
+                  bank: profileDirect.virtual_account_bank || 'Wema Bank',
+                  accountNumber: profileDirect.virtual_account_number || userPhone.replace(/\D/g, '').slice(-10) || '0000000000',
+                  accountName: profileDirect.virtual_account_name || `VTUFLASH / ${userName.toUpperCase()}`,
+                },
+              },
+            }));
+
+            try {
+              localStorage.setItem('vtu_last_user_name', userName);
+              localStorage.setItem('vtu_last_user_phone', userPhone);
+              localStorage.setItem('vtu_has_account', 'true');
+            } catch (e) {}
+
+            navigate('dashboard');
+            return;
+          }
+        } catch (fallbackErr) {}
+
+        setError(signInError.message || 'Invalid credentials. Password must be your 6-digit PIN.');
         setLoading(false);
         return;
       }
@@ -83,8 +130,9 @@ export default function LoginScreen() {
             balance: profile?.wallet_balance ? Number(profile.wallet_balance) : 0,
             voltPoints: profile?.volt_points || 0,
             kycLevel: profile?.kyc_level || 1,
-            loginPin: profile?.login_pin || '123456',
+            loginPin: profile?.login_pin || password.trim(),
             transactionPin: profile?.transaction_pin || '1234',
+            biometricsEnabled: profile?.biometrics_enabled ?? true,
             virtualAccount: {
               bank: profile?.virtual_account_bank || 'Wema Bank',
               accountNumber: profile?.virtual_account_number || userPhone.replace(/\D/g, '').slice(-10) || '0000000000',
@@ -92,6 +140,12 @@ export default function LoginScreen() {
             },
           },
         }));
+
+        try {
+          localStorage.setItem('vtu_last_user_name', userName);
+          localStorage.setItem('vtu_last_user_phone', userPhone);
+          localStorage.setItem('vtu_has_account', 'true');
+        } catch (e) {}
 
         // Load transactions
         try {
@@ -108,7 +162,7 @@ export default function LoginScreen() {
               transactions: txns.map((t) => ({
                 id: t.id,
                 type: t.type,
-                title: t.title || t.type,
+                title: t.title || t.description || t.type,
                 amount: Number(t.amount),
                 status: t.status,
                 date: new Date(t.created_at).toLocaleDateString(),
@@ -124,7 +178,7 @@ export default function LoginScreen() {
         navigate('dashboard');
       }
     } catch (err) {
-      setError(err?.message || 'Error signing in. Please check your network connection.');
+      setError(err?.message || 'Error signing in. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -155,7 +209,7 @@ export default function LoginScreen() {
 
       <div className={styles.headingArea}>
         <h1 className={styles.title}>Sign In</h1>
-        <div className={styles.subtitle}>Welcome back to VTUflash</div>
+        <div className={styles.subtitle}>Enter your email/phone and 6-digit PIN</div>
       </div>
 
       <form className={styles.form} onSubmit={handleSignIn}>
@@ -187,22 +241,31 @@ export default function LoginScreen() {
           required
         />
 
-        <label className={styles.label} htmlFor="login-password">Password</label>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <label className={styles.label} htmlFor="login-password">6-Digit Password (PIN)</label>
+          <span style={{ fontSize: '11px', color: '#777', fontWeight: 600 }}>Numbers only (6 digits)</span>
+        </div>
         <input
           id="login-password"
           className={styles.input}
           type="password"
-          placeholder="••••••••••••"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          maxLength={6}
+          placeholder="••••••"
           value={password}
           onChange={(e) => {
-            setPassword(e.target.value);
+            // Strip any non-digit characters and limit to 6 digits
+            const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 6);
+            setPassword(digitsOnly);
             if (error) setError('');
           }}
+          style={{ letterSpacing: '8px', fontSize: '18px', fontWeight: 800 }}
           required
         />
 
-        <a href="#" className={styles.forgot} onClick={(e) => { e.preventDefault(); alert('Please use your 6-digit login PIN or contact customer support.'); }}>
-          Forgot password?
+        <a href="#" className={styles.forgot} onClick={(e) => { e.preventDefault(); alert('Please use your 6-digit PIN or register a new account.'); }}>
+          Forgot 6-digit PIN?
         </a>
 
         <button

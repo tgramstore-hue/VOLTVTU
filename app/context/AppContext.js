@@ -148,13 +148,31 @@ export function AppProvider({ children }) {
             }));
           }
 
-          setScreen('dashboard');
-          historyStack.current = ['dashboard'];
-          setActiveTab('home');
+          // Returning authenticated user: route to unlock-pin with PIN/Biometric verification
+          setScreen('unlock-pin');
+          historyStack.current = ['unlock-pin'];
         } else {
-          // No session — require login or signup before dashboard
-          setScreen('login');
-          historyStack.current = ['login'];
+          // Check if previously registered on this device
+          const hasAccount = localStorage.getItem('vtu_has_account') === 'true';
+          const savedName = localStorage.getItem('vtu_last_user_name');
+          const savedPhone = localStorage.getItem('vtu_last_user_phone');
+
+          if (hasAccount && savedName) {
+            setState(prev => ({
+              ...prev,
+              user: {
+                ...prev.user,
+                name: savedName,
+                phone: savedPhone || prev.user.phone,
+              },
+            }));
+            setScreen('unlock-pin');
+            historyStack.current = ['unlock-pin'];
+          } else {
+            // New visitor: require sign up / login
+            setScreen('login');
+            historyStack.current = ['login'];
+          }
         }
       } catch (err) {
         setScreen('login');
