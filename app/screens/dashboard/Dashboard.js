@@ -134,11 +134,15 @@ export default function DashboardScreen() {
   const [interceptReason, setInterceptReason] = useState('');
 
   const latestTx = state.transactions && state.transactions[0];
-  const userEmail = state.user?.email || 'your email';
-  const isEmailVerified = Boolean(state.user?.isEmailVerified);
+  const isEmailVerified = Boolean(
+    state.user?.isEmailVerified ||
+    (typeof window !== 'undefined' && localStorage.getItem('vtu_email_verified') === 'true')
+  );
   const hasCreatedPin = Boolean(
     state.user?.hasCreatedTxPin ||
-    (state.user?.transactionPin && state.user.transactionPin.length === 4)
+    (state.user?.transactionPin && state.user.transactionPin.length === 4) ||
+    (typeof window !== 'undefined' && localStorage.getItem('vtu_has_created_tx_pin') === 'true') ||
+    (typeof window !== 'undefined' && localStorage.getItem('vtu_dismissed_pin_modal') === 'true')
   );
 
   // On mount: check if fresh signup needs PIN modal or email notice
@@ -149,7 +153,7 @@ export default function DashboardScreen() {
 
     // Check if user has not created a transaction PIN yet
     if (!hasCreatedPin) {
-      const pinDismissed = sessionStorage.getItem('vtu_dismissed_pin_modal');
+      const pinDismissed = sessionStorage.getItem('vtu_dismissed_pin_modal') || localStorage.getItem('vtu_dismissed_pin_modal');
       if (!pinDismissed) {
         setShowCreatePinModal(true);
         return;
@@ -158,7 +162,7 @@ export default function DashboardScreen() {
 
     // Check if user's email is not verified
     if (!isEmailVerified) {
-      const emailDismissed = sessionStorage.getItem('vtu_dismissed_email_modal');
+      const emailDismissed = sessionStorage.getItem('vtu_dismissed_email_modal') || (typeof window !== 'undefined' && localStorage.getItem('vtu_email_verified') === 'true');
       if (!emailDismissed) {
         setShowEmailModal(true);
       }
@@ -222,11 +226,17 @@ export default function DashboardScreen() {
       }
       // Save PIN
       await saveTransactionPin(newPinVal);
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('vtu_has_created_tx_pin', 'true');
+          localStorage.setItem('vtu_dismissed_pin_modal', 'true');
+        } catch (e) {}
+      }
       setPinSuccess(true);
       setTimeout(() => {
         setShowCreatePinModal(false);
         setPinSuccess(false);
-      }, 1200);
+      }, 1000);
     }
   };
 
@@ -234,6 +244,7 @@ export default function DashboardScreen() {
     setShowCreatePinModal(false);
     try {
       sessionStorage.setItem('vtu_dismissed_pin_modal', 'true');
+      localStorage.setItem('vtu_dismissed_pin_modal', 'true');
     } catch (e) {}
   };
 

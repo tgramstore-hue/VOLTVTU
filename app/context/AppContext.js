@@ -101,9 +101,25 @@ export function AppProvider({ children }) {
           const userName = profile?.full_name || session.user.user_metadata?.full_name || 'VTUflash User';
           const userPhone = profile?.phone || session.user.user_metadata?.phone || '';
           const userEmail = session.user.email || '';
-          const isEmailConfirmed = Boolean(session.user.email_confirmed_at);
-          const txPin = profile?.transaction_pin || '';
-          const hasTxPin = Boolean(txPin && txPin.length === 4);
+          const isEmailConfirmed = Boolean(
+            session.user.email_confirmed_at ||
+            profile?.is_email_verified ||
+            (typeof window !== 'undefined' && localStorage.getItem('vtu_email_verified') === 'true')
+          );
+          if (isEmailConfirmed && typeof window !== 'undefined') {
+            try { localStorage.setItem('vtu_email_verified', 'true'); } catch (e) {}
+          }
+
+          const savedLocalTxPin = typeof window !== 'undefined' ? (localStorage.getItem('vtu_user_tx_pin') || '') : '';
+          const savedHasLocalTxPin = typeof window !== 'undefined' && localStorage.getItem('vtu_has_created_tx_pin') === 'true';
+          const txPin = profile?.transaction_pin || savedLocalTxPin || '';
+          const hasTxPin = Boolean((txPin && txPin.length === 4) || savedHasLocalTxPin);
+          if (hasTxPin && typeof window !== 'undefined') {
+            try {
+              localStorage.setItem('vtu_has_created_tx_pin', 'true');
+              if (txPin) localStorage.setItem('vtu_user_tx_pin', txPin);
+            } catch (e) {}
+          }
           const bioEnabled = profile?.biometrics_enabled === true;
 
           setState(prev => ({
@@ -166,6 +182,9 @@ export function AppProvider({ children }) {
           const hasAccount = localStorage.getItem('vtu_has_account') === 'true';
           const savedName = localStorage.getItem('vtu_last_user_name');
           const savedPhone = localStorage.getItem('vtu_last_user_phone');
+          const savedLocalTxPin = localStorage.getItem('vtu_user_tx_pin') || '';
+          const savedHasLocalTxPin = localStorage.getItem('vtu_has_created_tx_pin') === 'true' || Boolean(savedLocalTxPin && savedLocalTxPin.length === 4);
+          const savedEmailVerified = localStorage.getItem('vtu_email_verified') === 'true';
 
           if (hasAccount && savedName) {
             setState(prev => ({
@@ -174,6 +193,9 @@ export function AppProvider({ children }) {
                 ...prev.user,
                 name: savedName,
                 phone: savedPhone || prev.user.phone,
+                transactionPin: savedLocalTxPin,
+                hasCreatedTxPin: savedHasLocalTxPin,
+                isEmailVerified: savedEmailVerified,
               },
             }));
             setScreen('unlock-pin');
@@ -469,7 +491,7 @@ export function AppProvider({ children }) {
   }, [getSupabase, state.supabaseUser?.id]);
 
   const saveTransactionPin = useCallback(async (newPin) => {
-    // Update local state immediately
+    // 1. Update local state immediately
     setState(prev => ({
       ...prev,
       user: {
@@ -478,17 +500,37 @@ export function AppProvider({ children }) {
         hasCreatedTxPin: true,
       },
     }));
-    // Persist to Supabase so next login doesn't show PIN modal again
+
+    // 2. Persist to localStorage immediately so it never shows modal again on this device
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('vtu_user_tx_pin', newPin);
+        localStorage.setItem('vtu_has_created_tx_pin', 'true');
+        localStorage.setItem('vtu_dismissed_pin_modal', 'true');
+      } catch (e) {}
+    }
+
+    // 3. Persist to Supabase profiles table
     try {
       const supabase = getSupabase();
-      if (state.supabaseUser?.id) {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      const userId = authUser?.id || state.supabaseUser?.id;
+
+      if (userId) {
         await supabase
           .from('profiles')
           .update({ transaction_pin: newPin })
-          .eq('id', state.supabaseUser.id);
+          .eq('id', userId);
+      } else if (state.user?.phone) {
+        await supabase
+          .from('profiles')
+          .update({ transaction_pin: newPin })
+          .eq('phone', state.user.phone);
       }
-    } catch (e) {}
-  }, [getSupabase, state.supabaseUser]);
+    } catch (e) {
+      console.warn('Could not persist PIN to Supabase:', e);
+    }
+  }, [getSupabase, state.supabaseUser?.id, state.user?.phone]);
 
   // Create Paystack Dedicated Virtual Account for user
   const createVirtualAccount = useCallback(async () => {

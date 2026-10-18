@@ -12,7 +12,7 @@ export default function UnlockPINScreen() {
   const [bioStatus, setBioStatus] = useState('idle'); // idle | scanning | success | failed
 
   const userName = state.user?.name || (typeof window !== 'undefined' ? localStorage.getItem('vtu_last_user_name') : null) || 'User';
-  const correctPin = state.user?.loginPin || '123456';
+  const correctPin = state.user?.loginPin || (typeof window !== 'undefined' ? localStorage.getItem('vtu_user_login_pin') : null) || '123456';
   const biometricsEnabled = state.user?.biometricsEnabled === true;
 
   const triggerBiometricScan = useCallback(async () => {

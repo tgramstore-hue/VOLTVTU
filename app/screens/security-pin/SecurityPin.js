@@ -5,7 +5,7 @@ import { IconChevronLeft, IconLock, IconFingerprint, IconCheck, IconX } from '..
 import styles from './SecurityPin.module.css';
 
 export default function SecurityPinScreen() {
-  const { goBack, state, updateUser, saveTransactionPin, saveBiometrics } = useApp();
+  const { goBack, state, updateUser, saveTransactionPin, saveBiometrics, getSupabase } = useApp();
 
   // Biometrics toggle (Defaults to false / OFF)
   const [biometrics, setBiometrics] = useState(state.user?.biometricsEnabled === true);
@@ -13,7 +13,8 @@ export default function SecurityPinScreen() {
   // Check if user has created a transaction PIN before
   const hasCreatedPin = Boolean(
     state.user?.hasCreatedTxPin ||
-    (state.user?.transactionPin && state.user.transactionPin.length === 4)
+    (state.user?.transactionPin && state.user.transactionPin.length === 4) ||
+    (typeof window !== 'undefined' && localStorage.getItem('vtu_has_created_tx_pin') === 'true')
   );
 
   // Modals for changing/creating PINs
@@ -72,6 +73,16 @@ export default function SecurityPinScreen() {
 
     if (isLogin) {
       updateUser({ loginPin: newPin });
+      if (typeof window !== 'undefined') {
+        try { localStorage.setItem('vtu_user_login_pin', newPin); } catch (e) {}
+      }
+      try {
+        const supabase = getSupabase();
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser?.id) {
+          await supabase.from('profiles').update({ login_pin: newPin }).eq('id', authUser.id);
+        }
+      } catch (e) {}
       setSuccessToast('6-digit Login PIN updated successfully!');
     } else {
       await saveTransactionPin(newPin);
