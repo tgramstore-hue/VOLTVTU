@@ -1,46 +1,21 @@
 'use client';
 import { useApp } from '../../context/AppContext';
 import {
-  IconHeadphones, IconScan, IconBell,
-  IconWallet, IconPhone, IconData, IconTV, IconBolt,
-  IconExam, IconBetting
-} from '../../components/Icons';
+  IconNavyPhone, IconNavyData, IconNavyTV, IconNavyBetting,
+  IconNavyElectricity, IconNavyEducation, IconNavyGiftCard, IconNavyGlobal
+} from '../services/Services';
 import PromoCarousel from '../../components/PromoCarousel';
 import styles from './Dashboard.module.css';
 
-// SVG Icons matching the reference design in navy blue style
-function IconGift(props) {
-  return (
-    <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="20 12 20 22 4 22 4 12"/>
-      <rect x="2" y="7" width="20" height="5"/>
-      <line x1="12" y1="22" x2="12" y2="7"/>
-      <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
-      <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
-    </svg>
-  );
-}
-
-function IconGlobalPhone(props) {
-  return (
-    <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-      <line x1="12" y1="18" x2="12.01" y2="18"/>
-      <path d="M9 7l3-3 3 3"/>
-      <path d="M15 13l-3 3-3-3"/>
-    </svg>
-  );
-}
-
 const services = [
-  { icon: IconPhone, label: 'Airtime', screen: 'airtime' },
-  { icon: IconData, label: 'Data', screen: 'data' },
-  { icon: IconTV, label: 'CableTV', screen: 'cable' },
-  { icon: IconBetting, label: 'Betting', screen: 'betting' },
-  { icon: IconBolt, label: 'Electricity', screen: 'electricity' },
-  { icon: IconExam, label: 'Education', screen: 'exam' },
-  { icon: IconGift, label: 'Gift Card', screen: 'giftcard' },
-  { icon: IconGlobalPhone, label: 'Global Topup', screen: 'virtual-numbers' },
+  { icon: IconNavyPhone, label: 'Airtime', screen: 'airtime' },
+  { icon: IconNavyData, label: 'Data', screen: 'data' },
+  { icon: IconNavyTV, label: 'CableTV', screen: 'cable' },
+  { icon: IconNavyBetting, label: 'Betting', screen: 'betting' },
+  { icon: IconNavyElectricity, label: 'Electricity', screen: 'electricity' },
+  { icon: IconNavyEducation, label: 'Education', screen: 'exam' },
+  { icon: IconNavyGiftCard, label: 'Gift Card', screen: 'giftcard' },
+  { icon: IconNavyGlobal, label: 'Global Topup', screen: 'virtual-numbers' },
 ];
 
 const banners = [
@@ -56,7 +31,7 @@ export default function DashboardScreen() {
 
   return (
     <div className={styles.container}>
-      {/* Stationary Sticky Top Header */}
+      {/* Top Header */}
       <div className={styles.header}>
         <div className={styles.userInfo} onClick={() => navigate('profile')}>
           <div className={styles.avatar}>
@@ -67,114 +42,121 @@ export default function DashboardScreen() {
                 style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
               />
             ) : (
-              state.user.initial
+              state.user.initial || 'E'
             )}
           </div>
           <span className={styles.greeting}>Hi, {state.user.name.toUpperCase()}</span>
         </div>
         <div className={styles.headerIcons}>
-          <button type="button" style={{ background: 'none', border: 'none', cursor: 'default', padding: 0 }} aria-label="Support" onClick={() => navigate('help-support')}>
-            <IconHeadphones size={24} />
+          <button type="button" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }} aria-label="Support" onClick={() => navigate('help-support')}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 14v-2a8 8 0 0116 0v2M4 14h3v5H4zM17 14h3v5h-3z" />
+            </svg>
           </button>
-          <button type="button" style={{ background: 'none', border: 'none', cursor: 'default', padding: 0 }} aria-label="Scan QR" onClick={() => navigate('add-money')}>
-            <IconScan size={24} />
+          <button type="button" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }} aria-label="Scan QR" onClick={() => navigate('add-money')}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M4 12h16" />
+            </svg>
           </button>
-          <button type="button" style={{ background: 'none', border: 'none', cursor: 'default', padding: 0 }} aria-label="Notifications" onClick={() => navigate('notifications')}>
-            <IconBell size={24} />
+          <button type="button" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }} aria-label="Notifications" onClick={() => navigate('notifications')}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 16V11a6 6 0 0112 0v5l2 2H4zM10 20a2 2 0 004 0" />
+            </svg>
           </button>
         </div>
       </div>
 
-      {/* Balance Card */}
+      {/* Balance Card (matching previous design exactly) */}
       <div className={styles.balanceSection} style={{ '--i': 1 }}>
         <div className={styles.balanceCard}>
           <div className={styles.balanceTop}>
             <div>
               <div className={styles.balanceLabel}>
-                Wallet Balance (₦)
-                <span className={styles.tierPill}>Tier {state.user.tier || 1}</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d0d0d0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3l8 3v6c0 5-3 8-8 9-5-1-8-4-8-9V6z"/>
+                </svg>
+                Available balance
               </div>
               <div className={styles.balanceAmount}>
                 ₦{state.user.balance.toLocaleString()}.00
               </div>
             </div>
-            <button className={styles.addMoneyBtn} onClick={() => navigate('add-money')}>
+            <button type="button" className={styles.addBtn} onClick={() => navigate('add-money')}>
               + Add Money
             </button>
           </div>
 
-          <div className={styles.balanceDetails}>
-            <div className={styles.statItem}>
-              <span className={styles.statLabel}>Cashback</span>
-              <span className={styles.statValue}>₦{state.user.cashback}</span>
-            </div>
-            <div className={styles.statDivider} />
-            <div className={styles.statItem}>
-              <span className={styles.statLabel}>Volt Points</span>
-              <span className={styles.statValue}>{state.user.voltPoints} pts</span>
-            </div>
+          <div className={styles.cashback}>
+            Cashback earned today <span className={styles.cashbackVal}>+₦{state.user.cashback || '0'}.00</span>
           </div>
+        </div>
+
+        <div className={styles.transStrip}>
+          <span>Last purchase: {latestTx ? latestTx.title : 'Data'}</span>
+          <span className={styles.transLink} onClick={() => navigate('transactions')}>
+            Transactions ›
+          </span>
         </div>
       </div>
 
-      {/* Carousel Banner (Replaces quick actions section right below balance card) */}
-      <div style={{ marginTop: '4px', '--i': 2 }}>
+      {/* Card showing Last Transaction (replacing Reseller Service - Today's Sales) */}
+      <div
+        className={styles.resellerCard}
+        style={{ cursor: 'pointer', '--i': 2 }}
+        onClick={() => navigate('transactions')}
+      >
+        <span>
+          Last Transaction:{' '}
+          <b>{latestTx ? `${latestTx.title} (₦${Math.abs(latestTx.amount).toLocaleString()}.00)` : 'None yet'}</b>
+        </span>
+        <span style={{ fontSize: '18px', fontWeight: 600, color: '#666' }}>›</span>
+      </div>
+
+      {/* Carousel Banner (Replaces quick actions 'To Wallet, To Bank, Save, Withdraw') */}
+      <div style={{ marginTop: '10px', '--i': 3 }}>
         <PromoCarousel />
       </div>
 
-      {/* Services Grid matching exact reference arrangement */}
-      <div className={styles.servicesGrid} style={{ '--i': 3 }}>
+      {/* Services Grid with deep Navy Blue icons matching Services Tab */}
+      <div className={styles.servicesGrid} style={{ '--i': 4 }}>
         {services.map(({ icon: Icon, label, screen }) => (
           <div key={label} className={styles.serviceItem} onClick={() => navigate(screen)}>
-            <div className={styles.serviceIcon}><Icon size={24} /></div>
+            <div className={styles.serviceIcon}>
+              <Icon />
+            </div>
             <span>{label}</span>
           </div>
         ))}
       </div>
 
-      {/* Recent Transaction Card */}
-      <div style={{ padding: '0 16px', marginTop: '16px', marginBottom: '24px', '--i': 4 }}>
-        <div
-          className="card"
-          style={{
-            padding: '14px 16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            background: '#fff',
-            borderRadius: '20px',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
-            cursor: 'pointer'
-          }}
-          onClick={() => navigate('transactions')}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div className="ico" style={{ width: 40, height: 40, background: '#FFF4CC', color: '#000' }}>
-              <IconWallet size={20} />
-            </div>
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: '#111' }}>
-                {latestTx ? latestTx.title : 'No recent transaction'}
+      {/* Bottom Banner Carousel closer to menu tab (restored) */}
+      <div className={styles.carouselWrap} style={{ '--i': 5 }}>
+        <div className={styles.carouselTrack}>
+          {[...banners, banners[0]].map((b, i) => (
+            <div key={i} className={styles.bannerSlide} style={{ background: b.bg, color: b.color }}>
+              <div>
+                <div className={styles.bannerTitle}>{b.title}</div>
+                <div className={styles.bannerSub} style={{ color: b.subColor }}>{b.sub}</div>
               </div>
-              <div style={{ fontSize: '11.5px', color: '#777', marginTop: '2px' }}>
-                {latestTx ? `${latestTx.date} · ${latestTx.time}` : 'Start by recharging airtime or data'}
-              </div>
+              <button
+                type="button"
+                className={styles.bannerBtn}
+                style={{ background: b.btnBg, color: b.btnColor }}
+                onClick={() => navigate(b.screen)}
+              >
+                {b.btnText}
+              </button>
             </div>
-          </div>
-          <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
-            {latestTx && (
-              <>
-                <span style={{ fontSize: '14px', fontWeight: 800, color: latestTx.amount > 0 ? '#16A34A' : '#111' }}>
-                  {latestTx.amount > 0 ? '+' : ''}₦{Math.abs(latestTx.amount).toLocaleString()}.00
-                </span>
-                <span style={{ fontSize: '10px', fontWeight: 700, background: '#DCFCE7', color: '#15803D', padding: '2px 8px', borderRadius: '8px' }}>
-                  {latestTx.status.toUpperCase()}
-                </span>
-              </>
-            )}
-            {!latestTx && <span style={{ fontSize: '13px', color: '#F0B90B', fontWeight: 600 }}>History ›</span>}
-          </div>
+          ))}
         </div>
+      </div>
+
+      {/* Carousel Dots */}
+      <div className={styles.dots}>
+        <div className={styles.dot} style={{ animation: 'd1 15s ease-in-out infinite' }} />
+        <div className={styles.dot} style={{ animation: 'd2 15s ease-in-out infinite' }} />
+        <div className={styles.dot} style={{ animation: 'd3 15s ease-in-out infinite' }} />
+        <div className={styles.dot} style={{ animation: 'd4 15s ease-in-out infinite' }} />
       </div>
     </div>
   );
