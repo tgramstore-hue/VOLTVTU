@@ -43,14 +43,9 @@ export default function UnlockPINScreen() {
       } catch (e) {}
     }
 
-    // Smooth device biometric simulation fallback
-    setTimeout(() => {
-      setBioStatus('success');
-      setTimeout(() => {
-        setState(prev => ({ ...prev, isAuthenticated: true }));
-        navigate('dashboard');
-      }, 700);
-    }, 1200);
+    // Biometrics not available or failed — close modal, use PIN instead
+    setBioPrompt(false);
+    setBioStatus('idle');
   }, [biometricsEnabled, navigate, setState]);
 
   // Prompt biometric on open if enabled
@@ -69,7 +64,7 @@ export default function UnlockPINScreen() {
     setPin(next);
     if (next.length === 6) {
       setTimeout(() => {
-        if (next === correctPin || next.length === 6) {
+        if (next === correctPin) {
           setState(prev => ({ ...prev, isAuthenticated: true }));
           navigate('dashboard');
         } else {

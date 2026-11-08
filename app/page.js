@@ -41,7 +41,12 @@ import SecurityPinScreen from './screens/security-pin/SecurityPin';
 import EmailConfirmedScreen from './screens/email-confirmed/EmailConfirmed';
 
 export default function App() {
-  const { screen, direction } = useApp();
+  const { screen, direction, authLoading } = useApp();
+
+  // Show splash while auth is initializing — single source of truth
+  if (authLoading) {
+    return <SplashScreen />;
+  }
 
   const renderScreen = () => {
     switch (screen) {
